@@ -1,0 +1,20 @@
+# Local-only working notes. Never committed, never cited in tracked files.
+_local/
+_LOCAL/
+
+# Generated skill outputs
+_output/
+
+# Python
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# Local tooling state
+.memsearch/
+
+# OS
+.DS_Store
+Thumbs.db

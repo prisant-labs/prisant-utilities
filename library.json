@@ -1,0 +1,17 @@
+{
+  "name": "prisant-utilities",
+  "version": "0.1.0",
+  "description": "General-purpose agent skills for session continuity, structured analysis, guide authoring, and cross-LLM peer review. Use when wrapping or resuming a coding session, turning raw thinking into a decision-ready brief, generating a guide bundle, or getting a second-model review of a document.",
+  "standard": "0.13",
+  "tier": "universal",
+  "prefix": "plab-",
+  "agent-targets": ["claude", "codex"],
+  "author": { "name": "JP" },
+  "license": "MIT",
+  "homepage": "https://github.com/prisant-labs/prisant-utilities",
+  "repository": "https://github.com/prisant-labs/prisant-utilities.git",
+  "keywords": ["agent-skills", "claude-code", "codex", "plugin", "session-logs", "peer-review", "documentation"],
+  "components": {
+    "skills": []
+  }
+}
