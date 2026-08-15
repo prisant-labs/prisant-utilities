@@ -15,7 +15,7 @@ Generate and synthesize structured AI peer reviews. Create a self-contained revi
 /plab-ai-review path/to/document.md --reviewer codex
 ```
 
-This generates a structured review request at `path/to/document_reviewed-by-codex.md`. The document includes everything the reviewer LLM needs — context, targeted questions, severity framework, and response templates.
+This generates a structured review request at `path/to/document_reviewed-by-codex.md`. The document includes everything the reviewer LLM needs - context, targeted questions, severity framework, and response templates.
 
 ### Full Workflow
 
@@ -68,8 +68,8 @@ Reads the source document, auto-detects the document type, selects 5-7 review di
 
 **Input:**
 - Document path (required)
-- `--reviewer <name>` — target reviewer LLM (required): `codex`, `gpt`, `gemini`, `claude`, `grok`, `mistral`, `local-<model>`
-- `--type <type>` — optional override: `plan`, `brief`, `spec`, `rfc`, `doc`
+- `--reviewer <name>` - target reviewer LLM (required): `codex`, `gpt`, `gemini`, `claude`, `grok`, `mistral`, `local-<model>`
+- `--type <type>` - optional override: `plan`, `brief`, `spec`, `rfc`, `doc`
 
 **Output:** `<basename>_reviewed-by-<reviewer>.md` in the same directory as the source.
 
@@ -97,11 +97,11 @@ Running `/plab-ai-review doc_reviewed-by-codex.md` (no flag) detects reviewer fi
 
 | Type | Focus | Default Sections |
 |------|-------|-----------------|
-| **plan** | Executability — can this be built as written? | 7 (traceability, completeness, dependencies, decisions, file inventory, success criteria, scope risks) |
-| **brief** | Decision quality — is the thinking rigorous? | 7 (framing, evidence, viability, recommendations, stakeholders, risks, assumptions) |
-| **spec** | Completeness — is this testable and unambiguous? | 6 (requirements, acceptance criteria, scope, dependencies, priorities, user stories) |
-| **rfc** | Technical soundness — is the proposal correct? | 7 (problem, architecture, trade-offs, edge cases, integration, migration, open questions) |
-| **doc** | Generic — LLM proposes custom dimensions | varies (5-7, confirmed with user) |
+| **plan** | Executability - can this be built as written? | 7 (traceability, completeness, dependencies, decisions, file inventory, success criteria, scope risks) |
+| **brief** | Decision quality - is the thinking rigorous? | 7 (framing, evidence, viability, recommendations, stakeholders, risks, assumptions) |
+| **spec** | Completeness - is this testable and unambiguous? | 6 (requirements, acceptance criteria, scope, dependencies, priorities, user stories) |
+| **rfc** | Technical soundness - is the proposal correct? | 7 (problem, architecture, trade-offs, edge cases, integration, migration, open questions) |
+| **doc** | Generic - LLM proposes custom dimensions | varies (5-7, confirmed with user) |
 
 `spec` and `prd` are synonyms. See `references/section-presets.md` for the full preset definitions.
 
@@ -206,15 +206,15 @@ Full template: `references/review-template.md`
 
 ## Key Concepts
 
-**Self-contained reviews.** The reviewer LLM receives everything it needs in one document — no conversation context, no back-and-forth. This is what makes cross-LLM review possible.
+**Self-contained reviews.** The reviewer LLM receives everything it needs in one document - no conversation context, no back-and-forth. This is what makes cross-LLM review possible.
 
 **Anti-sycophancy.** Every review document includes explicit instructions: "Your role is to find problems, not to validate. If you find nothing wrong, that's suspicious."
 
 **Severity-scaled responses.** Requestor responses match the severity of findings. Blockers get full paragraphs with evidence and proposed changes. Notes get one-liners. This prevents over-responding to minor issues and under-responding to critical ones.
 
-**Three actors.** Reviewer finds problems. Requestor analyzes and proposes actions. Human decides. No single actor does everything — this prevents both rubber-stamping and analysis paralysis.
+**Three actors.** Reviewer finds problems. Requestor analyzes and proposes actions. Human decides. No single actor does everything - this prevents both rubber-stamping and analysis paralysis.
 
-**Role-labeled attribution.** Every LLM contribution is tagged with role, name, and date (`**Reviewer — Codex (2026-04-08):**`). No ambiguity about who wrote what.
+**Role-labeled attribution.** Every LLM contribution is tagged with role, name, and date (`**Reviewer - Codex (2026-04-08):**`). No ambiguity about who wrote what.
 
 ---
 
@@ -234,11 +234,11 @@ The `_archive/` directory sits alongside the source document.
 
 ## Improvement Ideas
 
-- **Custom section override via CLI** — let users specify review dimensions instead of using presets
-- **Multi-reviewer protocol** — 2-3 independent reviewers on the same document, then cross-comparison
-- **Review quality tracking** — which findings get accepted vs. rejected over time, per reviewer LLM
-- **LLM pairing recommendations** — empirical data on which LLM pairs produce the best reviews
-- **Automated citation verification** — script that checks whether cited sections/quotes actually exist in the source
+- **Custom section override via CLI** - let users specify review dimensions instead of using presets
+- **Multi-reviewer protocol** - 2-3 independent reviewers on the same document, then cross-comparison
+- **Review quality tracking** - which findings get accepted vs. rejected over time, per reviewer LLM
+- **LLM pairing recommendations** - empirical data on which LLM pairs produce the best reviews
+- **Automated citation verification** - script that checks whether cited sections/quotes actually exist in the source
 
 ---
 

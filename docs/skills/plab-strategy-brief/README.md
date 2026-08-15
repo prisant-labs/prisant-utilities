@@ -25,7 +25,7 @@ Or explicitly:
 [paste your messy notes]
 ```
 
-The skill produces a standalone markdown document — not inline chat. The output is designed to be saved, shared, and referenced later.
+The skill produces a standalone markdown document - not inline chat. The output is designed to be saved, shared, and referenced later.
 
 ### What You'll Need
 
@@ -66,7 +66,7 @@ Every output follows this anatomy, scaled to input complexity:
 
 ### 1. What I Understand (Input Mirror)
 
-Reflects your input back in organized form. Surfaces assumptions, sub-threads, and gaps. This is the most important validation step — if the mirror is wrong, the analysis will be wrong.
+Reflects your input back in organized form. Surfaces assumptions, sub-threads, and gaps. This is the most important validation step - if the mirror is wrong, the analysis will be wrong.
 
 *100-300 words*
 
@@ -84,13 +84,13 @@ Applies analytical frameworks to your problem. Always uses the 5 core lenses (St
 
 ### 4. Approaches (Distinct Paths)
 
-2-4 genuinely different paths. Each with pros, cons, risks, effort estimate, and commentary. No padding — if only 2 viable paths exist, present 2.
+2-4 genuinely different paths. Each with pros, cons, risks, effort estimate, and commentary. No padding - if only 2 viable paths exist, present 2.
 
 *400-1,200 words*
 
 ### 5. The 80/20 Recommendation
 
-What gets 80% of the value for 20% of the effort. Opinionated, specific, actionable. This section must stand alone — some readers skip straight here.
+What gets 80% of the value for 20% of the effort. Opinionated, specific, actionable. This section must stand alone - some readers skip straight here.
 
 *150-400 words*
 
@@ -130,9 +130,9 @@ What's unsure, what needs human judgment, follow-up prompts for deeper explorati
 
 ### What It Won't Do
 
-- "Should I use tabs or spaces?" — Too trivial for structured analysis
-- "Here's my polished proposal, make it better" — That's editing, not strategy
-- "What's the best JavaScript framework?" — That's research, not thinking amplification
+- "Should I use tabs or spaces?" - Too trivial for structured analysis
+- "Here's my polished proposal, make it better" - That's editing, not strategy
+- "What's the best JavaScript framework?" - That's research, not thinking amplification
 
 ---
 
@@ -213,4 +213,4 @@ skills/plab-strategy-brief/
 - Support collaborative mode where the user iterates on specific sections
 - Track which lenses are most frequently useful (usage analytics)
 - Add a "quick brief" mode (~500 words) for simpler decisions
-- Support structured input (not just brain dumps) — e.g., pre-filled templates with constraints
+- Support structured input (not just brain dumps) - e.g., pre-filled templates with constraints
