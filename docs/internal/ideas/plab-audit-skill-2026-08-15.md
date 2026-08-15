@@ -3,11 +3,13 @@ title: "plab-audit: a repo appraisal and roadmap skill"
 type: strategy-brief
 status: draft
 created: 2026-08-15
-audience: public
+audience: maintainer
 generated-by: strategy-brief
 ---
 
 # plab-audit: Appraising a Repository, Not Just Grading It
+
+> **Design frame.** This plugin is built for its maintainer's own use. The repository is public because there is no reason for it not to be, not because the skills are aimed at an adoption curve. Nothing below should be traded away to serve a hypothetical third-party user. Where a general-purpose choice and a personally-useful choice diverge, the personally-useful one wins.
 
 ## 1. What I Understand
 
@@ -26,12 +28,12 @@ Most tools in this space do only the first. Deterministic linters, conformance g
 
 Assumptions I am making, flagged so they can be corrected:
 
-- The primary user is a solo maintainer or a very small team, not an enterprise audit function.
+- The only user is the maintainer. Not a team, not an adoption curve.
 - "Repository" means any repo, not only agent-skill plugins. A skill that only audits plugins is a much smaller idea.
 - The output is a durable document, consistent with how this plugin's other producing skills behave.
 - Cost matters. A skill that burns a large token budget per run will be used once and abandoned.
 
-**Gap in the input:** the ask does not say whether this is meant to run on *your own* repositories, on *unfamiliar* repositories you are evaluating, or both. That distinction changes the design substantially, and Section 7 treats it as the top open question.
+**Gap in the input:** the ask does not say whether this runs on *your own* repositories, on *unfamiliar* ones you are sizing up, or both. That still changes the design, though a single-user frame narrows it: the honest answer is probably "mostly mine, occasionally not," which argues for optimising the known-repo path and letting the unfamiliar case degrade gracefully rather than being a first-class mode.
 
 ## 2. Problem Space
 
@@ -45,17 +47,19 @@ Two of those hand-run audits changed a real decision. One of them reversed a pla
 
 ### What "solved" looks like
 
-A maintainer points the skill at a repository and, within one session, has a document they would actually send to a collaborator. It says what the repository is good at, what is rotting, what is missing, and what the next three things to build are, in order, with reasons. Every claim in it can be traced to a file and a line.
+The maintainer points the skill at a repository and, within one session, has a document that changes what they do next. Not a document they would send to someone; a document that reorders their own queue. It says what the repository is good at, what is rotting, what is missing, and what the next three things to build are, in order, with reasons. Every claim in it can be traced to a file and a line.
+
+The success test is behavioural and personal: **did the roadmap change the order of work?** A beautifully written audit that confirmed what the maintainer already believed has produced nothing.
 
 The failure state is a document full of true, generic observations. "Add more tests." "Improve documentation." "Consider CI." A repository audit that could have been written without reading the repository is worse than no audit, because it consumes attention and produces the feeling of progress.
 
 ### Who is affected
 
-- **The maintainer of an active repository** wants to know what to fix next and whether the thing they are worried about is actually the problem.
-- **Someone inheriting a repository** wants orientation: what is this, is it healthy, where are the landmines.
-- **Someone evaluating a dependency or an acquisition target** wants an appraisal they can defend.
+One person: the maintainer, working across their own active repositories and the occasional unfamiliar one they are sizing up. That is the whole user base, and designing for it is a constraint worth using rather than apologising for.
 
-These three want the same document at different weightings. The first wants the roadmap. The second wants the value summary. The third wants the evidence.
+What it buys: the objective function is knowable rather than guessed (see Calibration in Section 7), the ecosystems that matter are a short finite list, and no effort goes into onboarding, configurability, or graceful behaviour in situations that will never arise.
+
+What it costs: there is no second user whose non-use would signal a problem. If the maintainer does not reach for this skill, it has no value at all. That makes adoption the dominant risk rather than one risk among several, which Section 3 treats accordingly.
 
 ### Adjacent problems this does not solve
 
@@ -75,7 +79,7 @@ Deliberately out of scope, because each is already served:
 
 **Adversarial verification has already earned its keep.** In one hand-run audit, an independent verification pass over the initial findings materially corrected a headline claim (an undercount that was wrong by more than an order of magnitude) and surfaced several whole categories the first pass had missed. That is direct evidence that a single analysis pass is insufficient for this artifact, and that a critic pass is not ceremony.
 
-**The value summary is underserved.** Plenty of tools produce findings. Very few will tell you what a repository is worth and why. That is the part a maintainer cannot easily get elsewhere, and it is the part most likely to be forwarded to another person.
+**The value summary is underserved.** Plenty of tools produce findings. Very few will tell you what a repository is worth and why. That is the part a maintainer cannot easily get elsewhere, and on an unfamiliar repository it is the fastest route from nothing to orientation.
 
 ### Weaknesses
 
@@ -87,9 +91,11 @@ Deliberately out of scope, because each is already served:
 
 ### Risks
 
-**Adoption risk is the dominant one, and the evidence is unfriendly.** A prior portfolio audit of a comparable skill collection found that seven of ten skills had zero confirmed invocations. The single strongest predictor of a skill going unused was not quality; it was that the maintainer already had a working manual habit and never switched. This skill is being built precisely on top of a working manual habit. That is both its best evidence and its biggest threat.
+**Adoption is not a risk among several; with one user it is the entire risk.** A prior portfolio audit of a comparable collection found seven of ten skills with zero confirmed invocations. The strongest predictor of dormancy was not quality; it was that the maintainer already had a working manual habit and never switched. This skill would be built directly on top of a working manual habit, by the person who is already good at performing it by hand. That is simultaneously the best evidence that the artifact is valuable and the best evidence that the skill will sit unused.
 
-**Cost risk.** The hand-run precedent used multi-agent fan-out and consumed a substantial token budget per audit. If that becomes the default, the skill is reserved for special occasions and never becomes routine. Routine use is what would make it valuable.
+The single-user frame makes this sharper, not softer. There is no population of other users to carry a skill the author neglects, and no external signal to notice the neglect. The mitigation has to be structural: make the cheap mode genuinely cheaper and faster than doing it by hand, because convenience is the only thing that displaces a working habit.
+
+**Cost risk.** The hand-run precedent used multi-agent fan-out and consumed a substantial token budget per audit. If that becomes the default, the skill is reserved for special occasions and never becomes routine. Routine use is what would make it valuable, and with one user there is nobody else generating the usage that would justify the build.
 
 **Scope-creep risk.** "Audit a repo" invites every check anyone has ever wanted. Without a firm boundary, this becomes a meta-skill that duplicates linters, security scanners, and conformance gates, all of which do their narrow job better.
 
@@ -101,7 +107,9 @@ Deliberately out of scope, because each is already served:
 
 ### Concerns
 
-The deepest concern is **calibration**. A roadmap ranks items against each other, which requires knowing what the maintainer is optimizing for: shipping speed, correctness, contributor onboarding, cost. Absent that, the ranking is a guess wearing the costume of an analysis. Any credible design has to either elicit the objective up front or present the ranking as conditional on a stated objective.
+The deepest concern was **calibration**: a roadmap ranks items against each other, which requires knowing what the maintainer is optimising for. Absent that, the ranking is a guess wearing the costume of an analysis.
+
+The single-user frame largely dissolves this. With one known user, the objective function can be written down once, as a default the skill carries rather than a question it asks. Section 7 sketches what that default looks like. Contributor onboarding, for instance, can be dropped from the ranking entirely rather than weighted, because it is not an objective here.
 
 ### Situational lens: token economy
 
@@ -166,12 +174,14 @@ Modes matter because they let cost track intent. `--appraise` on a repository sh
 **Explicitly defer:**
 
 - The fan-out implementation. Ship the single-pass deterministic version, use it on real repositories, and let demand justify the expensive path.
-- Ecosystem breadth. Support one ecosystem well rather than five shallowly.
+- Ecosystem breadth. Support the two or three ecosystems actually in use, and let everything else fall back to language-agnostic checks (git history, structure, docs, dependency manifests). With one user this is a short finite list, not a product decision.
 - The ideation leg. Ship `--appraise` and `--audit` first. "New features and innovations" is the weakest leg and benefits most from seeing what the first two modes actually surface.
 
 **Confidence: medium-high on the artifact, medium-low on adoption.**
 
-High on the artifact because the method is proven and the output has already changed decisions. Low on adoption because the dormancy evidence is specifically unkind to skills that formalize an existing manual habit, and because this skill would be built by someone who is already good at doing it by hand. The mitigation is a dogfood gate: no feature work beyond v1 until one real end-to-end run exists on a repository the maintainer did not write. That pattern has been applied to other skills in this family and should apply here too, with no exemption for being the newest idea.
+High on the artifact because the method is proven and the output has already changed decisions twice. Low on adoption because the dormancy evidence is specifically unkind to skills that formalise an existing manual habit, and because with one user there is no second party whose usage could rescue it.
+
+The mitigation is a dogfood gate, and the single-user frame lets it be a sharper one than usual: **no feature work beyond v1 until the skill has produced one roadmap that actually reordered the maintainer's queue.** Not "until it has been run once", which is trivially satisfiable and proves nothing. The test is whether the output changed a decision, which is the same bar the two successful hand-run audits cleared. That pattern has been applied to other skills in this family and should apply here with no exemption for being the newest idea.
 
 ## 6. Evidence and Source Map
 
@@ -185,21 +195,33 @@ High on the artifact because the method is proven and the output has already cha
 | Deterministic gates outperform model judgment on conformance | Existing model-free conformance tooling in this ecosystem | Strong for that narrow scope |
 | Repositories exceed usable context | General, uncontroversial | Strong |
 
-**Evidence gaps, stated plainly.** There is no data on how a comparable skill performs for someone who is *not* the maintainer, no cost measurement for the proposed cheap path, and no evidence at all on the ideation leg, which has never been hand-run as a distinct exercise. The adoption estimate in Section 5 is reasoning from one adjacent dataset, not measurement of this skill.
+**Evidence gaps, stated plainly.** There is no cost measurement for the proposed cheap path, and no evidence at all on the ideation leg, which has never been hand-run as a distinct exercise. The adoption estimate in Section 5 reasons from one adjacent dataset rather than measuring this skill.
+
+One gap that would matter for a general-purpose tool is deliberately not listed: how this performs for a user who is not the maintainer. Under the design frame, that is not a gap. It is out of scope.
 
 ## 7. Uncertainties and Open Items
 
-**Top open question, blocking.** Own repositories, unfamiliar repositories, or both? Auditing an unfamiliar repository requires an orientation phase and cannot lean on the user to catch wrong assumptions. Auditing a known repository can skip most of that and go straight to judgment. Building for both without deciding produces a skill that is mediocre at each. *Requires human judgment; nothing here can settle it.*
+**Top open question, no longer blocking.** Own repositories, unfamiliar repositories, or both? The single-user frame supplies a workable default: optimise the known-repo path, where the skill can skip orientation and go straight to judgment, and let the unfamiliar case degrade gracefully rather than being a co-equal mode. Worth confirming, but no longer a decision that has to precede design.
 
 **The why-gate, blocking.** Skill or mode of the existing peer-review skill? Genuinely uncertain. The shapes rhyme, but the inputs differ (a document versus a tree) and so does the cross-model requirement. *Recommend answering via the backlog intake gate rather than by intuition.*
 
-**Calibration, high uncertainty.** How does the skill learn what the maintainer is optimizing for? Options include asking once at invocation, reading a declared objective from repository configuration, or presenting the roadmap as conditional on two or three named objectives. The third is the most honest and the least convenient.
+**Calibration, now low uncertainty and an opportunity.** With one known user the objective function can be a written default rather than a question. From observed working patterns, the ranking should weight:
 
-**Where it lives, medium uncertainty.** A general-purpose utility plugin, or a separate plugin installed only when this kind of work is happening? The always-on description cost argues for the latter if the skill is genuinely occasional.
+1. **Token and cost economy.** Always-on context cost, per-run cost, and the cheapest model that does the job. Recommendations that add recurring cost need to earn it explicitly.
+2. **Deterministic enforcement over remembering.** A rule enforced by a hook, a gate, or CI beats a rule written in a document. Prefer recommending the mechanism over the reminder.
+3. **Evidence and reversibility.** Claims traceable to file and line; archive rather than delete; changes that can be undone.
+4. **Cross-harness durability.** Things that work in more than one agent harness, not just the one in front of you.
+5. **Session continuity.** Work that survives the gap between sessions without the maintainer holding state in their head.
+
+Explicitly *not* weighted: contributor onboarding, community growth, backwards compatibility for external consumers. Those are real objectives for other repositories and noise for this one.
+
+The remaining uncertainty is whether to hard-code that list, read it from a declared objectives file in the repository under audit, or both. Reading it is more general; hard-coding it is more useful on day one.
+
+**Where it lives, medium uncertainty, and the single-user frame makes it sharper.** A general-purpose utility plugin, or a separate plugin installed only when this kind of work is happening? The always-on description cost is paid by exactly one person in every one of their sessions, forever, whether the skill fires or not. If audits are genuinely occasional, a separate plugin, or shipping it here with model invocation disabled so it only runs on explicit command, is the more honest trade. Both options keep it one command away.
 
 **Output convention, low uncertainty.** Default to this plugin's standard generated-artifact root under the skill's own name, with an explicit destination flag for cases where the audit should be tracked in the repository under review. The prior backlog proposal suggested a different default; the plugin-wide convention should win for consistency.
 
-**Naming, low uncertainty.** "Audit" undersells it, since the value summary and roadmap are the differentiated parts and neither is an audit. Worth one minute of thought before the name is locked, because renaming a shipped skill is expensive.
+**Naming, now near-irrelevant.** "Audit" undersells it, since the value summary and roadmap are the differentiated parts and neither is an audit. With no market to communicate to, the only cost of a mediocre name is that the description has to work harder to trigger correctly, and the description matters far more than the name. Spend the minute on the description instead.
 
 ---
 
