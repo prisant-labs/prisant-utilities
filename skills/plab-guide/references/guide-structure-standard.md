@@ -127,7 +127,7 @@ H2 heading: `## In-Depth Breakdown`. Four H3 sub-headings, in this fixed order. 
 
 The four layers' **logic** is mandatory; the **labels** are flexible. See `references/progressive-disclosure.md` for the rule and patterns.
 
-**Diagrams (optional).** When a layer reveals **branching**, **relationships**, or **flow** that prose flattens, embed a Mermaid diagram inside a fenced code block. Markdown viewers (GitHub, Obsidian, mkdocs+mermaid) render them natively. Skip diagrams for linear sequences (a numbered list reads better) and for two-party interactions (prose suffices). For diagram authoring discipline (Cardinal Rule, type selection, syntax validity), see [`../../references/diagrams.md`](../../../../references/diagrams.md). Common fits per layer:
+**Diagrams (optional).** When a layer reveals **branching**, **relationships**, or **flow** that prose flattens, embed a Mermaid diagram inside a fenced code block. Markdown viewers (GitHub, Obsidian, mkdocs+mermaid) render them natively. Skip diagrams for linear sequences (a numbered list reads better) and for two-party interactions (prose suffices). For diagram authoring discipline (Cardinal Rule, type selection, syntax validity), see [`../../../references/diagrams.md`](../../../references/diagrams.md). Common fits per layer:
 
 | Layer | Diagram opportunities |
 |-------|----------------------|
@@ -219,5 +219,5 @@ Both are repo-url topics with substantial documentation.
 | 2-row table anywhere | Convert to bullet list (gate G-15) |
 | Header-less 2-column "Field/Value" table | Add column headers (gate G-16) |
 | Em-dashes in body | Pre-write sweep (gate G-11) replaces them |
-| Diagram of a linear sequence | Convert to numbered list (Cardinal Rule from `../../references/diagrams.md`: don't diagram what a list can say) |
-| Mermaid block with unquoted special characters | Quote labels containing spaces, parentheses, colons, or `>` (Syntax Validity Principle 1 in `../../references/diagrams.md`) |
+| Diagram of a linear sequence | Convert to numbered list (Cardinal Rule from `../../../references/diagrams.md`: don't diagram what a list can say) |
+| Mermaid block with unquoted special characters | Quote labels containing spaces, parentheses, colons, or `>` (Syntax Validity Principle 1 in `../../../references/diagrams.md`) |

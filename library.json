@@ -12,6 +12,12 @@
   "repository": "https://github.com/prisant-labs/prisant-utilities.git",
   "keywords": ["agent-skills", "claude-code", "codex", "plugin", "session-logs", "peer-review", "documentation"],
   "components": {
-    "skills": []
+    "skills": [
+      { "name": "plab-wrap-session",     "path": "skills/plab-wrap-session/SKILL.md",     "version": "1.4.0", "tier": "universal", "status": "active" },
+      { "name": "plab-continue-session", "path": "skills/plab-continue-session/SKILL.md", "version": "1.2.0", "tier": "universal", "status": "active" },
+      { "name": "plab-strategy-brief",   "path": "skills/plab-strategy-brief/SKILL.md",   "version": "1.1.1", "tier": "universal", "status": "active" },
+      { "name": "plab-guide",            "path": "skills/plab-guide/SKILL.md",            "version": "2.2.1", "tier": "universal", "status": "active" },
+      { "name": "plab-ai-review",        "path": "skills/plab-ai-review/SKILL.md",        "version": "1.2.1", "tier": "universal", "status": "active" }
+    ]
   }
 }
