@@ -225,4 +225,4 @@ The remaining uncertainty is whether to hard-code that list, read it from a decl
 
 ---
 
-**Suggested follow-ups.** This brief can become a component proposal for backlog intake (which is where the why-gate gets answered), or a specification once the two blocking questions are settled. The recommended next artifact is neither: it is the hand-run example document from Section 5, step 2, because it converts every design argument here into something checkable.
+**Suggested follow-ups.** This brief can become a component proposal for backlog intake (which is where the why-gate gets answered), or a specification once the why-gate is settled. The recommended next artifact is neither: it is the hand-run example document from Section 5, step 2, because it converts every design argument here into something checkable.

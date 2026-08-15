@@ -6,6 +6,17 @@ Agent navigation entrypoint for the `prisant-utilities` plugin.
 
 Five general-purpose agent skills for the work around the work: closing and resuming coding sessions, turning raw thinking into a decision-ready brief, producing guide bundles, and getting a second model to review a document.
 
+## Design frame
+
+**This plugin is built for its maintainer's own use.** The repository is public because there is no reason for it not to be, not because the skills target an adoption curve. Where a general-purpose choice and a personally-useful choice diverge, the personally-useful one wins.
+
+Practical consequences for anyone proposing or changing a skill here:
+
+- Do not add configurability, onboarding affordances, or compatibility shims for hypothetical third-party users.
+- Skill descriptions still matter enormously, and arguably more. The description is the trigger mechanism for the one user who matters; a skill that does not fire is a skill that does not exist.
+- Always-on context cost is paid by one person in every session, forever. A rarely-used skill should justify its description budget or ship with model invocation disabled so it runs only on explicit command.
+- A skill that goes unused has no value at all. There is no second user to rescue it.
+
 Conventions an agent should follow in this repo:
 
 - Every skill name carries the `plab-` prefix and matches its directory name exactly.
