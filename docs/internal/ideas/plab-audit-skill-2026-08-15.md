@@ -24,6 +24,8 @@ Three sub-threads are bundled in that ask, and they are genuinely different jobs
 - **Appraisal** asks *what is this worth, and to whom*. A judgment about value, maturity, and fit.
 - **Ideation** asks *what should exist next*. Generative, not diagnostic.
 
+The third one already has a home. `plab-strategy-brief` exists to generate two to four genuinely distinct approaches and then commit to an opinionated recommendation with concrete next steps. That is the ideation engine, already built and already in this plugin. Any design that reimplements it inside a new skill is duplicating a component, which is the exact thing the why-gate exists to catch.
+
 Most tools in this space do only the first. Deterministic linters, conformance gates, and security scanners all produce findings. Very few produce an appraisal, and almost none produce a roadmap that ranks a *new feature idea* against a *hygiene fix* on one list.
 
 Assumptions I am making, flagged so they can be corrected:
@@ -157,9 +159,18 @@ One analysis pass over a sampled slice, producing a short document. No fan-out, 
 - **Risks.** Ships, disappoints once, is never used again. The worst outcome, because it also poisons appetite for a better version.
 - **Effort.** Low.
 
+### Approach E: Evidence-bound skill, chained to the existing brief skill
+
+`plab-audit` owns everything that can be traced to evidence: the appraisal, the findings, and a roadmap of grounded improvements. The genuinely generative question, what this repository could *become*, chains out to `plab-strategy-brief`, which already does approaches and an opinionated recommendation.
+
+- **Pros.** Adds no new capability, because the generative half already exists. Keeps the epistemic boundary clean: one document where every claim is traceable, a separate one that is openly speculative. Gives an underused skill a feeder, which raises the value of something already paid for. Zero additional always-on description budget.
+- **Cons.** Two documents instead of one, and the user's original ask was for a single ranked list. The handoff has to be genuinely smooth or it will be skipped.
+- **Risks.** `plab-strategy-brief` currently declares that it should not be used on clean structured input, and an audit report is structured. That scope line likely needs a small amendment to bless "here are forty findings, what should I build" as a valid input shape, which it plainly is.
+- **Effort.** Low, and most of it is contract rather than code. This plugin ships no chain contract today because nothing chains; adding one is a conditional requirement that activates the moment a component declares a `chain:`.
+
 ## 5. The 80/20 Recommendation
 
-**Build Approach A's mode structure on Approach B's deterministic spine, and make Approach C's fan-out an explicit opt-in flag rather than the default. Do not build Approach D.**
+**Build Approach A's mode structure on Approach B's deterministic spine, chain the generative half out per Approach E, and make Approach C's fan-out an explicit opt-in flag rather than the default. Do not build Approach D.**
 
 The reasoning is about sequencing rather than preference. The fan-out design is the one with proven results, but proven for *occasional, high-stakes* audits. The thing that does not exist yet, and would be used far more often, is a cheap audit a maintainer runs on a normal Tuesday. Deterministic-first is what makes that cheap version credible: it grounds hygiene findings in tool output instead of model opinion, and it keeps the model doing only what tools cannot.
 
@@ -170,12 +181,13 @@ Modes matter because they let cost track intent. `--appraise` on a repository sh
 1. **Answer the why-gate before writing any file.** Is this a skill, or a mode of the existing peer-review skill? Write the answer down either way. If it is a mode, this brief becomes an enhancement proposal instead, and that is a perfectly good outcome.
 2. **Hand-run the target output once more, deliberately, on a repository that is not this plugin.** Produce the exact document the skill should produce. That artifact becomes the specification and the test fixture. Do not write `SKILL.md` before this exists.
 3. **Design the coverage statement first.** Decide how the skill declares what it examined and what it skipped, before designing anything else. This is the constraint that keeps the output honest, and retrofitting it is painful.
+4. **Write the boundary test into the skill, not just this brief.** One sentence decides where every recommendation belongs: *can it be traced to a finding?* If yes it stays in the audit roadmap. If it requires inventing something the evidence does not imply, it is a strategy-brief question and the audit should say so and hand off rather than guess.
 
 **Explicitly defer:**
 
 - The fan-out implementation. Ship the single-pass deterministic version, use it on real repositories, and let demand justify the expensive path.
 - Ecosystem breadth. Support the two or three ecosystems actually in use, and let everything else fall back to language-agnostic checks (git history, structure, docs, dependency manifests). With one user this is a short finite list, not a product decision.
-- The ideation leg. Ship `--appraise` and `--audit` first. "New features and innovations" is the weakest leg and benefits most from seeing what the first two modes actually surface.
+- Building an ideation leg at all. It is not deferred so much as **relocated**: `plab-strategy-brief` already generates distinct approaches and an opinionated recommendation, so the blue-sky question chains there rather than being reimplemented. `plab-audit` still ships a roadmap, but only of improvements traceable to its own findings.
 
 **Confidence: medium-high on the artifact, medium-low on adoption.**
 
@@ -203,7 +215,13 @@ One gap that would matter for a general-purpose tool is deliberately not listed:
 
 **Top open question, no longer blocking.** Own repositories, unfamiliar repositories, or both? The single-user frame supplies a workable default: optimise the known-repo path, where the skill can skip orientation and go straight to judgment, and let the unfamiliar case degrade gracefully rather than being a co-equal mode. Worth confirming, but no longer a decision that has to precede design.
 
-**The why-gate, blocking.** Skill or mode of the existing peer-review skill? Genuinely uncertain. The shapes rhyme, but the inputs differ (a document versus a tree) and so does the cross-model requirement. *Recommend answering via the backlog intake gate rather than by intuition.*
+**The why-gate, partially answered.** Two versions of this question, with different answers.
+
+*Is audit a mode of the existing peer-review skill?* Still genuinely uncertain. The shapes rhyme, but the inputs differ (a document versus a tree) and so does the cross-model requirement. Recommend answering via backlog intake rather than by intuition.
+
+*Should ideation be its own skill?* **No.** It would duplicate `plab-strategy-brief`, which already generates distinct approaches and an opinionated recommendation, and it would add a third always-on description paid by one person forever. The legitimate concern behind the question is real, though, and it is not about ownership: it is **epistemic contamination**. Findings carry file-and-line evidence; ideas cannot. Put them in one document and the speculative material inherits the credibility of the evidenced material, with no way for the reader to tell which is which. Chaining out gets that separation without a new component.
+
+*Mechanically*, that means `plab-audit` declares `chain: plab-strategy-brief` in its metadata, and this plugin gains its first `agents/_chain-permitted.yaml`. That file is a conditional requirement: it is required exactly when a component invokes another, so it does not exist today and would be created by this skill. The conformance gate checks it for orphans (an invocation not permitted) and phantoms (a permission naming a component that does not exist).
 
 **Calibration, now low uncertainty and an opportunity.** With one known user the objective function can be a written default rather than a question. From observed working patterns, the ranking should weight:
 
