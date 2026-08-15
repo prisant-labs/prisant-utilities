@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Quick-Reference Template / v1 Technical White</title>
+<style>
+/* ============================================================================
+   QUICK-REFERENCE THEME (v1: technical white)
+   ============================================================================
+   All visual configuration lives in the :root block below. Edit any value to
+   change the appearance; every rule downstream uses var(--name).
+
+   Design principles:
+   - White card backgrounds save print ink and maximize text contrast.
+   - Functional alternation (table zebra, step-row zebra) is kept on by default.
+   - Decorative fills (card variants, lede, aside) are off by default.
+     Re-enable by setting the corresponding --bg-* variable.
+   - Code blocks keep a subtle tint to distinguish them from prose.
+   ============================================================================ */
+
+:root {
+  /* ----------- PAGE SETUP ----------- */
+  --page-margin: 0.3in 0.4in;
+  --fit-scale: 1;                  /* v2.0.0: global content scale; render-pdf.sh overrides this to auto-fit a 3-page overflow back to 2 */
+
+  /* ----------- TYPOGRAPHY: FONTS ----------- */
+  --font-body: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: Consolas, "Courier New", monospace;
+
+  /* ----------- TYPOGRAPHY: SIZES (v1.5.0: density-first; calibrated against Spike H) ----------- */
+  --size-body: calc(6.75pt * var(--fit-scale));             /* default body */
+  --size-masthead-icon: calc(16pt * var(--fit-scale));      /* big icon glyph in masthead */
+  --size-masthead-title: calc(11pt * var(--fit-scale));     /* page title */
+  --size-masthead-sub: calc(6pt * var(--fit-scale));        /* page subtitle */
+  --size-masthead-meta: calc(5.75pt * var(--fit-scale));    /* version / page-count meta */
+  --size-card-h2: calc(6pt * var(--fit-scale));             /* card section header */
+  --size-card-h3: calc(6.5pt * var(--fit-scale));           /* card sub-section heading */
+  --size-card-body: calc(6.5pt * var(--fit-scale));         /* card paragraph */
+  --size-card-tag: calc(5.5pt * var(--fit-scale));          /* card title-row right-aligned tag */
+  --size-table: calc(6.25pt * var(--fit-scale));            /* table cell text */
+  --size-table-th: calc(5.5pt * var(--fit-scale));          /* table header */
+  --size-mono-inline: calc(6.25pt * var(--fit-scale));      /* inline <code> */
+  --size-mono-block: calc(6pt * var(--fit-scale));          /* <pre> code blocks */
+  --size-step-row: calc(6.5pt * var(--fit-scale));          /* numbered step rows */
+  --size-aside: calc(6pt * var(--fit-scale));               /* card footer aside */
+  --size-kbd: calc(5.75pt * var(--fit-scale));              /* keyboard chips */
+
+  /* ----------- TYPOGRAPHY: LINE HEIGHTS (v1.5.0: tighter for density) ----------- */
+  --lh-body: 1.22;
+  --lh-card-text: 1.22;
+  --lh-pre: 1.28;
+  --lh-aside: 1.28;
+  --lh-lede: 1.28;
+  --lh-meta: 1.3;
+  --lh-masthead-title: 1.05;
+
+  /* ----------- TYPOGRAPHY: WEIGHTS / TRACKING ----------- */
+  --weight-body: 500;              /* prose default; v1.5.0 adds visual presence at small sizes */
+  --weight-strong: 700;
+  --weight-bold: 800;
+  --tracking-uppercase: 0.16em;    /* card h2 letter-spacing */
+  --tracking-sub: 0.2em;           /* masthead sub */
+  --tracking-th: 0.1em;            /* table header */
+
+  /* ----------- COLORS: PALETTE (edit these; rest derives) ----------- */
+  --accent: #1f4b87;               /* primary brand color */
+  --text: #000000;                 /* main text - pure black for max contrast at 6.75pt (v1.5.0) */
+  --text-muted: #2a3442;           /* masthead meta, secondary text */
+  --text-subdued: #4a5260;         /* code comments */
+
+  /* ----------- COLORS: BORDERS ----------- */
+  --border: #c8d1de;               /* default card / element border */
+  --border-strong: #a8b3c2;        /* kbd-style chips */
+  --border-subtle: #d8dee5;        /* table cell separators */
+
+  /* ----------- COLORS: BACKGROUNDS ----------- */
+  /* Most surfaces are pure white. The functional exceptions kept on by default:
+     - alternating table rows (legibility on long tables)
+     - step-row alternation
+     - inline + block code (distinguish code from prose)
+     - kbd chips
+     - the masthead band (structural page header) */
+  --bg-page: #ffffff;
+  --bg-card: #ffffff;
+  --bg-masthead: #f5f7fa;          /* page header band; flip to transparent to drop */
+  --bg-row-even: #e8edf2;          /* table zebra; flip to transparent to drop alternation */
+  --bg-step-row-even: #e8edf2;     /* step-row zebra; same */
+  --bg-code-inline: #e8edf2;       /* inline code; flip to transparent for plain code */
+  --bg-code-block: #e8edf2;        /* code blocks; same */
+  --bg-kbd: #f5f7fa;               /* keyboard-key chips */
+  --bg-lede: transparent;          /* lede paragraph; v2 default: no fill (was #f5f7fa) */
+  --bg-aside: transparent;         /* card footer aside; v2 default: no fill (was #f5f7fa) */
+  --bg-card-ref: transparent;      /* reference cards; v2 default: no fill (was #f0f4f9) */
+  --bg-card-summary: transparent;  /* summary banner; v2 default: no fill (was #e1e8f0) */
+
+  /* ----------- SPACING (v1.5.0: tighter for density) ----------- */
+  --grid-gap: calc(3px * var(--fit-scale));
+  --card-padding: calc(3px * var(--fit-scale)) calc(5px * var(--fit-scale)) calc(3px * var(--fit-scale)) calc(5px * var(--fit-scale));
+  --masthead-padding: calc(4px * var(--fit-scale)) calc(8px * var(--fit-scale));
+  --masthead-margin-bottom: calc(4px * var(--fit-scale));
+  --lede-padding: calc(4px * var(--fit-scale)) calc(8px * var(--fit-scale));
+  --lede-margin-bottom: calc(5px * var(--fit-scale));
+
+  /* ----------- ACCENT-RULE WEIGHTS ----------- */
+  --rule-masthead-left: 4px solid var(--accent);
+  --rule-lede-left: 2.5px solid var(--accent);
+  --rule-aside-left: 2px solid var(--accent);
+  --rule-pre-left: 2px solid var(--accent);
+  --rule-card-h2-bottom: 1.5px solid var(--accent);
+  --rule-th-bottom: 1px solid var(--accent);
+  --rule-card-ref-left: 2.5px solid var(--accent);   /* reference card highlight (replaces fill) */
+  --rule-card-summary-top: 2.5px solid var(--accent); /* summary banner highlight (replaces fill) */
+}
+
+/* ============================================================================
+   STRUCTURAL RULES (use var() everywhere)
+   ============================================================================ */
+
+@page { size: letter; margin: var(--page-margin); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  font-family: var(--font-body);
+  font-size: var(--size-body);
+  font-weight: var(--weight-body);
+  line-height: var(--lh-body);
+  color: var(--text);
+  background: var(--bg-page);
+}
+
+/* MASTHEAD ----------------------------------------------------------------- */
+.masthead {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: var(--masthead-padding);
+  background: var(--bg-masthead);
+  border: 0.5px solid var(--border);
+  border-left: var(--rule-masthead-left);
+  margin-bottom: var(--masthead-margin-bottom);
+}
+.masthead .icon {
+  font-family: var(--font-mono);
+  font-size: var(--size-masthead-icon);
+  font-weight: var(--weight-strong);
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.masthead .title {
+  font-size: var(--size-masthead-title);
+  font-weight: var(--weight-strong);
+  color: var(--text);
+  letter-spacing: -0.01em;
+  line-height: var(--lh-masthead-title);
+}
+.masthead .sub {
+  font-size: var(--size-masthead-sub);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-sub);
+  color: var(--accent);
+  margin-top: 2px;
+  font-weight: 600;
+}
+.masthead .meta {
+  font-family: var(--font-mono);
+  font-size: var(--size-masthead-meta);
+  color: var(--text-muted);
+  text-align: right;
+  line-height: var(--lh-meta);
+}
+
+/* LEDE --------------------------------------------------------------------- */
+.lede {
+  font-size: var(--size-body);
+  line-height: var(--lh-lede);
+  color: var(--text);
+  padding: var(--lede-padding);
+  border-left: var(--rule-lede-left);
+  margin-bottom: var(--lede-margin-bottom);
+  background: var(--bg-lede);
+}
+.lede b { color: var(--text); font-weight: var(--weight-strong); }
+
+/* CARD GRID ---------------------------------------------------------------- */
+/* v1.3.0: switched from CSS Grid (with stretched rows that wasted vertical space
+   when paired cards had unequal heights) to CSS Columns. Cards now flow
+   independently top-to-bottom in the left column, then the right column;
+   shorter cards no longer stretch to match taller siblings. Reading order is
+   column-major (down the left, then down the right) which is appropriate for
+   reference cards where each card is independent.
+   span-6 cards use column-span: all to break out to full-width.
+   span-2 / span-4 are deprecated in column layout (only "single column" or
+   "all columns" are meaningful); kept here as no-ops for backward compatibility
+   with content that hard-codes the class. */
+.grid {
+  column-count: 2;
+  column-gap: var(--grid-gap);
+  column-fill: balance;
+}
+.card {
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  padding: var(--card-padding);
+  break-inside: avoid;
+  page-break-inside: avoid;
+  min-width: 0;
+  margin-bottom: var(--grid-gap);
+  display: block;
+}
+.card.span-2,
+.card.span-3,
+.card.span-4 { /* no-op in column layout; default = single column */ }
+.card.span-6 {
+  column-span: all;
+  -webkit-column-span: all;
+}
+
+/* DIAGRAM CARDS (v1.4.0; v1.5.0 adds span-6 horizontal pattern) ---------------- */
+/* Sizing rules for inline SVG diagrams (mermaid pre-render via lib/render-mermaid.py).
+   The Mermaid source block is replaced in place by an <svg> element during Phase 6.5;
+   these rules cap the diagram so it does not blow out the card height and stays
+   centred horizontally. Use .card.diagram on any card whose body is a Mermaid SVG.
+
+   Aspect-ratio rule (v1.5.0):
+   - Vertical / portrait diagrams (taller than wide): use .card.diagram (single column).
+     Examples: stateDiagram, vertical flowcharts, sequence diagrams with few participants.
+   - Horizontal / landscape diagrams (wider than tall): use .card.diagram.span-6 (full row).
+     Examples: pipeline flowcharts, timeline diagrams, sequence diagrams with many
+     participants, ER diagrams. The horizontal max-height is bumped to 2.2in to use the
+     extra width without forcing the diagram to be tiny. */
+.card.diagram svg,
+.card.diagram img {
+  max-width: 100%;
+  height: auto;
+  max-height: 1.8in;
+  display: block;
+  margin: 0 auto;
+}
+.card.diagram.span-6 svg,
+.card.diagram.span-6 img {
+  max-height: 2.2in;
+}
+
+/* CARD VARIANTS ------------------------------------------------------------ */
+/* v2 design: no background fills. Indicators via accent-rule borders only. */
+.card.ref {
+  background: var(--bg-card-ref);
+  border-left: var(--rule-card-ref-left);
+}
+.card.summary {
+  background: var(--bg-card-summary);
+  border-top: var(--rule-card-summary-top);
+}
+
+/* CARD HEADINGS / BODY ----------------------------------------------------- */
+.card h2 {
+  font-size: var(--size-card-h2);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-uppercase);
+  color: var(--accent);
+  margin-bottom: 5px;
+  padding-bottom: 2px;
+  border-bottom: var(--rule-card-h2-bottom);
+  display: flex;
+  align-items: center;
+}
+.card h2 .tag {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--size-card-tag);
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.card h3 {
+  font-size: var(--size-card-h3);
+  font-weight: var(--weight-strong);
+  color: var(--text);
+  margin: 4px 0 1px 0;
+}
+.card p {
+  font-size: var(--size-card-body);
+  color: var(--text);
+  margin: 1.5px 0;
+  line-height: var(--lh-card-text);
+}
+
+/* CODE --------------------------------------------------------------------- */
+code {
+  font-family: var(--font-mono);
+  font-size: var(--size-mono-inline);
+  background: var(--bg-code-inline);
+  padding: 0.5px 3px;
+  color: var(--accent);
+  border-radius: 2px;
+  font-weight: 500;
+}
+pre {
+  font-family: var(--font-mono);
+  font-size: var(--size-mono-block);
+  line-height: var(--lh-pre);
+  background: var(--bg-code-block);
+  color: var(--text);
+  padding: 4px 7px;
+  border-left: var(--rule-pre-left);
+  margin: 3px 0 5px 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  border-radius: 1px;
+}
+pre .c { color: var(--text-subdued); font-style: italic; }
+pre .k { color: var(--accent); font-weight: var(--weight-strong); }
+
+/* TABLES ------------------------------------------------------------------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--size-table);
+  margin-top: 1px;
+}
+th, td {
+  text-align: left;
+  padding: 2.5px 5px;
+  vertical-align: top;
+}
+th {
+  background: transparent;
+  color: var(--accent);
+  font-size: var(--size-table-th);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-th);
+  font-weight: var(--weight-strong);
+  padding: 3px 5px;
+  border-bottom: var(--rule-th-bottom);
+}
+td {
+  color: var(--text);
+  border-bottom: 0.5px solid var(--border-subtle);
+}
+td:first-child { font-weight: var(--weight-strong); color: var(--text); }
+tr:nth-child(odd) td { background: transparent; }
+tr:nth-child(even) td { background: var(--bg-row-even); }
+tr:last-child td { border-bottom: none; }
+td code { background: transparent; padding: 0; color: var(--accent); font-weight: 600; }
+
+/* LISTS -------------------------------------------------------------------- */
+ul { padding-left: 13px; font-size: var(--size-card-body); margin: 2px 0; }
+li { margin-bottom: 1px; color: var(--text); line-height: var(--lh-card-text); }
+li strong { color: var(--text); }
+
+/* STEP / STATUS ROWS ------------------------------------------------------- */
+.step-row {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 0 7px;
+  font-size: var(--size-step-row);
+  padding: 1.5px 4px;
+  margin: 0 -4px;
+}
+.step-row:nth-of-type(even) { background: var(--bg-step-row-even); }
+.step-row .n {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-strong);
+  color: var(--accent);
+}
+.step-row .b { color: var(--text); }
+.step-row .b strong { color: var(--text); font-weight: var(--weight-strong); }
+
+.status-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 8px;
+  font-size: var(--size-step-row);
+  padding: 1.5px 4px;
+  margin: 0 -4px;
+  align-items: baseline;
+  color: var(--text);
+}
+.status-row:nth-of-type(even) { background: var(--bg-step-row-even); }
+.status-row code { display: inline-block; min-width: 80px; }
+
+/* INLINE ASIDE / CALLOUT --------------------------------------------------- */
+.card .aside {
+  font-size: var(--size-aside);
+  color: var(--text);
+  font-style: italic;
+  margin-top: 5px;
+  padding: 3px 7px;
+  border-left: var(--rule-aside-left);
+  background: var(--bg-aside);
+  line-height: var(--lh-aside);
+}
+
+/* KBD ---------------------------------------------------------------------- */
+.kbd {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--size-kbd);
+  padding: 0.5px 4px;
+  border: 0.5px solid var(--border-strong);
+  background: var(--bg-kbd);
+  color: var(--text);
+  border-radius: 2px;
+}
+
+/* PAGE BREAK --------------------------------------------------------------- */
+.page-break { /* v2.0.0: forced break removed; content flows naturally */ }
+</style>
+</head>
+<body>
+
+<!-- =============================================================
+     PAGE 1 / Pattern catalog (action / narrative content)
+     ============================================================= -->
+<header class="masthead">
+  <div class="icon">⌬</div>
+  <div>
+    <div class="title">Quick-Reference Template</div>
+    <div class="sub">v1.5 / Technical White / Pattern Catalog</div>
+  </div>
+  <div class="meta">
+    template / 2026-05<br>
+    reference card
+  </div>
+</header>
+
+<p class="lede"><b>This is the v1.5 quick-reference template.</b> Each card below demonstrates one layout pattern with sample content. Replace samples with topic-specific operator content while preserving structure. Card classes: default (white) for action / narrative; <code>.ref</code> (tinted left rule) for lookup / reference; <code>.diagram</code> for inline Mermaid SVG; <code>.span-6 .summary</code> for a closing full-width banner. <code>.span-6</code> on any card promotes it to full-row width. Target density: 1-2 dense pages with auto-fit, 6.75pt body at 1.22 line-height, ink ratio &gt;= 0.30 per page. Author enough cards to fill the space; the renderer auto-fits a slight overflow back to 2 pages.</p>
+
+<div class="grid">
+
+<!-- CARD 1 / Step-row pattern -->
+<div class="card span-3">
+  <h2>Step-Row Pattern <span class="tag">ordered</span></h2>
+  <div class="step-row"><span class="n">1.</span><span class="b"><strong>first-step</strong> / brief description after slash.</span></div>
+  <div class="step-row"><span class="n">2.</span><span class="b"><strong>second-step</strong> / each row alternates background.</span></div>
+  <div class="step-row"><span class="n">3.</span><span class="b"><strong>third-step</strong> / keep descriptions short.</span></div>
+  <div class="step-row"><span class="n">4.</span><span class="b"><strong>fourth-step</strong> / target ~60 chars per line.</span></div>
+  <div class="step-row"><span class="n">5.</span><span class="b"><strong>fifth-step</strong> / arrows ok: A &rarr; B &rarr; C.</span></div>
+  <div class="step-row"><span class="n">6.</span><span class="b"><strong>sixth-step</strong> / final action.</span></div>
+  <div class="when"><b>Use for:</b> sequential workflows, ordered processes, pipelines, lifecycles. Numbers in mono blue; bold lead term + slash + description.</div>
+</div>
+
+<!-- CARD 2 / h3 + p item list -->
+<div class="card span-3">
+  <h2>Item Descriptions <span class="tag">3 items</span></h2>
+  <h3>item-name-one</h3>
+  <p>Short paragraph describing the item. One or two sentences. Keep tight.</p>
+  <h3>item-name-two</h3>
+  <p>Each h3 acts as a sub-heading. The p below explains what the item does or means.</p>
+  <h3>item-name-three</h3>
+  <p>Useful for skill catalogs, glossaries, FAQ entries, named concepts.</p>
+  <div class="when"><b>Use for:</b> named items with short descriptions: skills, features, concepts, gotcha entries.</div>
+</div>
+
+<!-- CARD 3 / Two-column table -->
+<div class="card span-3">
+  <h2>2-Column Table <span class="tag">lookup</span></h2>
+  <table>
+    <tr><th>Key</th><th>Value</th></tr>
+    <tr><td>first-key</td><td>What it does or means.</td></tr>
+    <tr><td>second-key</td><td>Even rows are tinted.</td></tr>
+    <tr><td>third-key</td><td>First column is auto-bold.</td></tr>
+    <tr><td>fourth-key</td><td>Headers blue uppercase, blue rule under.</td></tr>
+  </table>
+  <div class="when"><b>Use for:</b> term-definition lookups, key-value config, simple reference tables.</div>
+</div>
+
+<!-- CARD 4 / Three-column table -->
+<div class="card span-3">
+  <h2>3-Column Matrix <span class="tag">decision</span></h2>
+  <table>
+    <tr><th>Mode</th><th>Items</th><th>How to use</th></tr>
+    <tr><td>Mode A</td><td>thing-one, thing-two</td><td>Brief instruction.</td></tr>
+    <tr><td>Mode B</td><td>thing-three, thing-four</td><td>Different instruction.</td></tr>
+    <tr><td>Mode C</td><td>thing-five</td><td>One more option.</td></tr>
+  </table>
+  <div class="when"><b>Use for:</b> decision matrices, comparison tables, multi-attribute lookups. Cap at 3-4 columns or readability suffers.</div>
+</div>
+
+<!-- CARD 5 / Bullet list -->
+<div class="card span-3">
+  <h2>Bullet List <span class="tag">principles</span></h2>
+  <ul>
+    <li><strong>Lead term.</strong> Short sentence after the bold.</li>
+    <li><strong>Another principle.</strong> Keep each line on a single visual row.</li>
+    <li><strong>Third point.</strong> Aim for 4-6 items.</li>
+    <li><strong>Fourth.</strong> Bullets are good for unordered values, principles, or do-this lists.</li>
+    <li><strong>Fifth.</strong> Avoid nested lists; flatten if possible.</li>
+  </ul>
+  <div class="when"><b>Use for:</b> principles, philosophies, unordered short items where order is not significant.</div>
+</div>
+
+<!-- CARD 6 / Status-row pattern -->
+<div class="card span-3">
+  <h2>Status-Row Pattern <span class="tag">code/desc</span></h2>
+  <div class="status-row"><code>--flag-one</code><span>One-line description of the flag.</span></div>
+  <div class="status-row"><code>--flag-two</code><span>Even rows tinted for skim.</span></div>
+  <div class="status-row"><code>cmd subcmd</code><span>Command + brief role.</span></div>
+  <div class="status-row"><code>k=v</code><span>Config key + meaning.</span></div>
+  <div class="status-row"><code>file.ext</code><span>Path + purpose.</span></div>
+  <div class="when"><b>Use for:</b> command lists, flag references, named items where the lead is monospaced (commands, paths, keys, flags).</div>
+</div>
+
+<!-- CARD 7 / .ref card with table -->
+<div class="card span-3 ref">
+  <h2>Reference Table <span class="tag">.ref</span></h2>
+  <table>
+    <tr><th>Trigger</th><th>Action</th></tr>
+    <tr><td>condition-A</td><td>do this</td></tr>
+    <tr><td>condition-B</td><td>do that</td></tr>
+    <tr><td>condition-C</td><td>do the other thing</td></tr>
+    <tr><td>condition-D</td><td>edge case</td></tr>
+  </table>
+  <div class="when"><b>.ref class</b> tints the card light blue and shifts table zebra to match. Use for quick-lookup content the reader scans, not reads.</div>
+</div>
+
+<!-- CARD 8 / .ref card with bullet list -->
+<div class="card span-3 ref">
+  <h2>Reference List <span class="tag">.ref</span></h2>
+  <ul>
+    <li><code>example.com/docs</code> / canonical docs</li>
+    <li><code>example.com/api</code> / API reference</li>
+    <li><code>example.com/cli</code> / CLI reference</li>
+    <li><code>example.com/changelog</code> / release notes</li>
+    <li>License: MIT. Maintainer: Org Name.</li>
+  </ul>
+  <div class="when"><b>Use for:</b> "see also" lists, source citations, related-tool catalogs at end of page.</div>
+</div>
+
+<!-- CARD 9 / Glossary table / .ref -->
+<div class="card span-3 ref">
+  <h2>Glossary Pattern <span class="tag">term/def</span></h2>
+  <table>
+    <tr><th>Term</th><th>Definition</th></tr>
+    <tr><td>term-one</td><td>One-line definition; cite source if applicable.</td></tr>
+    <tr><td>term-two</td><td>Keep definitions to a single sentence each.</td></tr>
+    <tr><td>term-three</td><td>Bold lead column reads first when scanning.</td></tr>
+    <tr><td>term-four</td><td>10-16 entries fit comfortably per glossary card.</td></tr>
+    <tr><td>term-five</td><td>Use a glossary card to define vocabulary used across other cards.</td></tr>
+    <tr><td>term-six</td><td>Group related terms together by row order.</td></tr>
+    <tr><td>term-seven</td><td>Acronyms expand on first appearance.</td></tr>
+    <tr><td>term-eight</td><td>Skip terms a typical reader already knows.</td></tr>
+  </table>
+</div>
+
+<!-- CARD 10 / Diagram (vertical / span-3) -->
+<div class="card span-3 diagram">
+  <h2>Diagram (Vertical) <span class="tag">.diagram span-3</span></h2>
+
+```mermaid
+flowchart TD
+    A[Input] --> B{Validate}
+    B -->|ok| C[Process]
+    B -->|fail| D[Reject]
+    C --> E[Persist]
+    E --> F[Done]
+    D --> F
+```
+
+  <div class="when"><b>Use for:</b> portrait / vertical diagrams (state machines, top-down decision flows). Single-column width; max-height 1.8in. Mermaid source is replaced by inline SVG in Phase 6.5.</div>
+</div>
+
+<!-- CARD 11 / span-6 summary banner -->
+<div class="card span-6 summary">
+  <h2>Summary Banner <span class="tag">.span-6 .summary</span></h2>
+  <p>This card spans the full row across both columns and carries a top accent rule. Use as a closing callout, "the rule" callout, or key takeaway. One per page maximum so it remains visually prominent.</p>
+  <p style="margin-top: 4px;"><b>When to use:</b> bottom-of-page summary, license + author block, pull quote that synthesizes the page's content into one sentence.</p>
+</div>
+
+</div>
+
+<!-- v2.0.0: forced page break and page-2 masthead removed; the grid below flows directly after the one above -->
+
+<div class="grid">
+
+<!-- CARD 12 / Diagram (horizontal / span-6) -->
+<div class="card span-6 diagram">
+  <h2>Diagram (Horizontal) <span class="tag">.diagram .span-6</span></h2>
+
+```mermaid
+flowchart LR
+    Author[Author] --> Stage[Stage]
+    Stage --> Commit[Commit]
+    Commit --> Push[Push]
+    Push --> Review[Review]
+    Review --> Merge[Merge]
+    Merge --> Deploy[Deploy]
+```
+
+  <div class="when"><b>Use for:</b> landscape / horizontal diagrams (pipelines, sequence diagrams with many participants, ER diagrams). <code>.span-6</code> promotes to full-row width; max-height 2.2in (vs 1.8in for vertical). Reading order shifts to left-to-right.</div>
+</div>
+
+<!-- CARD 13 / Code block pattern -->
+<div class="card span-3">
+  <h2>Code Block Pattern <span class="tag">pre</span></h2>
+  <h3>Single command</h3>
+<pre>cli command --flag value</pre>
+  <h3>Multi-line command</h3>
+<pre>cli command \
+  --flag value \
+  --other-flag</pre>
+  <h3>With syntax tokens</h3>
+<pre>cli <span class="k">primary-arg</span> --flag <span class="k">value</span>
+<span class="c"># inline comment in muted gray</span></pre>
+  <div class="when"><b>Use for:</b> shell commands, scripts, install snippets. <code>&lt;span class="k"&gt;</code> for keywords/values; <code>&lt;span class="c"&gt;</code> for comments. Auto-wrap on long lines.</div>
+</div>
+
+<!-- CARD 11 / Mixed content recipe -->
+<div class="card span-3">
+  <h2>Recipe Pattern <span class="tag">mixed</span></h2>
+  <p>Lead paragraph introduces the recipe in 1-2 sentences. Code blocks or tables follow.</p>
+<pre>cmd-one --setup
+cmd-two --run
+<span class="c"># the recipe ends here</span></pre>
+  <p>Closing paragraph if needed. Reference an action with <code>follow-up-cmd</code>.</p>
+  <div class="aside">.aside element: italic, blue left border, light tint. Use for clarifying notes, footnotes, or nuance the body skips.</div>
+  <div class="when"><b>Use for:</b> recipes (intro + commands + close + nuance), worked examples, multi-element walkthroughs.</div>
+</div>
+
+<!-- CARD 12 / Phase table + aside -->
+<div class="card span-3">
+  <h2>Phase Table <span class="tag">+ aside</span></h2>
+  <table>
+    <tr><th>Phase</th><th>What you do</th></tr>
+    <tr><td>PHASE-1</td><td>First action. Specific, verifiable.</td></tr>
+    <tr><td>PHASE-2</td><td>Second action. Builds on phase 1.</td></tr>
+    <tr><td>PHASE-3</td><td>Third action. Verification step.</td></tr>
+    <tr><td>PHASE-4</td><td>Final action. Commit / close out.</td></tr>
+  </table>
+  <div class="aside">Pre-phase work is not allowed. The cycle is rigid by design.</div>
+  <div class="when"><b>Use for:</b> phased processes (TDD-style cycles, lifecycle stages) with a footnote constraint or warning.</div>
+</div>
+
+<!-- CARD 13 / Inline step-row in mixed content -->
+<div class="card span-3">
+  <h2>Mini Process <span class="tag">step-row</span></h2>
+  <p>A short process inside a narrative card:</p>
+  <div class="step-row"><span class="n">1.</span><span class="b"><strong>First check</strong> / does the input match the spec?</span></div>
+  <div class="step-row"><span class="n">2.</span><span class="b"><strong>Second check</strong> / is the output clean and testable?</span></div>
+  <p>Critical issues block. Edge cases get a footnote.</p>
+  <h3>Optional sub-section</h3>
+  <p>Add an h3 to start a sub-topic within the same card.</p>
+  <div class="when"><b>Use for:</b> short processes (2-3 steps) embedded inside a narrative paragraph.</div>
+</div>
+
+<!-- CARD 14 / Anti-patterns / .ref -->
+<div class="card span-3 ref">
+  <h2>Anti-Patterns <span class="tag">.ref</span></h2>
+  <table>
+    <tr><th>Don't</th><th>Why</th></tr>
+    <tr><td>Anti-pattern one</td><td>Reason. Consequence.</td></tr>
+    <tr><td>Anti-pattern two</td><td>Reason. Consequence.</td></tr>
+    <tr><td>Anti-pattern three</td><td>Reason. Consequence.</td></tr>
+    <tr><td>Anti-pattern four</td><td>Reason. Consequence.</td></tr>
+    <tr><td>Anti-pattern five</td><td>Reason. Consequence.</td></tr>
+    <tr><td>Anti-pattern six</td><td>Reason. Consequence.</td></tr>
+  </table>
+  <div class="when"><b>Use for:</b> "do not do this" lists, common mistakes, anti-patterns. Tinted background signals reference content.</div>
+</div>
+
+<!-- CARD 15 / FAQ-style /.ref -->
+<div class="card span-3 ref">
+  <h2>Common Pitfalls <span class="tag">.ref</span></h2>
+  <h3>"Phrased like a user quote"</h3>
+  <p>One-paragraph answer. Reference the relevant <code>skill-or-tool</code>.</p>
+  <h3>Symptom-based heading</h3>
+  <p>Short paragraph diagnosing and recommending action.</p>
+  <h3>Another likely failure</h3>
+  <p>Different mode of failure with its own fix.</p>
+  <h3>Fourth pitfall</h3>
+  <p>Keep paragraphs to 1-3 sentences each.</p>
+  <div class="when"><b>Use for:</b> FAQ-style reference, diagnostic flows, symptom-cause-fix triples.</div>
+</div>
+
+<!-- CARD 16 / See also / .ref -->
+<div class="card span-3 ref">
+  <h2>See Also <span class="tag">.ref</span></h2>
+  <ul>
+    <li><code>github.com/org/repo</code> / source repo</li>
+    <li><code>example.com/docs</code> / documentation</li>
+    <li><code>example.com/community</code> / community channel</li>
+    <li><code>example.com/changelog</code> / release notes</li>
+    <li><code>example.com/issues</code> / bug reports</li>
+    <li>License + author line.</li>
+  </ul>
+  <div class="when"><b>Use for:</b> the canonical "where to go next" list at the bottom of the cheat sheet. Always one of the last cards.</div>
+</div>
+
+<!-- CARD 17 / Card variant guidance / .ref -->
+<div class="card span-3 ref">
+  <h2>Card Variant Guide <span class="tag">classes</span></h2>
+  <table>
+    <tr><th>Class</th><th>When</th></tr>
+    <tr><td>(default)</td><td>Action / narrative. White background.</td></tr>
+    <tr><td>.ref</td><td>Reference / lookup. Tinted blue background.</td></tr>
+    <tr><td>.summary</td><td>Closing banner. Stronger tint.</td></tr>
+    <tr><td>.span-3</td><td>Half-row width (default).</td></tr>
+    <tr><td>.span-6</td><td>Full-row width. Use sparingly.</td></tr>
+  </table>
+  <div class="when"><b>Use for:</b> applying the right card class. Default is .span-3 white. Switch to .ref for lookup blocks; .summary for the page-bottom banner.</div>
+</div>
+
+</div>
+
+</body>
+</html>

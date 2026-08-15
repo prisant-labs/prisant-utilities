@@ -1,0 +1,19 @@
+# History - plab-guide
+
+| Version | Date | Release | Type | Summary |
+|---|---|---|---|---|
+| 2.2.1 | 2026-08-14 | v0.1.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 2.2.1; prior history remains there. |
+
+## 2.2.1 - 2026-08-14
+
+First public release. The skill is unchanged in behaviour from its last private version; this entry records the move, not a feature change.
+
+**Migration provenance.** 2 recorded invocations via the Skill tool and 2 typed slash invocations in Claude Code on the origin machine, as of 2026-08-14. The low Claude Code count understates real use: this skill's output bundles were produced across several sessions and the count reflects only invocations captured in local transcripts on one machine.
+
+**Not carried over, and why.** The prior HISTORY file is deliberately not reproduced. It contained absolute machine paths to a personal knowledge vault on the author's disk, which is precisely the class of content this plugin exists to avoid publishing. The version numbering continues unbroken; only the narrative was dropped.
+
+**Also not carried over.** `CREATION_NOTES.md`, 137 lines of internal build narrative keyed to private planning folders, does not ship. It was development workshop material, not documentation.
+
+**Changed for public release.** The default output root moved from a brand-named folder to `_output/plab-guide/`. A worked example inside `assets/templates/guide-template_standard.md` was genericised: it had named a private library as a community example and attributed a fictional plugin to a real, named person. Both are now neutral placeholders.
+
+**Dependencies.** This skill loads `lib/render-mermaid.py` and `references/diagrams.md` from the plugin root. Toolchain requirements (headless Chrome, `pdfinfo`, `mmdc`) are reported by `scripts/check-toolchain.sh` and degrade gracefully when absent.
