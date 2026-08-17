@@ -1,6 +1,6 @@
 # Mermaid Diagram Authoring
 
-Slim authoring guidance for Mermaid diagrams used in skill outputs. Adapted from the author's `utility-mermaid-diagrams` skill in a private upstream library (Apache 2.0, same author).
+Slim authoring guidance for Mermaid diagrams used in skill outputs. Adapted by the same author from their `utility-mermaid-diagrams` skill in a private upstream library, which is licensed Apache-2.0. This adaptation ships under this repository's MIT licence.
 
 This reference is loaded by skills that produce documents with optional diagrams (`plab-guide`, `plab-strategy-brief`, future others). It covers the load-bearing 50 lines: when to use a diagram, which type fits which need, syntax validity rules, quality checklist.
 

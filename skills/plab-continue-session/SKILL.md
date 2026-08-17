@@ -7,10 +7,11 @@ description: "Summarize where a repository was left and resume the work that was
   log, reports what was done, what is still outstanding, and what was named as the
   immediate next action, then confirms before proceeding. Companion to plab-wrap-session,
   which writes the log this reads."
-version: "1.2.0"
-updated: 2026-08-09
 argument-hint: "[--log <path>]"
 license: MIT
+metadata:
+  version: "1.2.0"
+  updated: 2026-08-09
 ---
 
 # Continue Session

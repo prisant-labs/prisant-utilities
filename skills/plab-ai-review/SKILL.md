@@ -7,10 +7,11 @@ description: "Run a structured peer review of a document with a second model, th
   generates a self-contained review request for another model; --respond adds requestor
   synthesis once findings come back; --close archives the pair, applies accepted changes,
   and writes unresolved decisions to a backlog."
-version: "1.2.1"
-updated: 2026-07-04
 argument-hint: "<doc.md> [--reviewer codex|gpt|gemini] [--respond]"
 license: MIT
+metadata:
+  version: "1.2.1"
+  updated: 2026-07-04
 ---
 
 # AI Review

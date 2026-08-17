@@ -8,10 +8,11 @@ description: "Transform messy thinking into structured, decision-ready analysis 
   Also triggers on 'strategy primer', 'structured analysis', or '80/20 analysis'. Do NOT
   use for simple summarization of existing structured documents, editing polished prose,
   or pure research queries with no raw thinking provided."
-version: "1.1.1"
-updated: 2026-07-04
 argument-hint: "[paste raw thinking]"
 license: MIT
+metadata:
+  version: "1.1.1"
+  updated: 2026-07-04
 ---
 
 # Strategy Brief

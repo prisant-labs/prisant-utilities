@@ -18,3 +18,7 @@ node_modules/
 # OS
 .DS_Store
 Thumbs.db
+
+# Local dev marketplace only. Published distribution is the standalone
+# prisant-labs/agent-plugins repo (D-2); an embedded marketplace must never ship.
+.claude-plugin/marketplace.json

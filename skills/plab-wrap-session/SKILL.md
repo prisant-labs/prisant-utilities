@@ -9,10 +9,11 @@ description: "Document and close agentic coding sessions with structured session
   'end of session', 'session log', 'close out', 'what did we do', or 'document this
   session'. Also use when the session is blocked and needs to capture blocker details
   for the next session."
-version: "1.4.0"
-updated: 2026-08-09
 argument-hint: "[mode: quick|final|deep|blocked]"
 license: MIT
+metadata:
+  version: "1.4.0"
+  updated: 2026-08-09
 ---
 
 # Wrap Session

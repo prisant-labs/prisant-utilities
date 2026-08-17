@@ -2,22 +2,65 @@
   "name": "prisant-utilities",
   "version": "0.1.0",
   "description": "General-purpose agent skills for session continuity, structured analysis, guide authoring, and cross-LLM peer review. Use when wrapping or resuming a coding session, turning raw thinking into a decision-ready brief, generating a guide bundle, or getting a second-model review of a document.",
-  "standard": "0.13",
+  "standard": "0.14",
   "tier": "universal",
   "prefix": "plab-",
-  "agent-targets": ["claude", "codex"],
-  "author": { "name": "JP" },
+  "agent-targets": [
+    "claude",
+    "codex"
+  ],
+  "author": {
+    "name": "JP"
+  },
   "license": "MIT",
   "homepage": "https://github.com/prisant-labs/prisant-utilities",
   "repository": "https://github.com/prisant-labs/prisant-utilities.git",
-  "keywords": ["agent-skills", "claude-code", "codex", "plugin", "session-logs", "peer-review", "documentation"],
+  "keywords": [
+    "agent-skills",
+    "claude-code",
+    "codex",
+    "plugin",
+    "session-logs",
+    "peer-review",
+    "documentation"
+  ],
   "components": {
     "skills": [
-      { "name": "plab-wrap-session",     "path": "skills/plab-wrap-session/SKILL.md",     "version": "1.4.0", "tier": "universal", "status": "active" },
-      { "name": "plab-continue-session", "path": "skills/plab-continue-session/SKILL.md", "version": "1.2.0", "tier": "universal", "status": "active" },
-      { "name": "plab-strategy-brief",   "path": "skills/plab-strategy-brief/SKILL.md",   "version": "1.1.1", "tier": "universal", "status": "active" },
-      { "name": "plab-guide",            "path": "skills/plab-guide/SKILL.md",            "version": "2.2.1", "tier": "universal", "status": "active" },
-      { "name": "plab-ai-review",        "path": "skills/plab-ai-review/SKILL.md",        "version": "1.2.1", "tier": "universal", "status": "active" }
+      {
+        "name": "plab-wrap-session",
+        "path": "skills/plab-wrap-session/SKILL.md",
+        "version": "1.4.0",
+        "tier": "universal",
+        "status": "active"
+      },
+      {
+        "name": "plab-continue-session",
+        "path": "skills/plab-continue-session/SKILL.md",
+        "version": "1.2.0",
+        "tier": "universal",
+        "status": "active"
+      },
+      {
+        "name": "plab-strategy-brief",
+        "path": "skills/plab-strategy-brief/SKILL.md",
+        "version": "1.1.1",
+        "tier": "universal",
+        "status": "active"
+      },
+      {
+        "name": "plab-guide",
+        "path": "skills/plab-guide/SKILL.md",
+        "version": "2.2.1",
+        "tier": "universal",
+        "status": "active"
+      },
+      {
+        "name": "plab-ai-review",
+        "path": "skills/plab-ai-review/SKILL.md",
+        "version": "1.2.1",
+        "tier": "universal",
+        "status": "active"
+      }
     ]
   }
 }

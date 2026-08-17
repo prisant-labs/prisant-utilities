@@ -1,10 +1,11 @@
 ---
 name: plab-guide
 description: Generate a paired guide bundle (standard MD + ADHD MD + quick-reference HTML + 1-2 page PDF) for any topic. Use when the user provides a GitHub URL, a tool name, or a concept and wants a structured explanatory document plus a printable operator card. Triggers on "create a guide", "build a cheat sheet", "explain X with a quick reference", "/plab-guide".
-version: "2.2.1"
-updated: 2026-07-04
 argument-hint: "<topic-or-repo-url> [--type repo-url|tool|concept] [--out <dir>] [--force]"
 license: MIT
+metadata:
+  version: "2.2.1"
+  updated: 2026-07-04
 ---
 
 # plab-guide
