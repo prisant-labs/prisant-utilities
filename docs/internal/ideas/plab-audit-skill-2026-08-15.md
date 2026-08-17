@@ -226,14 +226,42 @@ One gap that would matter for a general-purpose tool is deliberately not listed:
 **Calibration, now low uncertainty and an opportunity.** With one known user the objective function can be a written default rather than a question. From observed working patterns, the ranking should weight:
 
 1. **Token and cost economy.** Always-on context cost, per-run cost, and the cheapest model that does the job. Recommendations that add recurring cost need to earn it explicitly.
-2. **Deterministic enforcement over remembering.** A rule enforced by a hook, a gate, or CI beats a rule written in a document. Prefer recommending the mechanism over the reminder.
-3. **Evidence and reversibility.** Claims traceable to file and line; archive rather than delete; changes that can be undone.
-4. **Cross-harness durability.** Things that work in more than one agent harness, not just the one in front of you.
-5. **Session continuity.** Work that survives the gap between sessions without the maintainer holding state in their head.
+2. **Deterministic enforcement over remembering.** A rule enforced by a hook, a gate, or CI beats a rule written in a document, which beats a rule held in someone's head. Always prefer recommending the mechanism over the reminder. See the mechanization ladder below.
+3. **Documentation that agents read.** In agentic development a README, an `AGENTS.md`, or a skill description is not a deliverable for humans; it is **runtime configuration for every future session**. A stale doc does not merely mislead a reader, it poisons the context of the next agent that acts on it. Rank documentation defects by how load-bearing the document is for an agent, not by how visible it is to a person.
+4. **Evidence and reversibility.** Claims traceable to file and line; archive rather than delete; changes that can be undone.
+5. **Cross-harness durability.** Things that work in more than one agent harness, not just the one in front of you.
+6. **Session continuity.** Work that survives the gap between sessions without the maintainer holding state in their head.
 
 Explicitly *not* weighted: contributor onboarding, community growth, backwards compatibility for external consumers. Those are real objectives for other repositories and noise for this one.
 
 The remaining uncertainty is whether to hard-code that list, read it from a declared objectives file in the repository under audit, or both. Reading it is more general; hard-coding it is more useful on day one.
+
+### The mechanization ladder (how every recommendation should be ranked)
+
+Every finding this skill produces should be pushed as far down this ladder as it will go, and the recommendation should name the rung:
+
+| Rung | Form | Cost to enforce | Fails when |
+|---|---|---|---|
+| 1 | **CI check or hook** | Zero model tokens, forever | The check itself breaks (see below) |
+| 2 | **Committed script the maintainer runs** | One command | Nobody runs it |
+| 3 | **Documented convention** | Model tokens every session that reads it | The doc goes stale |
+| 4 | **Remembered practice** | Human attention, unreliably | Always, eventually |
+
+"Add a note to CONTRIBUTING" is a rung-3 answer to a problem that usually has a rung-1 answer. An audit that habitually recommends rung 1 and 2 is worth far more than one that recommends rung 3, and the difference is mostly a matter of the skill being told to look for it.
+
+**Why this is a token-economics lever and not just a quality preference.** A check that runs in CI costs zero model tokens every time it runs, forever. The same check performed by a model costs tokens on every session that performs it, and its output is unbounded prose rather than an exit code. Pushing a check down one rung converts a recurring variable cost into a fixed one, and converts an unbounded verification task ("is this repository clean?") into a bounded one. It also frees the model's remaining budget for judgment, which is the only thing it is uniquely good at.
+
+**The mandatory caveat, learned the hard way.** A deterministic check is only cheaper if it actually works. A gate that has silently stopped detecting is worse than no gate, because it manufactures confidence at the exact moment a decision is made. Any recommendation to add a rung-1 check must come with a way to prove the check still fires: a known-positive canary the gate must catch, and an exit status that distinguishes clean from findings from **broken**. Two states are not enough.
+
+### Agent-readiness as an audit lens
+
+A lens no general-purpose audit tool applies, and the one most specific to how this repository's maintainer works. For any repository that agents will operate in, ask:
+
+- **Does an entry point exist?** An `AGENTS.md` or equivalent that states what the repository is and the conventions to follow. Its absence means every agent session re-derives orientation from scratch.
+- **What does orientation cost?** If understanding the repository requires reading files that will not fit in a context window, that is a defect with a real recurring price, not an aesthetic complaint.
+- **Are the always-on costs justified?** Skill descriptions, instruction files, and anything else loaded unconditionally are paid in every session forever, whether used or not.
+- **Do the docs agree with the code?** A version number in a README that contradicts the source is a live context-poisoning defect. Rank it as a correctness bug, not a documentation nit.
+- **Is the verification apparatus healthy?** Not "does CI exist" but "does CI still detect anything." Enumerate the gates and confirm each one fails on a known-positive.
 
 **Where it lives, medium uncertainty, and the single-user frame makes it sharper.** A general-purpose utility plugin, or a separate plugin installed only when this kind of work is happening? The always-on description cost is paid by exactly one person in every one of their sessions, forever, whether the skill fires or not. If audits are genuinely occasional, a separate plugin, or shipping it here with model invocation disabled so it only runs on explicit command, is the more honest trade. Both options keep it one command away.
 
