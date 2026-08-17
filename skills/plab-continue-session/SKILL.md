@@ -1,12 +1,12 @@
 ---
 name: plab-continue-session
-description: "Start a new agentic coding session by reading the most recent session log
-  and processing its continuation prompt. The companion to /plab-wrap-session. Use at the
-  start of any session, when resuming work after a break, when picking up someone else's
-  work, or when you say 'continue', 'resume', 'pick up where we left off', 'where were
-  we', 'what were we doing', 'continue session', or 'what's next'. Surfaces context (what
-  was done, what's next, any blockers), reads the verbose continuation prompt, and offers
-  to proceed with the named immediate next action."
+description: "Summarize where a repository was left and resume the work that was in
+  progress. Use when starting or resuming a session in a repo you have been away from,
+  when picking up someone else's work, or when the user says 'continue', 'resume', 'pick
+  up where we left off', 'where were we', or 'what's next'. Reads the most recent session
+  log, reports what was done, what is still outstanding, and what was named as the
+  immediate next action, then confirms before proceeding. Companion to plab-wrap-session,
+  which writes the log this reads."
 version: "1.2.0"
 updated: 2026-08-09
 argument-hint: "[--log <path>]"

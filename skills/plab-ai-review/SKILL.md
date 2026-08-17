@@ -1,13 +1,12 @@
 ---
 name: plab-ai-review
-description: "Generate and synthesize structured AI peer reviews. Three modes: --review
-  generates a self-contained review request for a second LLM (Codex, GPT, Gemini);
-  --respond adds requestor synthesis after the reviewer completes findings (auto-detects
-  pending clarifications on re-run); --close archives the source + review, applies
-  accepted changes, and writes unresolved decisions to a user-specified backlog.
-  Supports document types: plan, brief, spec/prd, rfc, or doc (generic). Triggers
-  on 'review this with codex/gpt', 'ai-review', 'get a second opinion', 'peer review
-  this', 'close this review'."
+description: "Run a structured peer review of a document with a second model, then
+  synthesize the findings into decisions. Use when you need a second opinion on a plan,
+  brief, spec, RFC, or design doc, or when the user says 'review this with codex', 'get a
+  second opinion', 'peer review this', or 'close this review'. Three modes: --review
+  generates a self-contained review request for another model; --respond adds requestor
+  synthesis once findings come back; --close archives the pair, applies accepted changes,
+  and writes unresolved decisions to a backlog."
 version: "1.2.1"
 updated: 2026-07-04
 argument-hint: "<doc.md> [--reviewer codex|gpt|gemini] [--respond]"
