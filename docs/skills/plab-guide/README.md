@@ -154,7 +154,7 @@ If `confidence != high`, the skill inserts a status banner immediately after the
 
 ## Examples
 
-Seven calibration topics live as locked baselines and reference outputs in `docs/internal/agent-skills-published/plab-guide/v1.0.0/examples/`:
+Seven calibration topics were used as locked baselines during development. The baseline bundles are not shipped with this plugin; `scripts/regression-test.sh` accepts your own via `PLAB_GUIDE_EXAMPLES_DIR`. The topics were:
 
 | Bundle | Type | Why this fixture |
 |--------|------|------------------|
@@ -237,8 +237,7 @@ Detects a Chromium-based browser; prints the resolved path or an install hint.
 | Local scripts | [`skills/plab-guide/scripts/`](../../../skills/plab-guide/scripts/) (5 scripts) |
 | Locked output templates | [`skills/plab-guide/assets/templates/`](../../../skills/plab-guide/assets/templates/) (3 files) |
 | Quick-ref visual theme | The `:root` block in `quick-reference-template_v1-technical-white.html`; see [`quick-ref-theme.md`](../../../skills/plab-guide/references/quick-ref-theme.md) |
-| Spec | [`docs/internal/agent-skills-published/plab-guide/v1.0.0/spec_v1_jp-create-guide.md`](../../internal/agent-skills-published/plab-guide/v1.0.0/spec_v1_jp-create-guide.md) |
-| Plan | [`docs/internal/agent-skills-published/plab-guide/v1.0.0/plan_v1_jp-create-guide.md`](../../internal/agent-skills-published/plab-guide/v1.0.0/plan_v1_jp-create-guide.md) |
+| Spec and plan | Not shipped; they remain in the author's private development repository |
 
 ---
 

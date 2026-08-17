@@ -20,7 +20,10 @@
 set -uo pipefail
 
 SKILL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-EXAMPLES_DIR="${SKILL_DIR}/../../docs/internal/agent-skills-published/plab-guide/v1.0.0/examples"
+# Baseline bundles are NOT shipped with this plugin; they live in the author's
+# private development repository. Point this at your own baselines to use the
+# suite, or set PLAB_GUIDE_EXAMPLES_DIR.
+EXAMPLES_DIR="${PLAB_GUIDE_EXAMPLES_DIR:-${SKILL_DIR}/examples}"
 
 if [[ ! -d "$EXAMPLES_DIR" ]]; then
   echo "error: examples directory not found at $EXAMPLES_DIR" >&2

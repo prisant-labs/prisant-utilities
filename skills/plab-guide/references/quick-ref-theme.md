@@ -11,14 +11,13 @@ How to edit the visual style of the quick-reference HTML and PDF artifacts. All 
 
 ## Where the styles live
 
-There are **two source-of-truth files** that are kept identical:
+There is **one source-of-truth file**:
 
 | File | Role |
 |------|------|
-| `docs/internal/agent-skills-published/plab-guide/v1.0.0/templates/quick-reference-template_v1-technical-white.html` | Design-folder canonical template (locked v1.0.0) |
-| `skills/plab-guide/assets/templates/quick-reference-template_v1-technical-white.html` | Skill's copy used during generation |
+| `skills/plab-guide/assets/templates/quick-reference-template_v1-technical-white.html` | Canonical locked template, copied into each generated bundle |
 
-The skill copies the assets-templates version into each new bundle when generating, so edits to either source-of-truth file propagate to **future** generations only. Existing artifacts in `examples/` keep the styles they were generated with; to update them, re-run the swap script in `_LOCAL/` or hand-edit each existing HTML.
+The skill copies this template into each new bundle when generating, so edits propagate to **future** generations only. Already-generated bundles keep the styles they were built with; update them by hand or regenerate.
 
 ### The `:root` block
 
@@ -236,12 +235,11 @@ Both source-of-truth templates are already on v2; the migration applies only if 
 
 ## Source-of-truth files (where to edit)
 
-For changes that should propagate to future generations:
+For changes that should propagate to future generations, edit:
 
-- `docs/internal/agent-skills-published/plab-guide/v1.0.0/templates/quick-reference-template_v1-technical-white.html`
 - `skills/plab-guide/assets/templates/quick-reference-template_v1-technical-white.html`
 
-Keep these two in sync; the skill copies from the assets-templates version during generation. If you maintain a parallel theme variant (e.g., a "dark" theme), name it explicitly: `quick-reference-template_v1-dark.html`, etc.
+The skill copies from that file during generation. If you maintain a parallel theme variant (e.g., a "dark" theme), name it explicitly: `quick-reference-template_v1-dark.html`, etc.
 
 ## See also
 

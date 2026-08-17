@@ -131,7 +131,7 @@ Canonical structure with phase annotations lives in [`references/review-template
 ### Example 1: Review an Implementation Plan
 
 ```
-/plab-ai-review docs/internal/agent-skills-published/jp-init-project/v1.0.0/plan_v1_init-project.md --reviewer codex
+/plab-ai-review docs/plans/checkout-rewrite.md --reviewer codex
 ```
 
 The skill:
