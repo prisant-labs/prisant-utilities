@@ -1,9 +1,9 @@
 # plab-continue-session
 
-**Version:** 1.2.0
+**Version:** 1.2.1
 **Source:** [`skills/plab-continue-session/`](../../../skills/plab-continue-session/)
 
-Start a new agentic coding session by reading the most recent session log and processing its continuation prompt. The companion to `/plab-wrap-session`.
+Resume an interrupted work session by replaying its recorded handoff. Reads the most recent session log, reports what is blocked on you and what the named next action is, then confirms before acting. The read-side companion to `/plab-wrap-session`, which writes the log this reads.
 
 ---
 
@@ -45,13 +45,14 @@ Install via the prisant-labs marketplace:
 - Start of a coding session, when prior work exists in `_local/_session-logs/`
 - Resuming after a break (a day, a week)
 - Picking up work another agent or person did
-- When you say "continue", "resume", "pick up where we left off", "where were we", "what were we doing"
+- When you say "continue", "resume", or "pick up where we left off"
 
 ## When NOT to Use
 
-- Truly fresh project with no session-log history (just start working, or `/jp-init-project`)
+- Truly fresh project with no session-log history (just start working)
 - You already know the specific task you want to work on
 - Mid-session "what have we done so far" (summarize from current context; no need to re-read a log)
+- **A status question** ("where are we", "where were we", "what's next"). Those get answered directly; they are not a request to resume.
 
 ---
 
@@ -73,7 +74,7 @@ If two logs share the same timestamp prefix (rare; concurrent sessions), the ski
 
 ### Phase 2: Read and parse
 
-Extracts from frontmatter: `date`, `repo`, `branch`, `summary`, `status`, `session-type`, `model`. Extracts from body: the `## Continuation Prompt` section, plus `## Outstanding Issues` and `## What's Next` if present.
+Extracts from frontmatter: `date`, `repo`, `branch`, `summary`, `status`, `session-type`, `model`, `agent`. Extracts from body: the `## Continuation Prompt` section, `## Waiting on You`, any objection recorded for a lighter-than-verbose prompt, plus `## Outstanding Issues`, `## What's Next`, and any proposals declined at wrap time in `## Hygiene Sweep`.
 
 ### Phase 3: Present resumption context
 
@@ -86,11 +87,14 @@ Standard display:
 **Summary:** Wrapped the v1.4.0 spec sweep
 **Branch:** `main`
 
+### Waiting on you
+- The retry-policy ruling, blocking three specs (blocked since 2026-05-12)
+
 ### Outstanding from last session
-- jp-implementation-plan dogfood pending
+- Spec S-09 has no implementation plan yet
 
 ### What's next (from last session)
-1. Run /jp-implementation-plan against the S-09 spec
+1. Draft the implementation plan for the S-09 spec
 2. Update the CHANGELOG entry
 
 ### Continuation prompt
@@ -117,7 +121,7 @@ Always asks: "Resume with the named immediate next action, or pick something els
 | **Repo mismatch** | Refuses to resume; reports both repos. Cross-repo resumption is almost always a mistake |
 | **Branch mismatch** | Warns ("log was on `feature/x`; you're on `main`") but allows; asks before proceeding |
 | **Malformed log** | Reports the path and offers to read the file directly or pick a different log; never synthesizes a resumption from broken data |
-| **No log found** | Reports the empty directory and offers options: start fresh, run `/jp-init-project`, or manually name a log path |
+| **No log found** | Reports the locations it searched and offers options: start fresh, or manually name a log path |
 
 ---
 
@@ -150,7 +154,7 @@ $ /plab-continue-session
 **Branch:** `main`
 
 ### Outstanding from last session
-- Dogfood jp-implementation-plan on the S-09 spec
+- Draft the implementation plan for the S-09 spec
 
 ### Continuation prompt
 [fenced prompt with full context]
@@ -179,7 +183,6 @@ No prior session log found at _local/_session-logs/
 
 Options:
 - Start fresh: tell me what you want to work on
-- Initialize agent infrastructure: run /jp-init-project
 - Manually point me at a log: tell me the path
 ```
 

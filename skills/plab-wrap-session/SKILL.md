@@ -6,14 +6,14 @@ description: "Document and close agentic coding sessions with structured session
   prompt, runs a pre-wrap hygiene sweep (remote divergence, release state, doc drift,
   working-tree reconciliation with per-action confirmation), and always lists what it
   is waiting on from the maintainer with links. Triggers on 'wrap up', 'wrap session',
-  'end of session', 'session log', 'close out', 'what did we do', or 'document this
+  'end of session', 'session log', 'close out', or 'document this
   session'. Also use when the session is blocked and needs to capture blocker details
   for the next session."
 argument-hint: "[mode: quick|final|deep|blocked]"
 license: MIT
 metadata:
-  version: "1.4.0"
-  updated: 2026-08-09
+  version: "1.4.1"
+  updated: 2026-08-18
 ---
 
 # Wrap Session
@@ -85,6 +85,7 @@ Include all Tier 1 fields. Add Tier 2 and Tier 3 when available. See `references
 ```yaml
 ---
 date: # ISO 8601 datetime
+type: # always session-log
 machine: # hostname - which checkout wrote this log; logs are machine-local and cannot cross checkouts
 repo: # from git remote
 branch: # from git branch

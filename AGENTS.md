@@ -36,9 +36,9 @@ Document and close agentic coding sessions with structured session logs. Deep mo
 
 ### plab-continue-session
 
-Start a session by reading the most recent session log and processing its continuation prompt. The read-side companion to `/plab-wrap-session`. Surfaces resumption context (summary, branch, outstanding issues, what is next) and confirms before proceeding with the named immediate next action. Legacy log locations are also searched, newest wins.
+Resume an interrupted work session by replaying its recorded handoff. The read-side companion to `/plab-wrap-session`. Reads the most recent session log, leads with what is blocked on the maintainer, surfaces the outstanding work and the named next action, and confirms before acting. Legacy log locations are also searched, newest wins. Does not fire on status questions; those get answered directly.
 
-**Trigger:** `/plab-continue-session`, "continue", "resume", "pick up where we left off", "where were we"
+**Trigger:** `/plab-continue-session`, "continue", "resume", "pick up where we left off"
 
 ---
 

@@ -103,6 +103,7 @@ key constraints, relevant file paths, branch name.]
 ---
 date:
 type: session-log
+machine: # hostname
 repo:
 branch:
 summary:
@@ -136,6 +137,7 @@ status: completed
 ---
 date:
 type: session-log
+machine: # hostname
 repo:
 branch:
 summary:

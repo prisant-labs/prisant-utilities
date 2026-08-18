@@ -1,6 +1,6 @@
 {
   "name": "prisant-utilities",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "General-purpose agent skills for session continuity, structured analysis, guide authoring, and cross-LLM peer review. Use when wrapping or resuming a coding session, turning raw thinking into a decision-ready brief, generating a guide bundle, or getting a second-model review of a document.",
   "standard": "0.14",
   "tier": "universal",
@@ -29,14 +29,14 @@
       {
         "name": "plab-wrap-session",
         "path": "skills/plab-wrap-session/SKILL.md",
-        "version": "1.4.0",
+        "version": "1.4.1",
         "tier": "universal",
         "status": "active"
       },
       {
         "name": "plab-continue-session",
         "path": "skills/plab-continue-session/SKILL.md",
-        "version": "1.2.0",
+        "version": "1.2.1",
         "tier": "universal",
         "status": "active"
       },

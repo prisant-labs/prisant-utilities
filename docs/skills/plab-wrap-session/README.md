@@ -1,6 +1,6 @@
 # plab-wrap-session
 
-**Version:** 1.4.0
+**Version:** 1.4.1
 **Source:** [`skills/plab-wrap-session/`](../../../skills/plab-wrap-session/)
 
 Document and close agentic coding sessions with structured session logs. Deep mode is the default: a full log with evidence index, a verbose copy-paste-ready continuation prompt, a pre-wrap hygiene sweep (remote divergence, release state, doc drift, working-tree reconciliation with per-action confirmation), and a mandatory Waiting on You section listing everything blocked on the maintainer, with links.
@@ -43,7 +43,7 @@ Install via the prisant-labs marketplace:
 - End of any coding session (the most common trigger)
 - Switching tasks or contexts mid-work
 - When you're blocked and need to capture the blocker for the next session
-- When you say "wrap up", "end of session", "session log", "close out", or "what did we do"
+- When you say "wrap up", "end of session", "session log", or "close out"
 
 ## When NOT to Use
 
@@ -191,12 +191,12 @@ Continue work on acme-service (~/code/acme-service).
 Last session deployed the ai-review skill v1.0.0 and pushed to origin.
 
 Current state:
-- 4 deployed skills (jp-skill-builder, plab-strategy-brief, plab-wrap-session, plab-ai-review)
-- jp-init-project plan doc written with 9 open decisions
+- 4 deployed skills (plab-guide, plab-strategy-brief, plab-wrap-session, plab-ai-review)
+- Retry-policy plan doc written with 9 open decisions
 
 Immediate next action:
-1. Resolve jp-init-project decisions (D1-D9 in plan_v1_init-project.md)
-2. Build skills/jp-init-project/ from resolved plan
+1. Resolve the retry-policy decisions (D1-D9 in plan_v1_retry-policy.md)
+2. Build the retry middleware from the resolved plan
 ```
 
 ### Bad Example

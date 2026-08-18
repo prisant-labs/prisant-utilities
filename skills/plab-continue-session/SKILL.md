@@ -9,8 +9,8 @@ description: "Resume an interrupted work session by replaying its recorded hando
 argument-hint: "[--log <path>]"
 license: MIT
 metadata:
-  version: "1.2.0"
-  updated: 2026-08-09
+  version: "1.2.1"
+  updated: 2026-08-18
 ---
 
 # Continue Session
@@ -22,13 +22,14 @@ Resume the work that the last session left set up to resume. Pairs with `/plab-w
 - Start of a coding session, when prior work exists
 - Resuming after a break (a day, a week)
 - Picking up work another agent or person did
-- When the user says "continue", "resume", "pick up", "where were we", "what were we doing"
+- When the user says "continue", "resume", or "pick up where we left off"
 
 ## When NOT to Use
 
 - Truly fresh project with no session-log history (just start working)
 - The user already named the specific task they want to work on
 - Mid-session "what have we done so far" (just summarize from current context; no need to re-read a log)
+- **A status question** ("where are we", "where were we", "what's next", "what were we doing"). Answer it directly from context, or read the log and answer from it. Do not run the resumption ritual. This is the most common mis-fire for this skill.
 
 ## Workflow
 
