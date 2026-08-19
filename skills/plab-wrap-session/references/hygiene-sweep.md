@@ -1,6 +1,6 @@
 # Pre-Wrap Hygiene Sweep
 
-The checks the wrap runs before writing the log, and the protocol for acting on what they find. Deep and final modes run all four checks; quick and blocked modes run only check 2 and note the skips in the log.
+The checks the wrap runs before writing the log, and the protocol for acting on what they find. Deep and final modes run all five checks; quick and blocked modes run only check 2 and note the skips in the log.
 
 Everything here is read-only until the user confirms an action. The sweep proposes; the user disposes.
 
@@ -44,6 +44,25 @@ Compare what the session changed against what documents it:
 - Skill or component version bumped but its usage doc still shows the old version
 - Feature behavior changed but README or reference docs describe the old behavior
 - Work completed with no CHANGELOG entry where the repo maintains one
+
+## Check 5: Session-log store
+
+```bash
+python skills/plab-wrap-session/scripts/organize-logs.py _local/_session-logs --json
+```
+
+The script is dry run by default, so this check is read-only exactly like the other four. The sweep's detection phase and the script's default mode are the same code path, which is why the check cannot drift from the operation it proposes.
+
+Flag: a non-empty `moves` list. Report the count and the month folders, then propose:
+
+> Log store: 14 logs from 3 closed months (2026-05, 2026-06, 2026-07) are unfiled.
+> File them into month folders? (y/n)
+
+On approval, re-run with `--apply` and report the result. Nothing else in the sweep changes.
+
+Report nothing when `moves` is empty. A store holding only current and previous-month logs is a normal store, not a finding, and a wrap that comments on it every time trains the maintainer to skim the sweep.
+
+A non-empty `collisions` list is different: it means a target filename already exists in its month folder, which should not happen and which the script refuses to resolve. That is an anomaly to name, not a routine proposal, so it goes in Waiting on You rather than the proposal queue.
 
 ## Resolution protocol
 

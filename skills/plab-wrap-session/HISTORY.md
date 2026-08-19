@@ -2,8 +2,35 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
+| 1.5.0 | 2026-08-18 | v0.2.0 | added | `--organize` files old logs into `YYYY-MM/` folders. Hygiene sweep gained Check 5. |
 | 1.4.1 | 2026-08-18 | v0.1.2 | fixed | Dropped the "what did we do" trigger. Added `type:` to the frontmatter block and `machine:` to the Quick and Blocked templates. |
 | 1.4.0 | 2026-08-14 | v0.1.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.4.0; prior history remains there. |
+
+## 1.5.0 - 2026-08-18
+
+**Added: `--organize`.** A flat session-log store grows without bound. `--organize` files logs older
+than the current and previous month into `YYYY-MM/` subdirectories, driven by
+`scripts/organize-logs.py`: dry run by default, idempotent, move-only, never deleting. The month
+comes from the filename prefix rather than mtime, because mtime is wrong after any copy or restore
+and the filename is the log's identity. Collisions skip the file and exit non-zero rather than
+overwriting. It runs instead of a wrap, so no log is written and no sweep fires.
+
+**Added: hygiene sweep Check 5.** Deep and final wraps now report how many logs could be filed and
+offer to file them under the existing per-action confirmation protocol. The sweep's read-only
+detection phase is exactly the script's dry run, so one code path serves both and the check cannot
+drift from the operation it proposes.
+
+**Added: cite session logs by filename, never by path.** A directory-qualified reference to another
+log breaks the moment that log is archived. The filename is stable identity, so a move needs no
+rewrite step and therefore has no rewrite bugs. `resumed-from:` already worked this way; the rule now
+covers prose references too.
+
+**The write path is unchanged.** New logs are still written flat to
+`_local/_session-logs/YYYY-MM-DD_HH-MM_<llm>_<title>.md`. Archiving is a separate, confirmed
+operation, and nothing that documents the write path needed to change.
+
+**Requires `plab-continue-session` 1.3.0.** The reader must understand month folders before anything
+is filed into one, or the first archival makes the store read as empty. Both ship in plugin v0.2.0.
 
 ## 1.4.1 - 2026-08-18
 

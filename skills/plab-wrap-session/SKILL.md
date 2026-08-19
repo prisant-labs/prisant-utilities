@@ -9,10 +9,10 @@ description: "Document and close agentic coding sessions with structured session
   'end of session', 'session log', 'close out', or 'document this
   session'. Also use when the session is blocked and needs to capture blocker details
   for the next session."
-argument-hint: "[mode: quick|final|deep|blocked]"
+argument-hint: "[mode: quick|final|deep|blocked] [--organize]"
 license: MIT
 metadata:
-  version: "1.4.1"
+  version: "1.5.0"
   updated: 2026-08-18
 ---
 
@@ -54,6 +54,7 @@ Run before writing the log; record findings in the log's Hygiene Sweep section. 
 2. **Working-tree and worktree state.** Uncommitted changes, untracked files, stashes, `git worktree list`, unpushed commits.
 3. **Release and repo hygiene.** Un-released CHANGELOG content, version fields vs the latest tag, and the repo's own CI validation scripts run locally when it has them (report results; never fix silently).
 4. **Documentation drift.** User or technical docs this session made stale: version tables, skill or feature READMEs vs source of truth, missing CHANGELOG entries.
+5. **Session-log store.** Logs from closed months sitting unfiled in `_local/_session-logs/`. Offer to file them into `YYYY-MM/` folders (see Organize Mode below). Read-only until confirmed; silent when there is nothing to file.
 
 **Resolution protocol: propose, then per-action confirmation.** For each finding, propose one concrete action (commit these files with this message, push, prune this worktree, apply this doc update) and execute only what the user approves, action by action. Declined or unanswered proposals are recorded in the log and carried into the continuation prompt. The sweep itself changes nothing; only confirmed actions do.
 
@@ -77,6 +78,30 @@ Write to: `_local/_session-logs/YYYY-MM-DD_HH-MM_<llm>_<brief-kebab-title>.md`
 | `AGENTS/session-log/` | plab-wrap-session v1.0.x |
 
 > **Migration note:** This project has session logs at `<legacy path>`. New logs are written to `_local/_session-logs/`. `/plab-continue-session` reads both, so nothing is lost. To consolidate, move the old files into `_local/_session-logs/` (they leave version control; git history retains them).
+
+## Organize Mode (`--organize`)
+
+`/plab-wrap-session --organize` files old session logs into `YYYY-MM/` month folders. It runs **instead of** a wrap: no session log is written, no hygiene sweep runs, no other check fires.
+
+```bash
+python skills/plab-wrap-session/scripts/organize-logs.py _local/_session-logs
+python skills/plab-wrap-session/scripts/organize-logs.py _local/_session-logs --apply
+```
+
+1. Run the script with no flags. It is dry run by default and prints the plan.
+2. If the plan is empty, say so and stop. Nothing else happens.
+3. Otherwise show the plan and ask once: "File these N logs into month folders? (y/n)"
+4. On yes, re-run with `--apply` and report the result. On no, stop and change nothing.
+
+**The current month and the previous month are never filed.** Recent logs stay flat, where resume reads them first.
+
+**Never run `--apply` without the user confirming that specific plan.** The script moves files and never deletes, so a wrong move is reversible, but the confirmation is the contract.
+
+The script exits non-zero when a target filename already exists in its month folder. Nothing is overwritten; surface the collision rather than retrying.
+
+Store layout, and why discovery reads both the flat store and month folders, are defined once in `plab-continue-session/references/log-discovery.md`. Do not restate those rules here.
+
+**Requires `plab-continue-session` 1.3.0+.** Older readers cannot see month folders, and a store archived for them reads as empty. Both ship in plugin v0.2.0, so an install is never mismatched with itself.
 
 ### Frontmatter
 
