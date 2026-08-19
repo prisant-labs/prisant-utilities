@@ -4,13 +4,38 @@ How `/plab-continue-session` finds the right session log to resume from.
 
 ## Search locations
 
-Search all three, in this order for reporting purposes only. Skip any that do not exist.
+Search all three stores, in this order for reporting purposes only. Skip any that do not exist.
 
 | Location | Written by | Status |
 |----------|-----------|--------|
 | `_local/_session-logs/` | plab-wrap-session v1.2.0+ | current |
 | `_agent-context/session-log/` | plab-wrap-session v1.1.0 - v1.2.x | legacy |
 | `AGENTS/session-log/` | plab-wrap-session v1.0.x | legacy |
+
+## Store layout: flat or month folders
+
+The current store holds logs two ways, and discovery reads both as one pooled corpus.
+
+| Path shape | Discovered | Meaning |
+|---|---|---|
+| `_session-logs/*.md` | yes | hot logs; this is where every new log is written |
+| `_session-logs/YYYY-MM/*.md` | yes | archived logs, filed by `/plab-wrap-session --organize` |
+| `_session-logs/<anything else>/` | **no** | deliberately outside the corpus (`_capture/`) |
+
+**Discovery is a date-shaped allowlist exactly one level deep, never a recursive walk.** A
+subdirectory is visible only if its name is `YYYY-MM`. This is what lets `_capture/` sit inside the
+store without polluting the corpus, and it is the mechanism any future deliberately-hidden
+subdirectory relies on.
+
+Do not "simplify" this into a recursive find with an underscore exclusion. The obvious form of that
+is broken: `find "$d" -name '*.md' -not -path '*/_*/*'` matches against the entire path, and both
+`_local` and `_session-logs` are themselves underscore-prefixed components, so every file is
+excluded via its ancestors and discovery silently returns zero results. An allowlist can only match
+what it literally describes; its failure mode is "too few results", which is visible, rather than
+"silently zero", which is not.
+
+**Legacy stores are searched flat.** They are frozen, nothing writes to them, and the organizer
+never touches them.
 
 ## Selection rule: newest across the union
 
@@ -23,24 +48,29 @@ This matters during migration. A project that has just moved to `_local/_session
 Filenames follow the pattern `YYYY-MM-DD_HH-MM_<llm>_<brief-kebab-title>.md`. Because the date+time prefix is ISO-style and zero-padded, **lexical descending sort = most recent first**. The prefix is location-independent, so pooled filenames from different directories sort correctly against each other.
 
 ```bash
-for d in _local/_session-logs _agent-context/session-log AGENTS/session-log; do
-  [ -d "$d" ] && ls "$d"/*.md 2>/dev/null
+current=_local/_session-logs
+for f in "$current"/*.md "$current"/[0-9][0-9][0-9][0-9]-[0-9][0-9]/*.md \
+         _agent-context/session-log/*.md AGENTS/session-log/*.md; do
+  [ -f "$f" ] && printf '%s\n' "$f"
 done | awk -F/ '{print $NF"\t"$0}' | sort -r | head -1 | cut -f2
 ```
 
 PowerShell equivalent:
 
 ```powershell
-$dirs = '_local/_session-logs', '_agent-context/session-log', 'AGENTS/session-log' |
-  Where-Object { Test-Path $_ }
-Get-ChildItem $dirs -Filter *.md | Sort-Object Name -Descending |
-  Select-Object -First 1 -ExpandProperty FullName
+$current = '_local/_session-logs'
+$stores  = @($current) + (Get-ChildItem $current -Directory -ErrorAction Ignore |
+                          Where-Object Name -match '^\d{4}-\d{2}$' | ForEach-Object FullName)
+$stores += '_agent-context/session-log', 'AGENTS/session-log'
+Get-ChildItem ($stores | Where-Object { Test-Path $_ }) -Filter *.md -File |
+  Sort-Object Name -Descending | Select-Object -First 1 -ExpandProperty FullName
 ```
 
-Both sort on the **basename** so the directory prefix never affects ordering, and both return the **full path** so the winner can be read directly. Two details worth preserving if these are rewritten:
+Both sort on the **basename** so the directory prefix never affects ordering, and both return the **full path** so the winner can be read directly. Three details worth preserving if these are rewritten:
 
-- Sorting on the full path instead of the basename would order by directory name first, which silently breaks newest-wins across locations.
-- Both filter to directories that exist rather than suppressing errors from missing ones. In PowerShell, `-ErrorAction SilentlyContinue` hides the message but still leaves a failure exit status, so a caller checking `$?` would read a successful lookup as a failure.
+- Sorting on the full path instead of the basename would order by directory name first, which silently breaks newest-wins across locations. It is also what makes month folders safe: an archived log and a hot log order correctly against each other because only their filenames are compared.
+- Both filter to entries that exist rather than suppressing errors from missing ones. In PowerShell, `-ErrorAction SilentlyContinue` hides the message but still leaves a failure exit status, so a caller checking `$?` would read a successful lookup as a failure.
+- Both enumerate month directories explicitly rather than recursing. A bare `-Recurse`, or a `find` over the whole store, would pull `_capture/` and any future deliberately-hidden subdirectory into the corpus.
 
 ## Migration note
 
@@ -65,7 +95,19 @@ Do not silently pick one. The choice is the user's.
 
 ## Empty or missing directory
 
-If none of the search locations exist, or all of them contain no `.md` files:
+**First, check for a version-skew symptom.** Before reporting that nothing was found, look for
+`YYYY-MM` subdirectories in the current store. If the top level has no `.md` files but month folders
+are present, the store was organized by a newer `plab-wrap-session` than the one installed here, and
+this discovery is too old to read it:
+
+> No `.md` logs at the top level of `_local/_session-logs/`, but it contains month folders
+> (`2026-06/`, `2026-07/`). This store was organized by a newer `plab-wrap-session` than the one
+> installed here. Run `/plugin update`, then resume.
+
+Reporting "no prior session log" in that state would be wrong and would invite starting fresh on top
+of work that is sitting one directory down.
+
+Otherwise, if none of the search locations exist, or all of them contain no `.md` files:
 
 ```
 No prior session log found in _local/_session-logs/ (or the legacy
