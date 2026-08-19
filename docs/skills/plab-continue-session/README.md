@@ -68,7 +68,17 @@ Searches three locations and picks the newest log across all of them - not the f
 | `_agent-context/session-log/` | plab-wrap-session v1.1.0 - v1.2.x | legacy |
 | `AGENTS/session-log/` | plab-wrap-session v1.0.x | legacy |
 
-Filenames follow the pattern `YYYY-MM-DD_HH-MM_<llm>_<title>.md`, so lexical descending sort gives the most recent. The timestamp prefix is location-independent, which is what makes a single sort across all three directories correct. If the winner comes from a legacy path, a migration note is surfaced alongside the resumption.
+The current store holds logs two ways, and both are read as one pooled set:
+
+| Path shape | Read | Meaning |
+|---|---|---|
+| `_session-logs/*.md` | yes | hot logs, where every new log is written |
+| `_session-logs/YYYY-MM/*.md` | yes | archived by `/plab-wrap-session --organize` |
+| `_session-logs/<anything else>/` | no | outside the corpus (`_capture/`) |
+
+Filenames follow the pattern `YYYY-MM-DD_HH-MM_<llm>_<title>.md`, so lexical descending sort gives the most recent. The timestamp prefix is location-independent, which is what makes a single sort across all three directories correct, and it is also why archiving is safe: an archived log in `2026-06/` and a hot log at the top level order correctly against each other, because only the filenames are compared. If the winner comes from a legacy path, a migration note is surfaced alongside the resumption.
+
+If the store's top level is empty but it contains month folders, that is a version-skew symptom rather than an empty store: it was organized by a newer `plab-wrap-session` than the one installed. The skill says so and points at `/plugin update` instead of offering to start fresh.
 
 If two logs share the same timestamp prefix (rare; concurrent sessions), the skill asks which to resume rather than guessing.
 

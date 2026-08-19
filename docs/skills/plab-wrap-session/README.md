@@ -27,6 +27,8 @@ _local/_session-logs/YYYY-MM-DD_HH-MM_<llm>_<brief-kebab-title>.md
 
 All agents write to the same centralized directory. The LLM short name in the filename identifies who did the work. The skill creates the directory if it doesn't exist.
 
+Once a month closes, `--organize` files its logs into a `YYYY-MM/` subfolder. New logs are always written flat at the top level, so the path above never changes.
+
 ### Installation
 
 Install via the prisant-labs marketplace:
@@ -95,6 +97,54 @@ Before writing, deep and final modes run the **pre-wrap hygiene sweep** ([`refer
 **When:** Session ended by an unresolved blocker.
 
 **Output:** Frontmatter + summary + blocker details + continuation prompt. Focuses on capturing the blocker clearly so the next session can resolve it.
+
+---
+
+## Organizing the log store (`--organize`)
+
+A flat session-log directory grows without bound. At roughly four logs a week it passes a hundred files inside a year, and browsing it by hand stops being pleasant.
+
+```
+/plab-wrap-session --organize
+```
+
+This runs **instead of** a wrap. No session log is written, no hygiene sweep runs. It files logs from closed months into `YYYY-MM/` subfolders:
+
+```
+_local/_session-logs/
+  2026-05/
+    2026-05-19_14-30_claude_skill-audit.md
+  2026-06/
+    2026-06-02_11-15_codex_guide-pdf-toolchain.md
+    2026-06-30_09-40_claude_capture-lite-hook.md
+  2026-07-21_16-05_claude_release-v011.md          <- hot, previous month
+  2026-08-18_13-44_claude_marketplace-ssh-to-https-fix.md   <- hot, current month
+  _capture/                                        <- never touched
+```
+
+**The current month and the previous month are never filed.** Recent logs stay flat, which is where resume reads them first. On 2026-08-18 that means 2026-08 and 2026-07 stay put, and 2026-06 and older get filed.
+
+**Nothing moves without your say-so.** The skill runs the organizer in dry run, shows you exactly which files would move where, and asks once. Declining changes nothing.
+
+**Resume is unaffected.** `/plab-continue-session` 1.3.0+ reads the flat store and the month folders as one pooled set, sorted by filename, so an archived log and a hot log order correctly against each other. Filenames never change when a log is filed.
+
+**You do not have to remember this exists.** Deep and final wraps run hygiene Check 5, which reports unfiled logs and offers to file them:
+
+> Log store: 14 logs from 3 closed months (2026-05, 2026-06, 2026-07) are unfiled.
+> File them into month folders? (y/n)
+
+### Guarantees
+
+| Situation | Behavior |
+|---|---|
+| Current or previous month | Never filed |
+| Target filename already exists | Skipped and reported, nothing overwritten |
+| File that is not a session log | Left in place and reported |
+| Subdirectory other than `YYYY-MM` | Never entered |
+| Legacy log directories | Never touched |
+| Anything | Never deleted; moves only |
+
+Run it twice and the second run does nothing. A full worked example with real command output: [`skills/plab-wrap-session/examples/organize-logs-walkthrough.md`](../../../skills/plab-wrap-session/examples/organize-logs-walkthrough.md).
 
 ---
 
