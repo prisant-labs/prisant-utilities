@@ -23,6 +23,12 @@ the one installed reads as empty to older discovery. The message now checks for 
 reporting nothing found, and names `/plugin update` as the fix rather than offering to start fresh on
 top of work sitting one directory down.
 
+**Fixed: a stray Markdown file could be resumed from.** Discovery selected on `*.md` and took the
+lexically last name, so a `README.md` or `notes.md` sitting in the store outranked every `2026-...`
+log and would be resumed from as though it were the latest session. Both pipelines now match the
+`YYYY-MM-DD_` date prefix. This was always latent; `--organize` makes it reachable by reporting
+non-log Markdown as "left in place", which establishes that the store may legitimately hold it.
+
 **Pairs with `plab-wrap-session` 1.5.0.** This reader change ships first by construction: both are in
 plugin v0.2.0, so no install can archive logs it cannot then find.
 

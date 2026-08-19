@@ -49,8 +49,9 @@ Filenames follow the pattern `YYYY-MM-DD_HH-MM_<llm>_<brief-kebab-title>.md`. Be
 
 ```bash
 current=_local/_session-logs
-for f in "$current"/*.md "$current"/[0-9][0-9][0-9][0-9]-[0-9][0-9]/*.md \
-         _agent-context/session-log/*.md AGENTS/session-log/*.md; do
+log='[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]_*.md'
+for f in "$current"/$log "$current"/[0-9][0-9][0-9][0-9]-[0-9][0-9]/$log \
+         _agent-context/session-log/$log AGENTS/session-log/$log; do
   [ -f "$f" ] && printf '%s\n' "$f"
 done | awk -F/ '{print $NF"\t"$0}' | sort -r | head -1 | cut -f2
 ```
@@ -63,8 +64,15 @@ $stores  = @($current) + (Get-ChildItem $current -Directory -ErrorAction Ignore 
                           Where-Object Name -match '^\d{4}-\d{2}$' | ForEach-Object FullName)
 $stores += '_agent-context/session-log', 'AGENTS/session-log'
 Get-ChildItem ($stores | Where-Object { Test-Path $_ }) -Filter *.md -File |
+  Where-Object Name -match '^\d{4}-\d{2}-\d{2}_' |
   Sort-Object Name -Descending | Select-Object -First 1 -ExpandProperty FullName
 ```
+
+**Both match the date prefix, not bare `*.md`.** A store can legitimately contain other Markdown
+(a `README.md` explaining the folder, scratch `notes.md`). Selecting on `*.md` would pick those:
+lexical descending sort puts any lowercase name above every `2026-...` log, so a stray `notes.md`
+would be resumed from as though it were the latest session. `--organize` reports such files as
+"left in place", so the store is expected to hold them and discovery has to skip them.
 
 Both sort on the **basename** so the directory prefix never affects ordering, and both return the **full path** so the winner can be read directly. Three details worth preserving if these are rewritten:
 
