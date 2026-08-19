@@ -2,8 +2,29 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
+| 1.3.0 | 2026-08-18 | v0.2.0 | added | Discovery reads `YYYY-MM/` month folders alongside the flat store. Empty-store message diagnoses version skew. |
 | 1.2.1 | 2026-08-18 | v0.1.2 | fixed | Body trigger list aligned with the narrowed description. Records the 2026-08-17 description change that shipped un-versioned. |
 | 1.2.0 | 2026-08-14 | v0.1.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.2.0; prior history remains there. |
+
+## 1.3.0 - 2026-08-18
+
+**Added: month-folder discovery.** The session-log store can now be archived into `YYYY-MM/`
+subdirectories by `/plab-wrap-session --organize`. Discovery reads those folders and the flat top
+level as one pooled corpus, so archiving never removes a log from resume.
+
+Discovery is a date-shaped allowlist exactly one level deep, not a recursive walk. Only `YYYY-MM`
+subdirectories are read, which keeps `_capture/` outside the corpus and preserves the mechanism that
+any deliberately-hidden subdirectory depends on. The basename sort is unchanged, so ordering remains
+provably independent of where a log is filed: an archived log with a newer filename still beats a hot
+log with an older one.
+
+**Changed: the empty-store message diagnoses version skew.** A store organized by a newer plugin than
+the one installed reads as empty to older discovery. The message now checks for month folders before
+reporting nothing found, and names `/plugin update` as the fix rather than offering to start fresh on
+top of work sitting one directory down.
+
+**Pairs with `plab-wrap-session` 1.5.0.** This reader change ships first by construction: both are in
+plugin v0.2.0, so no install can archive logs it cannot then find.
 
 ## 1.2.1 - 2026-08-18
 

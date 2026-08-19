@@ -9,7 +9,7 @@ description: "Resume an interrupted work session by replaying its recorded hando
 argument-hint: "[--log <path>]"
 license: MIT
 metadata:
-  version: "1.2.1"
+  version: "1.3.0"
   updated: 2026-08-18
 ---
 
@@ -35,11 +35,13 @@ Resume the work that the last session left set up to resume. Pairs with `/plab-w
 
 ### Phase 1: Locate the latest session log
 
-1. Collect `.md` files from **all three** locations, skipping any that do not exist:
-   - `_local/_session-logs/` (current)
+1. Collect `.md` files from **all three** stores, skipping any that do not exist:
+   - `_local/_session-logs/` (current) - both its top level and its `YYYY-MM/` month folders
    - `_agent-context/session-log/` (legacy, plab-wrap-session v1.1.0 - v1.2.x)
    - `AGENTS/session-log/` (legacy, plab-wrap-session v1.0.x)
-2. Pick the newest across the combined set - not the first location that happens to be non-empty. The filename pattern is `YYYY-MM-DD_HH-MM_<llm>_<title>.md`, so lexical descending sort = most recent first. Searching all locations matters because a project mid-migration has old logs in a legacy path and new ones in `_local/_session-logs/`; stopping at the first non-empty directory would resume from the wrong era.
+
+   Month folders are the only subdirectory shape that is read. `_capture/` and anything else inside the store are deliberately invisible. Full rules and both shell pipelines: `references/log-discovery.md`.
+2. Pick the newest across the combined set - not the first location that happens to be non-empty. The filename pattern is `YYYY-MM-DD_HH-MM_<llm>_<title>.md`, so lexical descending sort = most recent first. Searching all locations matters because a project mid-migration has old logs in a legacy path and new ones in `_local/_session-logs/`; stopping at the first non-empty directory would resume from the wrong era. Because the sort is on the filename and never the path, an archived log in `2026-06/` and a hot log at the top level order correctly against each other.
 3. Confirm the file exists and is non-empty. If no location yields a log, report "no prior session log found" and ask the user how to proceed.
 4. If the winning log came from a legacy path, surface a migration note alongside the resumption.
 
