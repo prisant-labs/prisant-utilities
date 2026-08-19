@@ -31,18 +31,20 @@ older install would read as empty; that case now reports the version skew and po
 
 ### Added
 
-- `plab-wrap-session` 1.5.0: `--organize` mode, backed by `scripts/organize-logs.py`. Dry run by
-  default, idempotent, move-only, never deleting. The month comes from the filename prefix rather
-  than mtime, because mtime is wrong after any copy or restore and the filename is the log's
-  identity. Collisions skip the file and exit non-zero instead of overwriting.
+- `plab-wrap-session` 1.5.0: `--organize` mode, backed by
+  `skills/plab-wrap-session/scripts/organize-logs.py`. Dry run by default, idempotent, move-only,
+  never deleting. The month comes from the filename prefix rather than mtime, because mtime is wrong
+  after any copy or restore and the filename is the log's identity. Collisions skip the file and exit
+  non-zero instead of overwriting.
 - `plab-wrap-session` 1.5.0: hygiene sweep Check 5 reports unfiled logs and proposes filing them
   under the existing per-action confirmation protocol. The check calls the organizer in dry run, so
   the sweep's read-only detection phase and the operation it proposes are one code path.
-- `plab-wrap-session` 1.5.0: `scripts/test-organize-logs.py`, 34 fixture checks with a pinned date
-  covering dry-run inertness, the hot window across a year boundary, idempotence, `_capture/`
-  isolation, collision safety, a missing store, and the discovery contract itself.
+- `plab-wrap-session` 1.5.0: `skills/plab-wrap-session/scripts/test-organize-logs.py`, 34 fixture
+  checks with a pinned date covering dry-run inertness, the hot window across a year boundary,
+  idempotence, `_capture/` isolation, collision safety, a missing store, and the discovery contract
+  itself.
 - `plab-wrap-session` 1.5.0: a worked example with real captured output at
-  `examples/organize-logs-walkthrough.md`.
+  `skills/plab-wrap-session/examples/organize-logs-walkthrough.md`.
 - `plab-continue-session` 1.3.0: discovery reads `YYYY-MM/` month folders alongside the flat store as
   one pooled corpus. It is a date-shaped allowlist exactly one level deep, never a recursive walk, so
   `_capture/` and any future deliberately-hidden subdirectory stay outside the corpus.
