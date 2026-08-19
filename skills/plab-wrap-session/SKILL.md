@@ -84,9 +84,11 @@ Write to: `_local/_session-logs/YYYY-MM-DD_HH-MM_<llm>_<brief-kebab-title>.md`
 `/plab-wrap-session --organize` files old session logs into `YYYY-MM/` month folders. It runs **instead of** a wrap: no session log is written, no hygiene sweep runs, no other check fires.
 
 ```bash
-python skills/plab-wrap-session/scripts/organize-logs.py _local/_session-logs
-python skills/plab-wrap-session/scripts/organize-logs.py _local/_session-logs --apply
+python scripts/organize-logs.py _local/_session-logs
+python scripts/organize-logs.py _local/_session-logs --apply
 ```
+
+`scripts/organize-logs.py` resolves against **this skill's own directory**, wherever the plugin is installed. The store argument is relative to the **project** being wrapped. Do not assume the two share a root: when the installed plugin runs, the skill lives in the plugin cache and the project does not.
 
 1. Run the script with no flags. It is dry run by default and prints the plan.
 2. If the plan is empty, say so and stop. Nothing else happens.

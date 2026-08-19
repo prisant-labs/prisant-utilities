@@ -48,8 +48,10 @@ Compare what the session changed against what documents it:
 ## Check 5: Session-log store
 
 ```bash
-python skills/plab-wrap-session/scripts/organize-logs.py _local/_session-logs --json
+python scripts/organize-logs.py _local/_session-logs --json
 ```
+
+The script path resolves against this skill's own directory, wherever the plugin is installed; the store argument is relative to the project being wrapped.
 
 The script is dry run by default, so this check is read-only exactly like the other four. The sweep's detection phase and the script's default mode are the same code path, which is why the check cannot drift from the operation it proposes.
 

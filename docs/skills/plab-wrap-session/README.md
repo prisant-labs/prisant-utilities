@@ -293,7 +293,10 @@ After writing the log, the skill checks if changes warrant updates to README, CH
 |------|---------|-------------|
 | `references/frontmatter-schema.md` | Complete 18-field metadata specification (3 tiers) | When customizing frontmatter or building tooling |
 | `references/session-log-template.md` | Output skeletons for all 4 modes | When examining exact output structure per mode |
+| `references/hygiene-sweep.md` | The five pre-wrap checks, their commands, and the per-action confirmation protocol | When understanding what the sweep inspects and proposes |
 | `references/doc-update-rules.md` | When/how to update README, CHANGELOG, plans, and ADRs | When understanding the surrounding document update rules |
+| `scripts/organize-logs.py` | Files logs from closed months into `YYYY-MM/` folders; dry run by default | Run by `--organize` and by hygiene Check 5 |
+| `examples/organize-logs-walkthrough.md` | A worked `--organize` run with real captured output | When you want to see exactly what filing does before running it |
 
 ---
 
@@ -301,11 +304,18 @@ After writing the log, the skill checks if changes warrant updates to README, CH
 
 ```
 skills/plab-wrap-session/
-├── SKILL.md                        # Core instructions (~120 lines)
+├── SKILL.md                        # Core instructions
+├── HISTORY.md                      # Per-version change record
 ├── references/
 │   ├── frontmatter-schema.md       # 18-field metadata reference (3 tiers)
 │   ├── session-log-template.md     # Output templates for all 4 modes
+│   ├── hygiene-sweep.md            # The 5 pre-wrap checks and the confirmation protocol
 │   └── doc-update-rules.md         # README/CHANGELOG/plan/ADR update rules
+├── scripts/
+│   ├── organize-logs.py            # Files logs into YYYY-MM/ folders (--organize, Check 5)
+│   └── test-organize-logs.py       # 34 fixture checks for the organizer
+└── examples/
+    └── organize-logs-walkthrough.md  # Worked --organize run with real output
 ```
 
 ---

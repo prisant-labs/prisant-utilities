@@ -6,6 +6,10 @@ captured output, not an illustration.
 The run is pinned to `--today 2026-08-18`, so the hot window is **2026-08** (current) and **2026-07**
 (previous). Everything older is filed.
 
+Commands are shown relative to this skill's directory, which is how the skill invokes them wherever the
+plugin is installed. The store argument is relative to the project being wrapped. All output below is
+verbatim.
+
 ## Before
 
 ```
@@ -27,7 +31,7 @@ Both survive untouched.
 The script is dry run by default. Nothing moves.
 
 ```console
-$ python skills/plab-wrap-session/scripts/organize-logs.py _local/_session-logs
+$ python scripts/organize-logs.py _local/_session-logs
 Would file 3 log(s) into 2 month folder(s): 2026-05, 2026-06
   2026-05-19_14-30_claude_skill-audit.md -> 2026-05/2026-05-19_14-30_claude_skill-audit.md
   2026-06-02_11-15_codex_guide-pdf-toolchain.md -> 2026-06/2026-06-02_11-15_codex_guide-pdf-toolchain.md
@@ -45,7 +49,7 @@ Three logs move, three stay hot, `notes.md` is reported and left alone.
 `/plab-wrap-session --organize` shows the plan above, asks once, and only then runs this.
 
 ```console
-$ python skills/plab-wrap-session/scripts/organize-logs.py _local/_session-logs --apply
+$ python scripts/organize-logs.py _local/_session-logs --apply
 Filed 3 log(s) into 2 month folder(s): 2026-05, 2026-06
   2026-05-19_14-30_claude_skill-audit.md -> 2026-05/2026-05-19_14-30_claude_skill-audit.md
   2026-06-02_11-15_codex_guide-pdf-toolchain.md -> 2026-06/2026-06-02_11-15_codex_guide-pdf-toolchain.md
@@ -78,7 +82,7 @@ month folders and sorts on the filename alone.
 Idempotent. A second `--apply` moves nothing and exits 0.
 
 ```console
-$ python skills/plab-wrap-session/scripts/organize-logs.py _local/_session-logs --apply
+$ python scripts/organize-logs.py _local/_session-logs --apply
 Nothing to file. Every log is already filed or still hot.
 Kept hot (3): the current and previous month are never filed.
 Already filed: 3 log(s) in existing month folders.
@@ -91,7 +95,7 @@ Left in place, name does not match the log pattern (1): notes.md
 whether there is anything worth proposing.
 
 ```console
-$ python skills/plab-wrap-session/scripts/organize-logs.py _local/_session-logs --json
+$ python scripts/organize-logs.py _local/_session-logs --json
 {
   "moves": [
     {
@@ -141,7 +145,7 @@ Check 5 flags on a non-empty `moves` list, stays silent when it is empty, and ro
 across 34 checks, with the date pinned so results do not drift as the calendar moves.
 
 ```console
-$ python skills/plab-wrap-session/scripts/test-organize-logs.py
+$ python scripts/test-organize-logs.py
 34/34 checks passed.
 ALL PASS
 ```
