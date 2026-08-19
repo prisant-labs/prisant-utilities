@@ -22,7 +22,7 @@ agent:
 status:
 decisions-count:
 skills-used: []
-resumed-from: # log filename if this session resumed from one
+resumed-from: # log filename if this session resumed from one. Filename only, never a path: archiving moves logs into YYYY-MM/ folders. Same rule for every log reference in the body.
 ---
 
 # Session: [Brief Title]

@@ -95,6 +95,17 @@ _local/_session-logs/YYYY-MM-DD_HH-MM_<llm>_<brief-kebab-title>.md
 
 All agents write to the same `_local/_session-logs/` directory. The LLM short name in the filename identifies who did the work. Full model details (name, version, settings) go in the frontmatter, not the filename.
 
+## Citing another session log
+
+Reference other logs **by filename only**, never by directory-qualified path. This applies to `resumed-from:`, to evidence tables, and to prose anywhere in the log.
+
+- Correct: `2026-08-17_22-15_claude_migration-complete-t3-and-cutover.md`
+- Wrong: `_local/_session-logs/2026-08-17_22-15_claude_migration-complete-t3-and-cutover.md`
+
+The filename is the log's identity: unique, sortable, and stable. The directory is storage, and `/plab-wrap-session --organize` moves logs into `YYYY-MM/` folders once their month closes. A path-qualified reference breaks on that move; a filename never does.
+
+This is why archiving needs no link-rewriting step, and therefore has no link-rewriting bugs. The durable fix for a reference a move can break is not to rewrite it on move, but to stop writing it that way.
+
 ## Field Dependencies
 
 These Tier 1 fields are load-bearing for future hook matching (SessionStart injection):
