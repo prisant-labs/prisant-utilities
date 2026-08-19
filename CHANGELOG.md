@@ -7,6 +7,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-08-18
+
+Session-log stores can now be archived by month without breaking resume.
+
+**What changes for you.** `/plab-wrap-session --organize` files logs from closed months into
+`YYYY-MM/` subfolders, so a store that has been running for a year is browsable again. The current
+and previous month stay flat, nothing moves without your confirmation on that specific plan, and
+nothing is ever deleted. You do not have to remember the command exists: deep and final wraps now
+report unfiled logs and offer to file them, the same way they already offer to push a commit or fix
+a stale version line. Resume keeps working throughout, because `/plab-continue-session` reads the
+flat store and the month folders as one set ordered by filename.
+
+**What does not change.** New logs are still written flat to
+`_local/_session-logs/YYYY-MM-DD_HH-MM_<llm>_<title>.md`. No mode, section, template, or frontmatter
+field moved, and nothing you have already written needs migrating. Archiving is opt-in and
+reversible: the organizer only ever moves files.
+
+**One ordering note.** The reader had to learn month folders before anything could be filed into
+one, so both skills ship together in this release. A store organized by this version and opened by an
+older install would read as empty; that case now reports the version skew and points at
+`/plugin update` rather than offering to start fresh.
+
+### Added
+
+- `plab-wrap-session` 1.5.0: `--organize` mode, backed by `scripts/organize-logs.py`. Dry run by
+  default, idempotent, move-only, never deleting. The month comes from the filename prefix rather
+  than mtime, because mtime is wrong after any copy or restore and the filename is the log's
+  identity. Collisions skip the file and exit non-zero instead of overwriting.
+- `plab-wrap-session` 1.5.0: hygiene sweep Check 5 reports unfiled logs and proposes filing them
+  under the existing per-action confirmation protocol. The check calls the organizer in dry run, so
+  the sweep's read-only detection phase and the operation it proposes are one code path.
+- `plab-wrap-session` 1.5.0: `scripts/test-organize-logs.py`, 34 fixture checks with a pinned date
+  covering dry-run inertness, the hot window across a year boundary, idempotence, `_capture/`
+  isolation, collision safety, a missing store, and the discovery contract itself.
+- `plab-wrap-session` 1.5.0: a worked example with real captured output at
+  `examples/organize-logs-walkthrough.md`.
+- `plab-continue-session` 1.3.0: discovery reads `YYYY-MM/` month folders alongside the flat store as
+  one pooled corpus. It is a date-shaped allowlist exactly one level deep, never a recursive walk, so
+  `_capture/` and any future deliberately-hidden subdirectory stay outside the corpus.
+- `plab-continue-session` 1.3.0: an empty top level with month folders present is now reported as
+  version skew, naming `/plugin update`, instead of "no prior session log found".
+
+### Fixed
+
+- `plab-continue-session` 1.3.0: a stray Markdown file in the log store could be resumed from.
+  Selection globbed `*.md` and took the lexically last name, so a `README.md` or `notes.md` outranked
+  every dated log. Both shell pipelines now match the `YYYY-MM-DD_` prefix. Latent until now;
+  `--organize` makes it reachable by establishing that the store may hold non-log Markdown.
+
+### Changed
+
+- `plab-wrap-session` 1.5.0: session logs are cited by filename, never by directory-qualified path,
+  in `resumed-from:` and in prose alike. A path-qualified reference breaks when the log is archived;
+  a filename does not, which is why archiving needs no link-rewriting step.
+
 ## [0.1.2] - 2026-08-18
 
 Correctness and bookkeeping. No new capability, but two of these change day-to-day behaviour.

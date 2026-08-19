@@ -1,6 +1,6 @@
 {
   "name": "prisant-utilities",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "General-purpose agent skills for session continuity, structured analysis, guide authoring, and cross-LLM peer review. Use when wrapping or resuming a coding session, turning raw thinking into a decision-ready brief, generating a guide bundle, or getting a second-model review of a document.",
   "license": "MIT",
   "author": {
