@@ -1,6 +1,6 @@
 # plab-strategy-brief
 
-**Version:** 1.0.0
+**Version:** 1.1.1
 **Source:** [`skills/plab-strategy-brief/`](../../../skills/plab-strategy-brief/)
 
 Transform messy, unstructured thinking into a structured, decision-ready analysis document with a consistent 7-section anatomy.
@@ -25,7 +25,7 @@ Or explicitly:
 [paste your messy notes]
 ```
 
-The skill produces a standalone markdown document - not inline chat. The output is designed to be saved, shared, and referenced later.
+The skill produces a standalone markdown document - not inline chat. The output is designed to be saved, shared, and referenced later. See [Output Location](#output-location) for where it lands.
 
 ### What You'll Need
 
@@ -105,6 +105,22 @@ Sources consulted, data points relied on, and gaps in sourcing. Honest about wha
 What's unsure, what needs human judgment, follow-up prompts for deeper exploration.
 
 *100-300 words*
+
+---
+
+## Output Location
+
+Briefs are written to `_output/plab-strategy-brief/<slug>-<YYYY-MM-DD>.md` relative to your working directory,
+where `<slug>` is a 3-6 word kebab-case derivation of the topic. The `_output/` root is shared with the
+plugin's other producing skills and is intended to be gitignored at the project level.
+
+To override it, name a destination in the request or pass `--out`:
+
+| You say | Result |
+|---|---|
+| `--out /path/to/brief.md` | Written to that exact file |
+| `--out /path/to/dir` | Written to `<dir>/<slug>-<YYYY-MM-DD>.md` |
+| "as a chat artifact only", "do not save" | No disk write |
 
 ---
 

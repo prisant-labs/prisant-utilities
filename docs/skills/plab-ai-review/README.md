@@ -1,9 +1,9 @@
 # plab-ai-review
 
-**Version:** 1.0.0
+**Version:** 1.2.1
 **Source:** [`skills/plab-ai-review/`](../../../skills/plab-ai-review/)
 
-Generate and synthesize structured AI peer reviews. Create a self-contained review request for a second LLM, then add requestor synthesis after the reviewer completes findings.
+Generate and synthesize structured AI peer reviews. Create a self-contained review request for a second LLM, add requestor synthesis once the reviewer files findings, then close the review: archive the pair, apply the accepted changes, and send unresolved decisions to a backlog.
 
 ---
 
@@ -60,7 +60,7 @@ ln -s /path/to/prisant-utilities/skills/plab-ai-review .claude/skills/plab-ai-re
 
 ---
 
-## Two Modes
+## Three Modes
 
 ### `--review` (Generate Review Request)
 
@@ -86,6 +86,29 @@ Reads the reviewed document (with reviewer findings filled in), then adds:
 **Input:** The `_reviewed-by-` file with reviewer findings filled in.
 
 **Output:** Updates the same file in place.
+
+### `--close` (Post-Review Lifecycle)
+
+```
+/plab-ai-review doc_reviewed-by-codex.md --close --backlog path/to/backlog.md
+```
+
+Runs the archive workflow for you once the decisions are settled:
+
+- Snapshots the source to `_archive/doc_original.md`, creating `_archive/` if it is missing.
+- Applies every Proposed Actions row marked `Update` back into the source. That table is the source of truth. If a decision reads Rejected or Deferred while its action row still says `Update`, the divergence is flagged in the confirmation prompt rather than blocking the run.
+- Moves the `_reviewed-by-` file into `_archive/`.
+- Appends unresolved decisions (Open, Deferred, Needs info) to the `--backlog` file under a dated heading. Accepted and Rejected items are closed; they stay in the archive and never reach the backlog.
+
+Nothing is touched until it prints all four steps and you answer `y`.
+
+**`--backlog <path>`** is required when the review has at least one unresolved decision, and ignored when it has none. A missing file is created with a standard header; an existing one is appended to under a new dated heading, never overwritten.
+
+**It stops rather than guesses.** An existing `_archive/doc_original.md` is an error, not an overwrite: the skill names the path it found and leaves every file alone.
+
+**Input:** The `_reviewed-by-` file with decisions resolved.
+
+**Output:** Updated source, two files in `_archive/`, and appended backlog entries.
 
 ### Auto-detect
 
@@ -201,6 +224,7 @@ Full template: `references/review-template.md`
 | `references/section-presets.md` | Default review dimensions per document type | When overriding or understanding type presets |
 | `references/attribution-guide.md` | Finding format, severity definitions, anti-sycophancy, structured decisions | When the attribution or finding format needs clarification |
 | `references/file-lifecycle.md` | File naming, archive workflow, user-facing steps | When managing review artifacts |
+| `references/backlog-entry-format.md` | Shape of the entries `--close` appends to a backlog file | When reading or reformatting backlog output |
 
 ---
 
@@ -220,7 +244,8 @@ Full template: `references/review-template.md`
 
 ## Archive Workflow
 
-After resolving decisions and applying updates:
+This is what `--close` automates. The steps are documented because you can also run them by hand, and because
+knowing them makes the confirmation prompt readable. After resolving decisions and applying updates:
 
 ```
 1. Copy doc.md -> _archive/doc_original.md           # Snapshot before updates

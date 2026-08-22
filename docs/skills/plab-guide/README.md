@@ -1,9 +1,9 @@
 # plab-guide
 
-**Version:** 1.6.0
+**Version:** 2.2.1
 **Source:** [`skills/plab-guide/`](../../../skills/plab-guide/)
 
-Generate a paired guide bundle (standard MD + ADHD MD + quick-reference HTML + 2-page PDF) for any topic. Works for software repos, tools, methodologies, frameworks, or domain knowledge.
+Generate a paired guide bundle (standard MD + ADHD MD + quick-reference HTML + 1-2 page PDF) for any topic. Works for software repos, tools, methodologies, frameworks, or domain knowledge.
 
 ---
 
@@ -26,8 +26,8 @@ The skill produces four artifacts in a dated output directory:
 _output/plab-guide/<slug>-<YYYY-MM-DD>/
 ├── <slug>_guide-standard.md          # Technical-reference MD guide
 ├── <slug>_guide-adhd.md              # ADHD-optimized MD guide
-├── <slug>_quick-reference.html       # 2-page HTML operator card
-├── <slug>_quick-reference.pdf        # 2-page PDF (rendered locally; no LLM tokens)
+├── <slug>_quick-reference.html       # 1-2 page HTML operator card
+├── <slug>_quick-reference.pdf        # 1-2 page PDF (rendered locally; no LLM tokens)
 └── MANIFEST.yaml                     # Machine-readable manifest
 ```
 
@@ -52,7 +52,7 @@ Install via the prisant-labs marketplace:
 ## When to Use
 
 - A teammate or stakeholder needs to learn a new topic from scratch (a tool, a framework, a methodology).
-- You want a printable, two-page operator card for a topic you reference often.
+- You want a printable one or two page operator card for a topic you reference often.
 - You want to lock down what you currently know about a topic in a structured artifact you can update later.
 - You're onboarding to a new repo or tool and want to absorb it efficiently with both depth and a quick-reference.
 
@@ -109,7 +109,7 @@ Same content as the standard guide with visual scaffolding:
 
 ### Quick-Reference HTML
 
-Two-page operator card with:
+One or two page operator card with:
 - 6-column grid; cards span 3 columns by default (half-page)
 - Semantic card classes: default (white), `.ref` (left accent rule for lookup tables), `.span-6 .summary` (full-width closing banner)
 - 6.75pt body, Segoe UI / Consolas typeface stack
@@ -117,7 +117,7 @@ Two-page operator card with:
 
 ### Quick-Reference PDF
 
-Rendered locally via `scripts/render-pdf.sh` using headless Chrome / Chromium / Edge. Exactly 2 pages (gate G-8 enforces). **Zero LLM tokens** are spent on rendering; the script invokes a local browser binary.
+Rendered locally via `scripts/render-pdf.sh` using headless Chrome / Chromium / Edge. One or two pages, never three or more (gate G-8). As of v2.0.0 a small, dense topic that legitimately fits a single page is accepted; page 2 is no longer forced. If content would overflow, the renderer steps the template's `--fit-scale` down (1.00 to 0.85) until it fits, and fails only if it still overflows at the minimum scale. **Zero LLM tokens** are spent on rendering; the script invokes a local browser binary.
 
 ---
 
@@ -178,16 +178,17 @@ Read any of them to see what a finished guide looks like.
 skills/plab-guide/scripts/render-pdf.sh path/to/file.html
 ```
 
-Validates exactly 2 pages (gate G-8). Exits 3 on overflow with a fix-list.
+Auto-fits to 1 or 2 pages and validates per-page ink density (gate G-8). Exit 3 means the content still overflows 2 pages at the minimum fit-scale; exit 4 means a page fell below the ink-density floor.
 
-### Sweep em-dashes from generated text
+### Check generated text for em-dashes
 
 ```bash
-skills/plab-guide/scripts/em-dash-sweep.sh path/to/file.md
-skills/plab-guide/scripts/em-dash-sweep.sh --dry-run path/to/file.md  # report only
+grep -n -e $'\xe2\x80\x94' -e $'\xe2\x80\x93' path/to/file.md   # the two escapes are U+2014 and U+2013
 ```
 
-Replaces U+2014 (em-dash) with ` - ` (space-hyphen-space) and U+2013 (en-dash) with `-` (hyphen). Enforces gate G-11.
+Gate G-11 requires zero em-dashes (U+2014) and en-dashes (U+2013) in any artifact. It is a written-discipline
+rule verified by grep, not an auto-rewrite: a hit means the sentence gets rewritten, not mechanically
+substituted. Authoring guidance is in `references/voice-and-style.md`.
 
 ### Validate a MANIFEST.yaml
 
@@ -203,7 +204,7 @@ Validates against the schema (required keys, correct types, artifact files exist
 skills/plab-guide/scripts/regression-test.sh
 ```
 
-Re-renders all 7 baseline quick-reference HTMLs to PDF and verifies each is exactly 2 pages.
+Re-renders the locked baseline quick-reference HTMLs to PDF and checks each still renders and clears gate G-8. The baseline bundles are not shipped with this plugin; point the script at your own before running it.
 
 ### Check toolchain readiness
 
@@ -220,9 +221,9 @@ Detects a Chromium-based browser; prints the resolved path or an install hint.
 | Failure | Behavior |
 |---------|----------|
 | No browser found | Phase 7 skipped; the other 3 artifacts are produced; install hint printed. |
-| PDF overflows 2 pages | Render script exits 3 with a fix-list (tighten longest card, drop a low-value card, reduce padding). |
+| PDF overflows 2 pages | Render script auto-fits down to `--fit-scale` 0.85 first; exits 3 only if it still overflows, with a fix-list (tighten longest card, drop a low-value card, reduce padding). |
 | Fewer than 3 sources | Mark `confidence: medium` (1-2 sources) or `low-confidence draft` (0 sources). |
-| Em-dash leaks past sweep | Gate G-11 fails the run; investigate before unblocking. |
+| Em-dash found in an artifact | Gate G-11 fails the run; rewrite the sentence before unblocking. There is no auto-rewrite. |
 | Existing output directory | Append `-<n>` suffix; never overwrite without `--force`. |
 | Network unavailable | Build all artifacts from model knowledge with prominent unverified markers and confidence banner. |
 
@@ -245,5 +246,6 @@ Detects a Chromium-based browser; prints the resolved path or an install hint.
 
 | Version | Date | Notes |
 |---------|------|-------|
-| 1.6.0 | 2026-05-10 | Current version. See `skills/plab-guide/HISTORY.md` for full version history. |
-| 1.0.0 | 2026-05-01 | Initial release. 7 calibration topics validated; locked templates; parameterized CSS theme; flexible Layer headings for non-software topics. |
+| 2.2.1 | 2026-08-14 | Current version, and the first released in this plugin. See [`skills/plab-guide/HISTORY.md`](../../../skills/plab-guide/HISTORY.md). |
+
+Versions before 2.2.1 were released in a private upstream library; that history is not reproduced here.
