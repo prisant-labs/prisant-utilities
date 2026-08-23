@@ -4,8 +4,8 @@ description: Generate a paired guide bundle (standard MD + ADHD MD + quick-refer
 argument-hint: "<topic-or-repo-url> [--type repo-url|tool|concept] [--out <dir>] [--force]"
 license: MIT
 metadata:
-  version: "2.2.1"
-  updated: 2026-07-04
+  version: "2.2.2"
+  updated: 2026-08-23
 ---
 
 # plab-guide
@@ -125,7 +125,7 @@ The skill runs gates G-1 through G-19 before MANIFEST write. Critical-gate failu
 | Single dense page | A small, dense topic that legitimately fits 1 page is accepted as of v2.0.0; page 2 is no longer forced. G-19 may warn that body content looks thin, but the build still passes as long as the page clears the G-8 ink floor. |
 | Page below ink-ratio 0.20 | Phase 7 fails G-8 (exit 4); fix list (add cards from the catalog, expand short cards, rebalance, surface gotchas). Aim for the 0.30 target / Spike H-style density (~0.35 ink ratio per page). |
 | Fewer than 3 sources | Mark `confidence: medium` (1-2 sources) or `low-confidence draft` (0 sources, model knowledge only). |
-| Em-dash leaks past sweep | Gate G-11 fails the run; investigate before unblocking. |
+| Em-dash found in an artifact | Gate G-11 fails the run; rewrite the sentence before unblocking. There is no auto-rewrite. |
 | `mmdc` missing during Phase 6.5 | `lib/render-mermaid.py` warns and exits 0; surviving Mermaid blocks then fail Gate G-18 with the install hint. Either install mmdc or remove the diagram cards. |
 | Mermaid block fails to render (syntax error) | `lib/render-mermaid.py` prints the mmdc stderr for that block and continues; Gate G-18 then fails on the surviving block. Fix the syntax (paste into mermaid.live to debug) and re-run Phase 6.5. |
 | Existing output directory | Append `-<n>` suffix; never overwrite without `--force`. |

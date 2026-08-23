@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Documentation correctness, plus the skill-side defects that the stale documentation was hiding.
+
+**What changes for you.** The five per-skill READMEs and the root README table now state the versions
+that actually shipped. Three of them also described behavior that no longer exists: `plab-ai-review`
+was documented as having two modes when `--close` has shipped since 1.2.1, `plab-guide` documented a
+`scripts/em-dash-sweep.sh` that is not in this repository, and `plab-strategy-brief` never mentioned
+where it writes its output. Reading any of these now tells you what the installed skill does.
+
+**What does not change.** No skill gained or lost a capability. `plab-guide` 2.2.2 is correctness only.
+
+### Fixed
+
+- `plab-guide` 2.2.2: `scripts/regression-test.sh` asserted a 2-page render and would have failed a
+  legitimate 1-page baseline, contradicting the one-or-two-page contract `render-pdf.sh` has enforced
+  since v2.0.0. It now accepts 1 or 2 pages and reports the actual count.
+- `plab-guide` 2.2.2: `references/quick-ref-html-patterns.md` repeated "exactly 2 pages" in its G-8
+  row and listed a 1-page result as a page-count failure. The per-page ink floor is the gate; page
+  count alone is not.
+- `plab-guide` 2.2.2: `SKILL.md`'s failure table said "Em-dash leaks past sweep". There is no sweep.
+  G-11 is a written-discipline rule verified by grep, as the same file's gate list already stated.
+- Usage docs for all five skills carried stale version lines, by as much as three minor versions
+  (`plab-guide` read 1.6.0 against a shipped 2.2.1). The root README table was stale for the two
+  skills v0.2.0 bumped.
+- `plab-ai-review` usage docs documented two modes. `--close` shipped in 1.2.1 and was undocumented,
+  along with its `--backlog` flag, its confirmation gate, and its refusal to overwrite an existing
+  archive.
+- `plab-guide` usage docs documented `scripts/em-dash-sweep.sh`, which does not exist in this
+  repository and described an auto-rewrite that gate G-11 explicitly rejects. Replaced with the grep
+  check the gate actually uses. Six further places claimed a fixed 2-page output.
+- `plab-strategy-brief` usage docs did not mention output location anywhere, though
+  `_output/plab-strategy-brief/` has been the default since v1.0.1.
+- The root README's session-log section did not mention that `--organize` files closed months into
+  `YYYY-MM/` subfolders, or that resume reads the flat store and those folders as one set.
+
+
 ## [0.2.0] - 2026-08-18
 
 Session-log stores can now be archived by month without breaking resume.

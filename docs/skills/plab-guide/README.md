@@ -1,6 +1,6 @@
 # plab-guide
 
-**Version:** 2.2.1
+**Version:** 2.2.2
 **Source:** [`skills/plab-guide/`](../../../skills/plab-guide/)
 
 Generate a paired guide bundle (standard MD + ADHD MD + quick-reference HTML + 1-2 page PDF) for any topic. Works for software repos, tools, methodologies, frameworks, or domain knowledge.
@@ -246,6 +246,7 @@ Detects a Chromium-based browser; prints the resolved path or an install hint.
 
 | Version | Date | Notes |
 |---------|------|-------|
-| 2.2.1 | 2026-08-14 | Current version, and the first released in this plugin. See [`skills/plab-guide/HISTORY.md`](../../../skills/plab-guide/HISTORY.md). |
+| 2.2.2 | 2026-08-23 | Current version. Corrects three internal contradictions with the v2.0.0 one-or-two-page contract. |
+| 2.2.1 | 2026-08-14 | First version released in this plugin. See [`skills/plab-guide/HISTORY.md`](../../../skills/plab-guide/HISTORY.md). |
 
 Versions before 2.2.1 were released in a private upstream library; that history is not reproduced here.

@@ -2,7 +2,29 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
+| 2.2.2 | 2026-08-23 | unreleased | fix | Three internal contradictions with the v2.0.0 one-or-two-page contract, plus vestigial em-dash-sweep wording. |
 | 2.2.1 | 2026-08-14 | v0.1.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 2.2.1; prior history remains there. |
+
+## 2.2.2 - 2026-08-23
+
+Correctness only. No behavior added, and nothing about how a guide is authored changes.
+
+v2.0.0 made a dense single page legal and gave `render-pdf.sh` an auto-fit step, but three places in
+the skill were never updated to match, so the skill contradicted itself:
+
+- `scripts/regression-test.sh` asserted `pages -eq 2` and would have failed a legitimate 1-page
+  baseline, against the contract its own renderer documents in its header. It now accepts 1 or 2 and
+  reports the actual count. The comparison is also guarded with `${pages:-0}`, so a missing `pdfinfo`
+  reading falls through to the failure branch instead of erroring under `set -u`.
+- `references/quick-ref-html-patterns.md` repeated "exactly 2 pages" in its G-8 row, and its
+  anti-pattern table listed a 1-page result as a "page-count floor failure". The ink floor is the
+  real gate; page count alone is not.
+- `SKILL.md`'s failure table still said "Em-dash leaks past sweep". There is no sweep: G-11 is a
+  written-discipline rule verified by grep, which the same table's own gate list already said.
+
+Found while reconciling the public docs READMEs against shipped skill versions. The docs half of that
+work is separate and touches no skill. The version line drift was the visible symptom; these were the
+defect underneath it.
 
 ## 2.2.1 - 2026-08-14
 

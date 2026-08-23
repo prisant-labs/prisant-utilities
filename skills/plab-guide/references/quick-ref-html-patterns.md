@@ -295,7 +295,7 @@ Density target (v1.5.0): each page should land at **>= 0.30 ink ratio** (recomme
 | Gate | Check |
 |------|-------|
 | G-7 | No banned content (install walkthroughs, "what is X" entries, marketing prose) |
-| G-8 | PDF renders at exactly 2 pages AND each page has ink ratio >= 0.20 (pixel-based density via `pdftoppm`; v1.5.0 recommended target >= 0.30; Spike H benchmark 0.385 / 0.348) |
+| G-8 | PDF renders at 1 or 2 pages, never 3 or more (auto-fit) AND each page has ink ratio >= 0.20 (pixel-based density via `pdftoppm`; v1.5.0 recommended target >= 0.30; Spike H benchmark 0.385 / 0.348) |
 | G-11 | No em-dashes / en-dashes |
 | G-15 | No 2-row tables (use a list) |
 | G-16 | All tables have column headers |
@@ -311,7 +311,7 @@ Density target (v1.5.0): each page should land at **>= 0.30 ink ratio** (recomme
 | Tables without headers | Field/Value pairs without `<th>` | Add `<tr><th>...</th></tr>` |
 | Card with one short row | Wasted real estate | Merge with adjacent card or expand |
 | Page 2 ends with white space | Sparse page (G-8 density floor failure) | Add cards from the catalog; expand short cards; rebalance from page 1 |
-| Whole document fits on 1 page | Severe under-fill (G-8 page-count floor failure) | Add 4-6 more cards; the topic likely warrants more depth than was captured |
+| Thin single page | A dense 1-page card is legal as of v2.0.0, so page count alone is not the failure; the ink floor is. Only a page under ratio 0.20 fails G-8 | Add 4-6 more cards; the topic likely warrants more depth than was captured |
 | Long paragraph inside card | Hard to scan | Break into 2-3 short paragraphs or convert to bullets |
 | Emoji-heavy lede | Doesn't render well in PDF | Stick to ASCII + the blue accent |
 | Topic-irrelevant card | E.g., "API" card on a non-API topic | Drop it; pick from the catalog |

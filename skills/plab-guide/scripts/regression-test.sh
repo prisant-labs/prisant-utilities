@@ -2,7 +2,7 @@
 # regression-test.sh
 #
 # Runs the locked baseline quick-reference HTMLs through the PDF renderer
-# and verifies each still produces a 2-page PDF. Smoke-tests the end-to-end
+# and verifies each still renders at 1 or 2 pages. Smoke-tests the end-to-end
 # template + script pipeline against the locked examples.
 #
 # This does NOT regenerate the MD guides (those are produced by an LLM run
@@ -70,11 +70,11 @@ for bundle in "${BUNDLES[@]}"; do
     # Page count check (gate G-8)
     if command -v pdfinfo >/dev/null 2>&1; then
       pages=$(pdfinfo "$tmp_pdf" 2>/dev/null | awk '/^Pages:/ {print $2}')
-      if [[ "$pages" -eq 2 ]]; then
-        echo "[PASS] $bundle (2 pages)"
+      if [[ "${pages:-0}" -ge 1 && "${pages:-0}" -le 2 ]]; then
+        echo "[PASS] $bundle ($pages page(s))"
         PASS=$((PASS + 1))
       else
-        echo "[FAIL] $bundle (rendered $pages pages, expected 2)"
+        echo "[FAIL] $bundle (rendered ${pages:-?} pages, expected 1 or 2)"
         FAIL=$((FAIL + 1))
         FAILED_BUNDLES+=("$bundle")
       fi
