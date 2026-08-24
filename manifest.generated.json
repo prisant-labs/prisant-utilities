@@ -20,6 +20,21 @@
       "description": "Generate a paired guide bundle (standard MD + ADHD MD + quick-reference HTML + 1-2 page PDF) for any topic. Use when the user provides a GitHub URL, a tool name, or a concept and wants a structured explanatory document plus a printable operator card. Triggers on \"create a guide\", \"build a cheat sheet\", \"explain X with a quick reference\", \"/plab-guide\"."
     },
     {
+      "name": "plab-init-project",
+      "path": "skills/plab-init-project/SKILL.md",
+      "description": "Initialize agentic development infrastructure in a project. Creates standardized folders and seed files: AGENTS.md (open standard agent instructions), CLAUDE.md (Claude-specific overlay), session logs written to gitignored _local/_session-logs/, and MADR v4 decision records. Three profiles: minimal (experiments), standard (working projects), public (open source). Non-destructive and idempotent - safe to run against an existing repository. Use when setting up a new project for AI-assisted development, or when adding agent support to an existing repo. Explicit invocation only: run /plab-init-project; it does not fire on its own. Pairs with /plab-wrap-session and /plab-continue-session, which write and read the session logs it scaffolds."
+    },
+    {
+      "name": "plab-release-plan",
+      "path": "skills/plab-release-plan/SKILL.md",
+      "description": "Manage a version-scoped release plan. Creates the release folder with the plan document inside; promotes per-effort folders (spec + implementation plan + supporting) from _unassigned/ into the release; auto-generates an aggregation table from the folder contents; enforces hygiene gates and a doc-update checklist that gates the tag. Use when scoping a release, moving efforts in or out of one, or checking whether a version can be tagged yet. Explicit invocation only: run /plab-release-plan with one of five subcommands - --create, --promote, --demote, --update, --gate; it does not fire on its own. Refuses to invent or modify acceptance criteria - AC live in specs written by /plab-spec; the release plan only aggregates."
+    },
+    {
+      "name": "plab-spec",
+      "path": "skills/plab-spec/SKILL.md",
+      "description": "Create a feature specification document optimized for agent execution. Produces a spec.md inside a per-effort folder under docs/internal/release-plans/, carrying frontmatter, an agent-updated Task Summary block at the top, numbered acceptance criteria with source citations, and links to the related effort and plan. Writes into _unassigned/ by default; pass --target-release vX.Y.Z to write straight into a release folder. Use when the problem space is already explored and the requirements need a durable home that survives rewrites of the plan beneath them. Explicit invocation only: run /plab-spec; it does not fire on its own. Defines WHAT to build; /superpowers:writing-plans defines HOW and /plab-strategy-brief explores WHY."
+    },
+    {
       "name": "plab-strategy-brief",
       "path": "skills/plab-strategy-brief/SKILL.md",
       "description": "Transform messy thinking into structured, decision-ready analysis documents. Use when a user provides raw, unstructured thoughts and wants them organized, expanded, and turned into an actionable artifact. Triggers on: 'help me think through', 'brain dump', 'summarize and expand', 'make sense of this', requests combining pros/cons with approaches and recommendations, or any stream-of-consciousness input needing structure. Also triggers on 'strategy primer', 'structured analysis', or '80/20 analysis'. Do NOT use for simple summarization of existing structured documents, editing polished prose, or pure research queries with no raw thinking provided."

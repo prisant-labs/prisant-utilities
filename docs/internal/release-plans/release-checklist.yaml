@@ -1,6 +1,6 @@
 # Project-level doc-update checklist extensions for prisant-utilities.
 #
-# Consumed by /jp-release-plan. The skill applies its eight built-in defaults first, then appends
+# Consumed by /plab-release-plan. The skill applies its eight built-in defaults first, then appends
 # every row listed here. Rows are added, never substituted: if an entry names the same `doc` as a
 # built-in, the built-in wins and this entry is ignored.
 #

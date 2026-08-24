@@ -4,7 +4,9 @@ Agent navigation entrypoint for the `prisant-utilities` plugin.
 
 ## What this is
 
-Five general-purpose agent skills for the work around the work: closing and resuming coding sessions, turning raw thinking into a decision-ready brief, producing guide bundles, and getting a second model to review a document.
+Eight general-purpose agent skills for the work around the work: scaffolding a repository for agent-assisted development, closing and resuming coding sessions, turning raw thinking into a decision-ready brief, producing guide bundles, getting a second model to review a document, and carrying a feature from written specification through to a taggable release plan.
+
+Three of the eight ship with `disable-model-invocation: true` and run only when invoked by name: `plab-spec`, `plab-release-plan`, and `plab-init-project`. They are deliberate, low-frequency tools whose trigger phrases ("spec", "init", "plan the release") are too common in ordinary conversation to be safe auto-matches.
 
 ## Design frame
 
@@ -21,7 +23,9 @@ Conventions an agent should follow in this repo:
 
 - Every skill name carries the `plab-` prefix and matches its directory name exactly.
 - Skills load shared utilities from the plugin root: `references/` for authoring guidance, `lib/` for executable helpers.
-- Generated artifacts go to `_output/<skill-name>/`, which is gitignored.
+- Generated artifacts go to `_output/<skill-name>/`, which is gitignored. The three planning skills are the
+  exception: `plab-spec` and `plab-release-plan` write into `docs/internal/release-plans/`, and
+  `plab-init-project` writes into the repository it scaffolds.
 - Never write em-dashes (U+2014) or en-dashes (U+2013). Use " - " or restructure.
 
 ## Skills
@@ -63,6 +67,30 @@ Generate a paired guide bundle for any topic: a standard Markdown guide, an ADHD
 Generate and synthesise structured peer reviews across models. Three modes: `--review` produces a self-contained review request for a second LLM, `--respond` adds requestor synthesis once the reviewer has filed findings, and `--close` archives the source and review, applies accepted changes, and writes unresolved decisions to a backlog. Designed to be run in a different harness from the one that produced the document under review.
 
 **Trigger:** `/plab-ai-review`, "review this with a second model", "get a second opinion", "peer review this"
+
+---
+
+### plab-spec
+
+Create a feature specification: the contract between intent and implementation. Writes a `spec.md` into a per-effort folder under `docs/internal/release-plans/`, carrying frontmatter, an agent-updated Task Summary block, numbered acceptance criteria each cited to a source, and links to the related effort and plan. Lands in `_unassigned/` by default, or straight into a release folder with `--target-release vX.Y.Z`. Defines WHAT to build; `/superpowers:writing-plans` defines HOW and `/plab-strategy-brief` explores WHY. Refuses to write implementation steps.
+
+**Invocation:** manual only (`disable-model-invocation: true`). `/plab-spec` and nothing else.
+
+---
+
+### plab-release-plan
+
+Aggregate every spec and implementation plan in scope of a release into one self-contained folder, and gate the tag on hygiene checks plus a doc-update checklist. Five subcommands: `--create` scaffolds the release folder and plan document, `--promote` and `--demote` move whole per-effort folders between `_unassigned/` and a release, `--update` regenerates the aggregation table from disk, `--gate` reports readiness read-only. The aggregation table is generated, never hand-edited. Refuses to add or modify acceptance criteria; those live in specs.
+
+**Invocation:** manual only (`disable-model-invocation: true`). `/plab-release-plan` with a subcommand.
+
+---
+
+### plab-init-project
+
+Initialize agent development infrastructure in a repository: `AGENTS.md`, `CLAUDE.md`, gitignored `_local/_session-logs/`, and MADR v4 decision records. Three profiles: `minimal`, `standard`, `public`. Non-destructive and idempotent, so it is safe to run against a repository that already has some of this. Pairs with `plab-wrap-session` and `plab-continue-session`, which write and read the session logs it scaffolds.
+
+**Invocation:** manual only (`disable-model-invocation: true`). `/plab-init-project`.
 
 ---
 

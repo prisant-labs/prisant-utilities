@@ -1,0 +1,86 @@
+# Frontmatter Schema
+
+The spec's YAML frontmatter is its machine-readable contract with downstream readers: `/plab-release-plan`, which parses it to build a release's aggregation table, and whoever writes the `implementation-plan.md` that sits beside it.
+
+## Required Fields
+
+| Field | Type | Description | Example |
+|-------|------|-------------|---------|
+| `id` | string | Effort id this spec belongs to. Must match the effort brief. | `S-04` |
+| `title` | string | Short, declarative title of the feature. Same string as the effort title or refined. | `Cross-LLM peer review skill` |
+| `type` | const | Always `spec`. Distinguishes from plan, brief, etc. | `spec` |
+| `status` | enum | One of: `draft`, `committed`, `fulfilled`, `superseded`. | `draft` |
+| `created` | ISO date | When this spec file was first written. | `2026-04-14` |
+| `updated` | ISO date | Last substantive edit. | `2026-04-14` |
+| `linked-effort` | path | Relative path to the effort brief. | `docs/internal/efforts/S-04.md` |
+| `ac-count` | integer | Number of acceptance criteria in this spec. Must match actual count. | `7` |
+
+## Optional Fields
+
+| Field | Type | When to use | Example |
+|-------|------|-------------|---------|
+| `linked-plan` | path \| null | Path to the plan, once it exists. `null` until then. | `docs/internal/efforts/S-04/S-04_plan.md` |
+| `linked-strategy-brief` | path | Path to upstream strategy-brief, if one exists. | `docs/internal/efforts/S-04/S-04_strategy-brief.md` |
+| `gh-issue` | integer | GitHub issue number if one tracks this work. | `15` |
+| `source-count` | integer | Number of distinct external sources cited in Sources & Evidence. Must match actual count. | `4` |
+| `requires-human-review` | boolean | `true` when spec contains `[model-inference]` markers without backing source. Signals reviewers. | `true` |
+| `spec-dependencies` | list of strings | Other spec ids this depends on. | `[S-02, S-07]` |
+| `target-release` | string | Target release version, if known. | `v1.2.0` |
+| `priority` | enum | `P1`, `P2`, `P3`. Inherits from effort if absent. | `P2` |
+
+## Status Lifecycle
+
+```
+draft → committed → fulfilled
+                 ↘ superseded
+```
+
+| Status | Meaning | Who sets it |
+|--------|---------|-------------|
+| `draft` | Just written or actively being revised. | Skill on creation |
+| `committed` | Reviewed and frozen. AC are now contract. | Human review |
+| `fulfilled` | All AC verified as met. | Closing the effort |
+| `superseded` | Replaced by a newer spec or no longer applicable. Add `superseded-by:` field with id. | Manual |
+
+The skill creates specs in `draft`. Promotion to `committed` is a human (or human-confirmed) action - never automatic.
+
+## Validation Rules
+
+- `id` matches `^[A-Z]{1,2}-\d{2,4}$` (matches the project's effort-id format)
+- `type` is always `spec` - required for downstream parsers to identify
+- `status` must be one of the enum values; no free-form
+- `ac-count` must equal the actual number of `AC-N:` entries in the body
+- `source-count` (if present) must equal the number of `[S<n>]` entries listed in Sources & Evidence
+- If `requires-human-review: true`, body MUST contain at least one `[model-inference]` marker
+- All `linked-*` paths must exist on disk at write time, OR be explicit `null`
+
+## Full Example
+
+```yaml
+---
+id: S-04
+title: Cross-LLM peer review skill
+type: spec
+status: draft
+created: 2026-04-14
+updated: 2026-04-14
+linked-effort: docs/internal/efforts/S-04.md
+linked-plan: null
+linked-strategy-brief: docs/internal/efforts/S-04/S-04_strategy-brief.md
+gh-issue: 15
+ac-count: 7
+source-count: 4
+requires-human-review: false
+target-release: v1.2.0
+priority: P2
+---
+```
+
+## Why This Schema
+
+- **Machine parseable**: `/plab-release-plan` reads `title` + `status` to build a release's aggregation table
+- **Lifecycle observable**: `status` lets release tools find committed-but-not-fulfilled specs
+- **Audit traceable**: `source-count` + `requires-human-review` flag specs that lean on model inference
+- **Dependency aware**: `spec-dependencies` lets release planning detect cross-spec coupling
+
+Do not invent fields. If a need arises that this schema doesn't cover, propose an extension in `docs/internal/ideas/` rather than ad-hoc adding it.

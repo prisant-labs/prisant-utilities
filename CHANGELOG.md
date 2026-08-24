@@ -7,15 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Documentation correctness, plus the skill-side defects that the stale documentation was hiding.
+Three skills arrive from a private library, and the documentation correctness pass that preceded them.
 
-**What changes for you.** The five per-skill READMEs and the root README table now state the versions
-that actually shipped. Three of them also described behavior that no longer exists: `plab-ai-review`
-was documented as having two modes when `--close` has shipped since 1.2.1, `plab-guide` documented a
-`scripts/em-dash-sweep.sh` that is not in this repository, and `plab-strategy-brief` never mentioned
-where it writes its output. Reading any of these now tells you what the installed skill does.
+**What changes for you.** The plugin now covers the whole path from an empty repository to a taggable
+release. `plab-init-project` 1.3.0 scaffolds agent infrastructure into a repo, `plab-spec` 1.2.1
+writes the acceptance criteria a feature is judged against, and `plab-release-plan` 1.3.0 aggregates
+effort folders into a release and decides whether it can ship. All three were previously private, so
+`docs/internal/release-plans/` in this repository documented a skill nobody could install; that is now
+fixed. Five skills becomes eight.
 
-**What does not change.** No skill gained or lost a capability. `plab-guide` 2.2.2 is correctness only.
+**All three are manual-invocation only.** They ship with `disable-model-invocation: true` and never
+fire on their own: type `/plab-spec`, `/plab-release-plan` or `/plab-init-project`. Two of them
+auto-triggered in the private library and no longer do, which is a deliberate behavior change.
+"spec", "init", "set up project" and "plan the release" are ordinary words in conversation about a
+repository, and all three skills write files into it.
+
+**What does not change.** The five existing skills are untouched by the migration. No skill gained or
+lost a capability, and `plab-guide` 2.2.2 remains correctness only.
+
+### Added
+
+- `plab-spec` 1.2.1, migrated from a private upstream. Writes a `spec.md` into a per-effort folder
+  under `docs/internal/release-plans/`, with frontmatter, an agent-updated Task Summary block,
+  numbered acceptance criteria each cited to a source, and an append-only Revisions section.
+- `plab-release-plan` 1.3.0, migrated from a private upstream. Five subcommands (`--create`,
+  `--promote`, `--demote`, `--update`, `--gate`) over a release folder whose aggregation table is
+  generated from disk rather than hand-edited. Refuses to add or modify acceptance criteria.
+- `plab-init-project` 1.3.0, migrated from a private upstream. Three profiles (`minimal`, `standard`,
+  `public`), non-destructive and idempotent. Pairs with the session skills already in this plugin:
+  it scaffolds the `_local/_session-logs/` that `plab-wrap-session` writes and `plab-continue-session`
+  reads.
+
+### Changed
+
+- References inside the three migrated skills now name what exists in this environment. The retired
+  `jp-implementation-plan` becomes `/superpowers:writing-plans` in nine places, the retired
+  `jp-skill-builder` becomes `/skill-creator`, and sibling references name their `plab-` twins.
+  `plab-init-project`'s AGENTS.md and CLAUDE.md seed templates named session skills that a reader
+  outside the maintainer's machine could not install; they now name `plab-wrap-session` and
+  `plab-continue-session`.
+- `docs/internal/release-plans/README.md` and `release-checklist.yaml` pointed at `/jp-release-plan`,
+  a skill no reader of this public repository could install. Both now name `/plab-release-plan`.
+- The plugin description in `library.json` enumerated four capability areas and now covers
+  specification, release planning, and project scaffolding as well.
 
 ### Fixed
 

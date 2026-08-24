@@ -92,7 +92,7 @@ empty.
 
 ## Working with these documents
 
-The `/jp-release-plan` skill owns this folder's structure:
+The `/plab-release-plan` skill owns this folder's structure:
 
 | Command | Effect |
 |---|---|
