@@ -1,0 +1,43 @@
+# Project-level doc-update checklist extensions for prisant-utilities.
+#
+# Consumed by /jp-release-plan. The skill applies its eight built-in defaults first, then appends
+# every row listed here. Rows are added, never substituted: if an entry names the same `doc` as a
+# built-in, the built-in wins and this entry is ignored.
+#
+# Why these five exist. The built-in defaults were written for a repo with a single plugin manifest
+# and a `docs/skills/README.md` index. This repo has two manifests that must agree (release hygiene
+# gate (f) fails the tag when they do not), a generated manifest downstream of `library.json`, and
+# per-skill usage docs with no index above them. Every row below corresponds to a file that has
+# actually gone stale in a shipped release at least once.
+#
+# Note on a built-in that does not apply: `docs/skills/README.md` does not exist in this repo; the
+# per-skill READMEs sit directly under `docs/skills/<skill>/`. Check that built-in row off as
+# "[x] N/A - no docs/skills/README.md in this repo" per the template's documented convention, and
+# use the `docs/skills/<skill>/README.md` row below instead.
+
+add:
+  - doc: ".codex-plugin/plugin.json"
+    update: >-
+      Bump `version` to match `.claude-plugin/plugin.json`. Release hygiene gate (f) reads BOTH
+      manifests and fails the tag when either disagrees with the release version.
+
+  - doc: "library.json"
+    update: >-
+      Bump the top-level plugin `version` and the `version` of every component changed in this
+      release. This is the source the generated manifest is built from, so a miss here propagates.
+
+  - doc: "manifest.generated.json"
+    update: >-
+      Regenerate from library.json rather than hand-editing. It embeds skill descriptions verbatim,
+      so a description edit that skips regeneration ships a manifest contradicting the skill.
+      Run the toolkit generator with --write --target=all.
+
+  - doc: "docs/skills/<skill>/README.md"
+    update: >-
+      Bump the version line in the usage doc of every affected skill. These drifted by as much as
+      three minor versions before the 2026-08-23 parity sweep caught them.
+
+  - doc: "README.md skill table"
+    update: >-
+      Bump the Version column for every affected skill in the root README table (starts at line 9).
+      Distinct from the built-in README row, which covers prose version references.
