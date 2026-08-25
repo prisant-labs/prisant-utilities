@@ -32,6 +32,14 @@ All fields are auto-derivable from the environment.
 | `skills-used` | List | Skills invoked during the session (usage telemetry; feeds pruning decisions) | Semi - agent recalls, user corrects |
 | `resumed-from` | Filename | The session log this session resumed from via /plab-continue-session, if any (measures log consumption) | Auto when resumption happened |
 
+### `resumed-from` semantics
+
+Written only when `/plab-continue-session` performed the resume in the current session. Never
+back-fill this field from narrative memory of a resume that happened in some prior session; if no
+resume occurred this session, omit the field entirely rather than guessing. Cross-repo lineage, when
+it matters, belongs in the Summary section's prose, not in this field: continue already refuses
+cross-repo resumption, so a value this field ever holds is always a same-repo filename.
+
 ### Session Types
 
 `bugfix` | `feature` | `refactor` | `research` | `planning` | `review` | `docs` | `autonomous` | `exploration`

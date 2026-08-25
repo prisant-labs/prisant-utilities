@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `plab-wrap-session` `resumed-from:` is now written only when `/plab-continue-session` performed the
+  resume in the current session, never back-filled from memory, and omitted rather than guessed when
+  no resume occurred. Both real logs in this repository carried an unresolvable cross-repo value from
+  back-filling.
 - The `plab-wrap-session` pre-wrap hygiene sweep's documentation-drift check now looks in both
   directions. It caught a version bumped with a stale usage doc, but not the inverse, content changed
   with no version bump, which is the drift that actually shipped in this repository. It now also

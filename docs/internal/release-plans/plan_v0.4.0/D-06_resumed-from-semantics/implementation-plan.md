@@ -2,9 +2,9 @@
 id: D-06
 title: "Implementation plan: Fix resumed-from semantics: written only by an in-session resume, never back-filled"
 type: implementation-plan
-status: draft
+status: complete
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-24
 linked-spec: spec.md
 linked-release: docs/internal/release-plans/plan_v0.4.0/plan_v0.4.0.md
 ac-coverage: complete
@@ -49,8 +49,8 @@ completing (`plan_v0.4.0.md` Hygiene Gate (f)).
 
 | Phase | Goal | Fulfills AC | Owner | Status |
 |---|---|---|---|---|
-| P1 | Semantics fix in `frontmatter-schema.md` and `SKILL.md` | AC-1, AC-2, AC-3, AC-4 | agent | Not started |
-| P2 | Repo bookkeeping (wrap-only) | AC-1, AC-2, AC-3, AC-4 | agent | Not started |
+| P1 | Semantics fix in `frontmatter-schema.md` and `SKILL.md` | AC-1, AC-2, AC-3, AC-4 | agent | Done |
+| P2 | Repo bookkeeping (wrap-only) | AC-1, AC-2, AC-3, AC-4 | agent | Done |
 
 ---
 
@@ -68,7 +68,7 @@ with it.
 
 **Steps:**
 
-- [ ] Step 1: In `references/frontmatter-schema.md`, insert a new subsection immediately after the
+- [x] Step 1: In `references/frontmatter-schema.md`, insert a new subsection immediately after the
   Tier 2 table and before `### Session Types`:
 
   ```markdown
@@ -84,7 +84,7 @@ with it.
   Leave the existing Tier 2 table row for `resumed-from` unchanged; this subsection is the one place
   the full rule lives.
 
-- [ ] Step 2: In `SKILL.md`'s frontmatter block, replace the `resumed-from:` comment. Current line:
+- [x] Step 2: In `SKILL.md`'s frontmatter block, replace the `resumed-from:` comment. Current line:
 
   ```yaml
   resumed-from: # filename of the session log this session resumed from, if any - measures log consumption
@@ -96,7 +96,7 @@ with it.
   resumed-from: # written only by an in-session /plab-continue-session resume; never back-filled from memory. See references/frontmatter-schema.md.
   ```
 
-- [ ] Step 3: Bump wrap's frontmatter:
+- [x] Step 3: Bump wrap's frontmatter:
 
   ```yaml
   metadata:
@@ -107,7 +107,7 @@ with it.
   Skip this step if a sibling v0.4.0 effort (D-04 or D-05) has already bumped it to 1.6.0 this
   release.
 
-- [ ] Step 4: Add (or append to, if present) the `## 1.6.0` section in
+- [x] Step 4: Add (or append to, if present) the `## 1.6.0` section in
   `skills/plab-wrap-session/HISTORY.md`, same create-or-append rule as the sibling D-04 and D-05 plans.
 
   Paragraph to add under `## 1.6.0 - 2026-08-23`:
@@ -153,19 +153,19 @@ changed.
 
 **Steps:**
 
-- [ ] Step 1: In `library.json`, set `components.skills[plab-wrap-session].version` to `"1.6.0"`, if
+- [x] Step 1: In `library.json`, set `components.skills[plab-wrap-session].version` to `"1.6.0"`, if
   not already set by a sibling effort. Do not touch `plab-continue-session`'s entry in this plan, and
   do not touch the top-level `version` field.
 
-- [ ] Step 2: In `docs/skills/plab-wrap-session/README.md`, update the `**Version:**` line to `1.6.0`
+- [x] Step 2: In `docs/skills/plab-wrap-session/README.md`, update the `**Version:**` line to `1.6.0`
   and add one sentence near the `references/frontmatter-schema.md` mention in Reference Files, noting
   that `resumed-from` is written only by an in-session resume.
 
-- [ ] Step 3: In root `README.md`'s skill table, bump the Version column for `plab-wrap-session` to
+- [x] Step 3: In root `README.md`'s skill table, bump the Version column for `plab-wrap-session` to
   `1.6.0`, if not already bumped by a sibling effort. Leave the `plab-continue-session` row for D-04 or
   D-05 to bump.
 
-- [ ] Step 4: Add a bullet under `CHANGELOG.md`'s `[Unreleased]` heading (`### Fixed`):
+- [x] Step 4: Add a bullet under `CHANGELOG.md`'s `[Unreleased]` heading (`### Fixed`):
 
   ```markdown
   - `plab-wrap-session` 1.6.0: `resumed-from:` is now written only when `/plab-continue-session`

@@ -2,9 +2,9 @@
 id: D-06
 title: "Fix resumed-from semantics: written only by an in-session resume, never back-filled"
 type: spec
-status: draft
+status: fulfilled
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-24
 linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
 linked-plan: implementation-plan.md
 ac-count: 4
@@ -19,18 +19,18 @@ priority: P3
 
 ## Task Summary
 
-Status: Draft
-Last updated: 2026-08-23
+Status: Fulfilled
+Last updated: 2026-08-24
 Linked plan: implementation-plan.md
 Open questions: 1 (see Open Questions / Decisions)
 Revisions: 1 (see Revisions)
 
 ### Acceptance Criteria Fulfillment
 
-- [ ] AC-1: `frontmatter-schema.md` states the four-part semantics
-- [ ] AC-2: `SKILL.md`'s frontmatter comment matches or cross-references the semantics
-- [ ] AC-3: Neither file describes `resumed-from` as suitable for cross-repo pointers
-- [ ] AC-4: No shipped file justifies writing the field from memory rather than an in-session resume
+- [x] AC-1: `frontmatter-schema.md` states the four-part semantics
+- [x] AC-2: `SKILL.md`'s frontmatter comment matches or cross-references the semantics
+- [x] AC-3: Neither file describes `resumed-from` as suitable for cross-repo pointers
+- [x] AC-4: No shipped file justifies writing the field from memory rather than an in-session resume
 
 ### Currently In Progress
 

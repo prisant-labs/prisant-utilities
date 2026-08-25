@@ -51,6 +51,13 @@ The recipe proved itself during its own implementation. Run against this working
 `plab-wrap-session changed since v0.3.0 but metadata.version is still 1.5.0`, which was true at that
 moment and is what the bump in this entry resolves.
 
+**Fixed: `resumed-from` semantics.** The field now means "consumed via an in-session
+`/plab-continue-session` resume", stated once in `references/frontmatter-schema.md` and mirrored in
+the frontmatter comment. It is never back-filled from narrative memory, and is omitted, not guessed,
+when no resume occurred. Both real logs in this repository previously carried a value pointing at an
+unresolvable cross-repo filename because the field had been back-filled. No repo qualifier was added,
+since continue already refuses cross-repo resumption, which makes a bare filename always resolvable.
+
 ## 1.5.0 - 2026-08-18
 
 **Added: `--organize`.** A flat session-log store grows without bound. `--organize` files logs older

@@ -125,7 +125,7 @@ agent: # claude-code|codex-cli|other
 status: # completed|interrupted|blocked
 decisions-count: # integer
 skills-used: # skills invoked this session, e.g. [plab-guide, plab-ai-review] - feeds usage telemetry
-resumed-from: # filename of the session log this session resumed from, if any - measures log consumption
+resumed-from: # written only by an in-session /plab-continue-session resume; never back-filled from memory. See references/frontmatter-schema.md.
 ---
 ```
 
