@@ -2,12 +2,12 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
-| 1.6.0 | 2026-08-24 | v0.4.0 | fixed | Detector gates that could not fail open, plus the log-format and hygiene fixes batched with them. |
+| 1.6.0 | 2026-08-25 | v0.4.0 | fixed | Detector gates that could not fail open, plus the log-format and hygiene fixes batched with them. |
 | 1.5.0 | 2026-08-18 | v0.2.0 | added | `--organize` files old logs into `YYYY-MM/` folders. Hygiene sweep gained Check 5. |
 | 1.4.1 | 2026-08-18 | v0.1.2 | fixed | Dropped the "what did we do" trigger. Added `type:` to the frontmatter block and `machine:` to the Quick and Blocked templates. |
 | 1.4.0 | 2026-08-14 | v0.1.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.4.0; prior history remains there. |
 
-## 1.6.0 - 2026-08-24
+## 1.6.0 - 2026-08-25
 
 **Fixed: the path-existence gate stopped flagging prose.** The Log Self-Check gate "Every file path
 and link named in the log exists" resolved any citation as if it were a repo-relative path. In the
