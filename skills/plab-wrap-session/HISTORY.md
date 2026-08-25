@@ -2,9 +2,26 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
+| 1.6.0 | 2026-08-24 | v0.4.0 | fixed | Detector gates that could not fail open, plus the log-format and hygiene fixes batched with them. |
 | 1.5.0 | 2026-08-18 | v0.2.0 | added | `--organize` files old logs into `YYYY-MM/` folders. Hygiene sweep gained Check 5. |
 | 1.4.1 | 2026-08-18 | v0.1.2 | fixed | Dropped the "what did we do" trigger. Added `type:` to the frontmatter block and `machine:` to the Quick and Blocked templates. |
 | 1.4.0 | 2026-08-14 | v0.1.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.4.0; prior history remains there. |
+
+## 1.6.0 - 2026-08-24
+
+**Fixed: the path-existence gate stopped flagging prose.** The Log Self-Check gate "Every file path
+and link named in the log exists" resolved any citation as if it were a repo-relative path. In the
+2026-08-23 10:27 wrap it flagged 7 of 21 citations and 6 of the 7 were false positives: bare
+filenames and document titles mentioned in running prose, not claims about where a file lives.
+
+The gate now tests what a citation actually asserts. A citation containing a path separator is a
+location claim and must exist as written. A backtick-wrapped citation with no separator is resolved
+against the repo root and passes silently when it does not resolve, because naming a file is not the
+same as saying where it is. A bare word with a file extension and neither signal is prose and is not
+evaluated at all.
+
+A gate that cries wolf six times out of seven trains its reader to skim the output, which is how the
+one real finding in that wrap nearly went unread.
 
 ## 1.5.0 - 2026-08-18
 

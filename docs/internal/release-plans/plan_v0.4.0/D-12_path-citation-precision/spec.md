@@ -2,9 +2,9 @@
 id: D-12
 title: Narrow the path-existence gate to real path citations
 type: spec
-status: draft
+status: fulfilled
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-24
 linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
 linked-plan: implementation-plan.md
 ac-count: 5
@@ -19,19 +19,19 @@ priority: P2
 
 ## Task Summary
 
-**Status:** Draft
-**Last updated:** 2026-08-23
+**Status:** Fulfilled
+**Last updated:** 2026-08-24
 **Linked plan:** implementation-plan.md
 **Open questions:** 1 open, see Open Questions / Decisions
 **Revisions:** Initial draft
 
 ### Acceptance Criteria Fulfillment
 
-- [ ] AC-1: A citation containing a path separator is checked for existence and flagged when missing
-- [ ] AC-2: A backtick-wrapped citation with no separator is tested against the repo root; non-resolution is not reported as a finding
-- [ ] AC-3: A bare word with a file extension, carrying neither signal, is not evaluated at all
-- [ ] AC-4: The scoping rule is stated as an explicit test in the SKILL.md gate line itself
-- [ ] AC-5: A genuine missing path-separator citation is still flagged after the narrowing
+- [x] AC-1: A citation containing a path separator is checked for existence and flagged when missing
+- [x] AC-2: A backtick-wrapped citation with no separator is tested against the repo root; non-resolution is not reported as a finding
+- [x] AC-3: A bare word with a file extension, carrying neither signal, is not evaluated at all
+- [x] AC-4: The scoping rule is stated as an explicit test in the SKILL.md gate line itself
+- [x] AC-5: A genuine missing path-separator citation is still flagged after the narrowing
 
 ### Currently In Progress
 

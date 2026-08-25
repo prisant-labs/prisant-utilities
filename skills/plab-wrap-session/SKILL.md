@@ -191,7 +191,7 @@ Verify the drafted log passes every gate; fix failures before writing, never aft
 - Waiting on You section present in every mode ("Nothing pending." counts; absence does not)
 - Summary is 120 characters or fewer
 - Frontmatter Tier 1 complete, including `machine:`
-- Every file path and link named in the log exists
+- Every citation that asserts a location resolves: one containing a path separator must exist as written, and a backtick-wrapped citation with no separator is resolved against the repo root and passes silently if it does not resolve. A bare word with a file extension and neither signal is prose, not a path claim, and is not checked
 - No em-dash or en-dash characters anywhere in the log
 
 ## Surrounding Document Updates

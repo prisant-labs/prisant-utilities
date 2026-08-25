@@ -5,6 +5,16 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- The `plab-wrap-session` path-existence Log Self-Check gate flagged bare filenames mentioned in
+  prose as missing paths. In one observed wrap 6 of its 7 flags were false positives. It now checks
+  only citations that assert a location: one carrying a path separator must exist as written, and a
+  backtick-wrapped citation with no separator is resolved against the repo root and passes silently
+  when it does not resolve.
+
 ## [0.3.0] - 2026-08-24
 
 Three skills arrive from a private library, and the documentation correctness pass that preceded them.

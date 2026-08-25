@@ -2,9 +2,9 @@
 id: D-12
 title: "Implementation plan: Narrow the path-existence gate to real path citations"
 type: implementation-plan
-status: draft
+status: complete
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-24
 linked-spec: spec.md
 linked-release: docs/internal/release-plans/plan_v0.4.0/plan_v0.4.0.md
 ac-coverage: complete
@@ -52,8 +52,8 @@ across every v0.4.0 effort that touches wrap. Do not bump `metadata.version` in 
 
 | Phase | Goal | Fulfills AC | Owner | Status |
 |---|---|---|---|---|
-| P1 | Rewrite the path-existence gate bullet | AC-1, AC-2, AC-3, AC-4, AC-5 | agent | Not started |
-| P2 | Documentation and version-trail content | N/A (documentation) | agent | Not started |
+| P1 | Rewrite the path-existence gate bullet | AC-1, AC-2, AC-3, AC-4, AC-5 | agent | Done |
+| P2 | Documentation and version-trail content | N/A (documentation) | agent | Done |
 
 ---
 
@@ -68,13 +68,13 @@ test.
 
 **Steps:**
 
-- [ ] Step 1: Open `skills/plab-wrap-session/SKILL.md` and confirm the current text at the Log
+- [x] Step 1: Open `skills/plab-wrap-session/SKILL.md` and confirm the current text at the Log
   Self-Check section (`## Log Self-Check (before writing)`, currently starting at line 186). The
   target bullet currently reads "Every file path and link named in the log exists" (currently line
   194, the fifth of six bullets, immediately above the em-dash/en-dash bullet). Re-verify the line
   number before editing, since a prior phase in this same release may have already shifted lines above
   it.
-- [ ] Step 2: Replace that one bullet with:
+- [x] Step 2: Replace that one bullet with:
   `Every citation with a path separator, or backtick-wrapped and resolving against the repo root,
   exists as a file (a bare word with a file extension and neither signal is not a path claim and is
   not checked)`
@@ -82,9 +82,9 @@ test.
   branches of the rule survive: (a) separator present -> checked, flagged if missing; (b)
   backtick-wrapped, no separator -> resolved against repo root, non-resolution is not a finding; (c)
   neither signal -> not evaluated.
-- [ ] Step 3: Leave every other line in the Log Self-Check section, and the rest of the file, untouched.
+- [x] Step 3: Leave every other line in the Log Self-Check section, and the rest of the file, untouched.
   Do not touch the em-dash/en-dash bullet immediately below.
-- [ ] Step 4: Re-read the six-bullet list top to bottom and confirm it still reads as six single-line
+- [x] Step 4: Re-read the six-bullet list top to bottom and confirm it still reads as six single-line
   bullets (the new one may wrap in the editor but should remain one logical bullet, consistent with the
   style of its neighbors).
 
@@ -116,19 +116,19 @@ changed and why.
 
 **Steps:**
 
-- [ ] Step 1: Add a bullet under `CHANGELOG.md`'s `## [Unreleased]` section, in a `### Fixed`
+- [x] Step 1: Add a bullet under `CHANGELOG.md`'s `## [Unreleased]` section, in a `### Fixed`
   subsection (create the subsection if the current `[Unreleased]` block does not already have one).
   Content: state that the path-existence Log Self-Check gate previously flagged bare filenames
   mentioned in prose as missing paths (6 of 7 flags were false positives in one observed wrap), and
   that it now only checks citations carrying a path separator or a backtick-wrapped, repo-root
   resolving reference.
-- [ ] Step 2: Check `skills/plab-wrap-session/HISTORY.md` for an existing `## 1.6.0` heading and
+- [x] Step 2: Check `skills/plab-wrap-session/HISTORY.md` for an existing `## 1.6.0` heading and
   version-table row. If a co-landing v0.4.0 effort has already added one, append this effort's content
   as an additional bulleted paragraph under the existing heading, without editing or removing any
   other effort's bullets. If no `1.6.0` heading exists yet, add both the version-table row (`| 1.6.0 |
   <date> | v0.4.0 | fixed | <short summary, to be extended by later v0.4.0 efforts> |`) and the
   section heading with this effort's bullet.
-- [ ] Step 3: Follow the existing HISTORY.md style (bold lead sentence, then supporting detail), as
+- [x] Step 3: Follow the existing HISTORY.md style (bold lead sentence, then supporting detail), as
   seen in the 1.5.0 and 1.4.1 entries already in the file.
 
 **Verification:** Both files remain valid Markdown (visual check); `skills/plab-wrap-session/HISTORY.md`
