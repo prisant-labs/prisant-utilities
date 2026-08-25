@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   em-dash and en-dash check. Until now the conformance gate was a command in `AGENTS.md` that a human
   had to remember, and the dash rule was enforced only by a hook on one machine, which a copy-based
   migration bypassed once at 31 dashes. CI reports; it never fixes, bumps, or tags.
+- Capture-lite records are now read, not just written. A SessionEnd hook has been writing JSONL
+  records that nothing consumed. `plab-wrap-session` now reports how many sessions since the last log
+  were never wrapped, in Outstanding Issues; `plab-continue-session` surfaces a one-line orientation
+  on its no-log-found and stale-log paths. Both stay silent when the capture store is absent, which
+  it will be on any machine without the optional hook.
 - Both detector-backed `plab-wrap-session` Log Self-Check gates now run committed, canary-verified
   scripts that report one of three states: clean, findings, or broken. `scripts/dash-check.py` and
   `scripts/path-citation-check.py` each prove their detector against a canary corpus before scanning,

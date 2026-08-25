@@ -2,9 +2,21 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
+| 1.4.0 | 2026-08-25 | v0.4.0 | added | Capture-lite orientation on the no-log and stale-log paths. |
 | 1.3.0 | 2026-08-18 | v0.2.0 | added | Discovery reads `YYYY-MM/` month folders alongside the flat store. Empty-store message diagnoses version skew. |
 | 1.2.1 | 2026-08-18 | v0.1.2 | fixed | Body trigger list aligned with the narrowed description. Records the 2026-08-17 description change that shipped un-versioned. |
 | 1.2.0 | 2026-08-14 | v0.1.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.2.0; prior history remains there. |
+
+## 1.4.0 - 2026-08-25
+
+**Added: capture-lite orientation.** On the no-log-found path and the stale-log path, when
+`_local/_session-logs/_capture/` holds qualifying records, continue now surfaces one orientation line
+before its existing message: branch, head, commits today and timestamp for the no-log case, or a
+count of sessions since the stale log for the age-warning case. Silent when the directory is absent
+or nothing qualifies.
+
+The records already existed. A SessionEnd hook has been writing them with nothing reading them, which
+is a producer with no consumer, the same defect class this plugin has shipped before.
 
 ## 1.3.0 - 2026-08-18
 

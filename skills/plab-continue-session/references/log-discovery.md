@@ -126,6 +126,9 @@ Options:
 - Manually point me at a log: tell me the path.
 ```
 
+If `_local/_session-logs/_capture/` holds any qualifying record, surface it first; see
+"Capture-lite orientation" below.
+
 ## Age warning
 
 If the latest log's date prefix is more than 7 days old, surface an age warning before proceeding:
@@ -133,6 +136,20 @@ If the latest log's date prefix is more than 7 days old, surface an age warning 
 > **Heads up:** the latest session log is from 2026-04-15 (43 days ago). The repo state may have moved on. Confirm you want to resume from this log, or point me at a more recent one.
 
 The 7-day threshold is a heuristic; it does not block. The user can confirm and proceed.
+
+Also check `_local/_session-logs/_capture/` for records since this log; see "Capture-lite
+orientation" below.
+
+## Capture-lite orientation (when present)
+
+On the no-log-found branch above, and on the age-warning path, check whether
+`_local/_session-logs/_capture/` exists and its `.jsonl` files hold any record with a non-null
+`session_id` newer than the relevant boundary: no existing log at all for the no-log-found case, or
+the stale log's date for the age-warning case. If so, surface one line before the existing message:
+the most recent qualifying record's `branch`, `head`, `commits_today`, and `ts` for the no-log case,
+or the count of such records since the stale log for the age-warning case. Say nothing when the
+directory is absent or nothing qualifies; the hook is optional machine-local infrastructure and this
+store may not exist at all.
 
 ## Repo / branch mismatch
 

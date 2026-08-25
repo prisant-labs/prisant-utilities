@@ -58,6 +58,13 @@ when no resume occurred. Both real logs in this repository previously carried a 
 unresolvable cross-repo filename because the field had been back-filled. No repo qualifier was added,
 since continue already refuses cross-repo resumption, which makes a bare filename always resolvable.
 
+**Added: capture-lite consumption, wrap side.** In deep and final modes, when
+`_local/_session-logs/_capture/` holds `.jsonl` records newer than the last existing log, Outstanding
+Issues now states how many sessions since then were never wrapped, with the earliest-to-latest head.
+Records with a null `session_id` are skipped. Silent when the directory is absent or nothing
+qualifies. No new script: the hook that writes these records lives outside this repository, under the
+user's home directory, and was already producing them with nothing reading them.
+
 ## 1.5.0 - 2026-08-18
 
 **Added: `--organize`.** A flat session-log store grows without bound. `--organize` files logs older

@@ -2,9 +2,9 @@
 id: D-04
 title: Consume capture-lite records in wrap and continue
 type: spec
-status: draft
+status: fulfilled
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-24
 linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
 linked-plan: implementation-plan.md
 ac-count: 7
@@ -19,21 +19,21 @@ priority: P2
 
 ## Task Summary
 
-Status: Draft
-Last updated: 2026-08-23
+Status: Fulfilled
+Last updated: 2026-08-24
 Linked plan: implementation-plan.md
 Open questions: 3 (see Open Questions / Decisions)
 Revisions: 1 (see Revisions)
 
 ### Acceptance Criteria Fulfillment
 
-- [ ] AC-1: Capture absent means no mention, wrap side
-- [ ] AC-2: Wrap reports unwrapped-session count and head range in Outstanding Issues
-- [ ] AC-3: Null `session_id` records are excluded from the count
-- [ ] AC-4: Continue's no-log-found path surfaces a capture orientation line
-- [ ] AC-5: Continue's stale-log path surfaces a capture count
-- [ ] AC-6: Capture absent means unchanged output, continue side
-- [ ] AC-7: Public skill text references only the five consumed field names
+- [x] AC-1: Capture absent means no mention, wrap side
+- [x] AC-2: Wrap reports unwrapped-session count and head range in Outstanding Issues
+- [x] AC-3: Null `session_id` records are excluded from the count
+- [x] AC-4: Continue's no-log-found path surfaces a capture orientation line
+- [x] AC-5: Continue's stale-log path surfaces a capture count
+- [x] AC-6: Capture absent means unchanged output, continue side
+- [x] AC-7: Public skill text references only the five consumed field names
 
 ### Currently In Progress
 

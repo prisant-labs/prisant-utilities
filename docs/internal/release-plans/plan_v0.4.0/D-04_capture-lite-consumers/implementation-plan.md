@@ -2,9 +2,9 @@
 id: D-04
 title: "Implementation plan: Consume capture-lite records in wrap and continue"
 type: implementation-plan
-status: draft
+status: complete
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-24
 linked-spec: spec.md
 linked-release: docs/internal/release-plans/plan_v0.4.0/plan_v0.4.0.md
 ac-coverage: complete
@@ -57,9 +57,9 @@ a release-level action gated by all eight v0.4.0 efforts completing (`plan_v0.4.
 
 | Phase | Goal | Fulfills AC | Owner | Status |
 |---|---|---|---|---|
-| P1 | Wrap-side capture consumption | AC-1, AC-2, AC-3 | agent | Not started |
-| P2 | Continue-side capture consumption | AC-4, AC-5, AC-6 | agent | Not started |
-| P3 | Repo bookkeeping and AC-7 field-minimality verification | AC-7 | agent | Not started |
+| P1 | Wrap-side capture consumption | AC-1, AC-2, AC-3 | agent | Done |
+| P2 | Continue-side capture consumption | AC-4, AC-5, AC-6 | agent | Done |
+| P3 | Repo bookkeeping and AC-7 field-minimality verification | AC-7 | agent | Done |
 
 ---
 
@@ -76,7 +76,7 @@ Outstanding Issues, only when qualifying capture records exist.
 
 **Steps:**
 
-- [ ] Step 1: Add a new numbered item to `## Evidence Gathering` (after the existing item 6 and before
+- [x] Step 1: Add a new numbered item to `## Evidence Gathering` (after the existing item 6 and before
   the closing "If git is unavailable..." sentence). Renumber to the next available integer if a
   sibling effort already added an item 7 this release (see Global constraints):
 
@@ -89,7 +89,7 @@ Outstanding Issues, only when qualifying capture records exist.
      directory is absent or nothing qualifies.
   ```
 
-- [ ] Step 2: Append one clause to the **Outstanding Issues** bullet under
+- [x] Step 2: Append one clause to the **Outstanding Issues** bullet under
   `### Body Sections (Final Mode)` (the line reading "**Outstanding Issues** - Blockers, risks,
   unfinished work."):
 
@@ -98,7 +98,7 @@ Outstanding Issues, only when qualifying capture records exist.
   that were never wrapped (from capture-lite records, when present; see Evidence Gathering above).
   ```
 
-- [ ] Step 3: Bump wrap's frontmatter, if not already at this value from a sibling effort:
+- [x] Step 3: Bump wrap's frontmatter, if not already at this value from a sibling effort:
 
   ```yaml
   metadata:
@@ -106,7 +106,7 @@ Outstanding Issues, only when qualifying capture records exist.
     updated: 2026-08-23
   ```
 
-- [ ] Step 4: Add (or append to, if present) the `## 1.6.0` section in
+- [x] Step 4: Add (or append to, if present) the `## 1.6.0` section in
   `skills/plab-wrap-session/HISTORY.md`, same create-or-append rule as the sibling D-05 and D-06 plans.
 
   Paragraph to add under `## 1.6.0 - 2026-08-23`:
@@ -148,7 +148,7 @@ stale-log path, only when qualifying records exist.
 
 **Steps:**
 
-- [ ] Step 1: Add a new subsection to `log-discovery.md`, after "## Age warning" and before
+- [x] Step 1: Add a new subsection to `log-discovery.md`, after "## Age warning" and before
   "## Repo / branch mismatch":
 
   ```markdown
@@ -164,7 +164,7 @@ stale-log path, only when qualifying records exist.
   store may not exist at all.
   ```
 
-- [ ] Step 2: At the end of "## Empty or missing directory" (before "## Age warning" begins), add one
+- [x] Step 2: At the end of "## Empty or missing directory" (before "## Age warning" begins), add one
   forward-pointer sentence:
 
   ```markdown
@@ -172,7 +172,7 @@ stale-log path, only when qualifying records exist.
   "Capture-lite orientation" below.
   ```
 
-- [ ] Step 3: At the end of "## Age warning" (before "## Repo / branch mismatch" begins), add one
+- [x] Step 3: At the end of "## Age warning" (before "## Repo / branch mismatch" begins), add one
   forward-pointer sentence:
 
   ```markdown
@@ -180,7 +180,7 @@ stale-log path, only when qualifying records exist.
   orientation" below.
   ```
 
-- [ ] Step 4: Bump continue's frontmatter, only if no sibling v0.4.0 effort (most likely D-05) has
+- [x] Step 4: Bump continue's frontmatter, only if no sibling v0.4.0 effort (most likely D-05) has
   already bumped it this release:
 
   ```yaml
@@ -189,7 +189,7 @@ stale-log path, only when qualifying records exist.
     updated: 2026-08-23
   ```
 
-- [ ] Step 5: Add (or append to, if present) the `## 1.4.0` section in
+- [x] Step 5: Add (or append to, if present) the `## 1.4.0` section in
   `skills/plab-continue-session/HISTORY.md`, same create-or-append rule as Phase 1 Step 4.
 
   Paragraph to add under `## 1.4.0 - 2026-08-23`:
@@ -232,22 +232,22 @@ name was introduced.
 
 **Steps:**
 
-- [ ] Step 1: In `library.json`, set `components.skills[plab-wrap-session].version` to `"1.6.0"` and
+- [x] Step 1: In `library.json`, set `components.skills[plab-wrap-session].version` to `"1.6.0"` and
   `components.skills[plab-continue-session].version` to `"1.4.0"`, if not already at those values from
   a sibling effort. Do not change the top-level `version` field.
 
-- [ ] Step 2: In `docs/skills/plab-wrap-session/README.md`, update the `**Version:**` line to `1.6.0`
+- [x] Step 2: In `docs/skills/plab-wrap-session/README.md`, update the `**Version:**` line to `1.6.0`
   and add one sentence near the Evidence Gathering or Outstanding Issues description noting the
   capture-lite count, cross-referencing the skill body rather than restating its logic.
 
-- [ ] Step 3: In `docs/skills/plab-continue-session/README.md`, update the `**Version:**` line to
+- [x] Step 3: In `docs/skills/plab-continue-session/README.md`, update the `**Version:**` line to
   `1.4.0` and add one sentence to the "How It Works" or Safety Checks section noting the capture-lite
   orientation line, cross-referencing `references/log-discovery.md`.
 
-- [ ] Step 4: In root `README.md`'s skill table, bump the Version column for `plab-wrap-session` to
+- [x] Step 4: In root `README.md`'s skill table, bump the Version column for `plab-wrap-session` to
   `1.6.0` and `plab-continue-session` to `1.4.0`, if not already bumped by a sibling effort.
 
-- [ ] Step 5: Add a bullet under `CHANGELOG.md`'s `[Unreleased]` heading (`### Added`):
+- [x] Step 5: Add a bullet under `CHANGELOG.md`'s `[Unreleased]` heading (`### Added`):
 
   ```markdown
   - `plab-wrap-session` 1.6.0 and `plab-continue-session` 1.4.0: capture-lite records are now read,
@@ -256,7 +256,7 @@ name was introduced.
     when the capture store is absent.
   ```
 
-- [ ] Step 6: Verify AC-7 directly:
+- [x] Step 6: Verify AC-7 directly:
 
   ```bash
   grep -n '`harness`\|`reason`\|`last_tag`\|`transcript`\|`dirty`\|`untracked`\|`stashes`' skills/plab-wrap-session/SKILL.md skills/plab-continue-session/references/log-discovery.md

@@ -44,6 +44,8 @@ Before writing the log, gather facts:
 5. Inventory work products in gitignored locations (`_local/` and kin) - git-derived file lists cannot see them
 6. List skills invoked this session and any multi-agent workflow runs (run IDs, agent counts, token totals) for the frontmatter and Evidence Index
 
+7. In deep and final modes, when `_local/_session-logs/_capture/` exists, read its `.jsonl` files (there may be more than one) and filter to records with a non-null `session_id` and a `ts` after the newest existing log's filename timestamp (see `plab-continue-session/references/log-discovery.md` for the newest-wins sort; if no existing log exists, every qualifying record counts). If any remain, note the count and the earliest-to-latest `head` for Outstanding Issues below. Say nothing if the directory is absent or nothing qualifies.
+
 If git is unavailable, note that and proceed with session context only.
 
 ## Pre-Wrap Hygiene Sweep (deep and final modes)
@@ -146,7 +148,7 @@ resumed-from: # written only by an in-session /plab-continue-session resume; nev
 
 **Verification** - Checklist format. What was tested, what was assumed, what was skipped.
 
-**Outstanding Issues** - Blockers, risks, unfinished work.
+**Outstanding Issues** - Blockers, risks, unfinished work, including any sessions since the last log that were never wrapped (from capture-lite records, when present; see Evidence Gathering above).
 
 **Hygiene Sweep** - Findings from the pre-wrap sweep: state found, actions proposed, actions taken vs declined.
 
