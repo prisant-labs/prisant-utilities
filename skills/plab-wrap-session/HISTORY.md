@@ -65,6 +65,15 @@ Records with a null `session_id` are skipped. Silent when the directory is absen
 qualifies. No new script: the hook that writes these records lives outside this repository, under the
 user's home directory, and was already producing them with nothing reading them.
 
+**Added: same-arc log supersession.** When the newest existing log covers the same arc as the session
+being wrapped, the new log declares the supersession in Summary and proposes archiving the older file
+to `_local/_session-logs/_superseded/` under per-action confirmation. This closes the gap that let two
+real logs five hours apart cover the same work with nothing noticing.
+
+No `supersedes:` frontmatter field was added. It would have had zero consumers today, which is the
+same producer-with-no-consumer shape that capture-lite was already in. The declaration lives in prose,
+where a reader actually encounters it.
+
 ## 1.5.0 - 2026-08-18
 
 **Added: `--organize`.** A flat session-log store grows without bound. `--organize` files logs older

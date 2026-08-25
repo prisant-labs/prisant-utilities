@@ -18,6 +18,10 @@ or nothing qualifies.
 The records already existed. A SessionEnd hook has been writing them with nothing reading them, which
 is a producer with no consumer, the same defect class this plugin has shipped before.
 
+**Added: `_superseded/` named in the discovery allowlist.** `plab-wrap-session` 1.6.0 can archive a
+same-arc superseded log to `_local/_session-logs/_superseded/`. The existing one-level-deep allowlist
+already excluded it, so this only documents the name. No pipeline change.
+
 ## 1.3.0 - 2026-08-18
 
 **Added: month-folder discovery.** The session-log store can now be archived into `YYYY-MM/`

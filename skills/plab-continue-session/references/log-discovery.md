@@ -20,12 +20,16 @@ The current store holds logs two ways, and discovery reads both as one pooled co
 |---|---|---|
 | `_session-logs/*.md` | yes | hot logs; this is where every new log is written |
 | `_session-logs/YYYY-MM/*.md` | yes | archived logs, filed by `/plab-wrap-session --organize` |
-| `_session-logs/<anything else>/` | **no** | deliberately outside the corpus (`_capture/`) |
+| `_session-logs/<anything else>/` | **no** | deliberately outside the corpus (`_capture/`, `_superseded/`) |
 
 **Discovery is a date-shaped allowlist exactly one level deep, never a recursive walk.** A
 subdirectory is visible only if its name is `YYYY-MM`. This is what lets `_capture/` sit inside the
 store without polluting the corpus, and it is the mechanism any future deliberately-hidden
 subdirectory relies on.
+
+As of `plab-wrap-session` 1.6.0, `_local/_session-logs/_superseded/` holds logs archived because a
+newer log superseded them. The allowlist above already excludes it; neither pipeline below needed to
+change.
 
 Do not "simplify" this into a recursive find with an underscore exclusion. The obvious form of that
 is broken: `find "$d" -name '*.md' -not -path '*/_*/*'` matches against the entire path, and both

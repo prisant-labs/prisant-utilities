@@ -2,9 +2,9 @@
 id: D-05
 title: Declare and archive same-arc superseding session logs
 type: spec
-status: draft
+status: fulfilled
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-24
 linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
 linked-plan: implementation-plan.md
 ac-count: 7
@@ -19,21 +19,21 @@ priority: P2
 
 ## Task Summary
 
-Status: Draft
-Last updated: 2026-08-23
+Status: Fulfilled
+Last updated: 2026-08-24
 Linked plan: implementation-plan.md
 Open questions: 3 (see Open Questions / Decisions)
 Revisions: 1 (see Revisions)
 
 ### Acceptance Criteria Fulfillment
 
-- [ ] AC-1: Same-arc judgment produces a supersession sentence in the new log's Summary
-- [ ] AC-2: Same-arc judgment produces exactly one archive proposal
-- [ ] AC-3: Confirmed proposal relocates the older file to `_superseded/`
-- [ ] AC-4: Declined or unanswered proposal is recorded in the same Summary sentence
-- [ ] AC-5: No judgment means no sentence and no proposal
-- [ ] AC-6: `log-discovery.md` documents `_superseded/` as excluded, with no pipeline change
-- [ ] AC-7: No `supersedes:` frontmatter field exists anywhere in the schema
+- [x] AC-1: Same-arc judgment produces a supersession sentence in the new log's Summary
+- [x] AC-2: Same-arc judgment produces exactly one archive proposal
+- [x] AC-3: Confirmed proposal relocates the older file to `_superseded/`
+- [x] AC-4: Declined or unanswered proposal is recorded in the same Summary sentence
+- [x] AC-5: No judgment means no sentence and no proposal
+- [x] AC-6: `log-discovery.md` documents `_superseded/` as excluded, with no pipeline change
+- [x] AC-7: No `supersedes:` frontmatter field exists anywhere in the schema
 
 ### Currently In Progress
 

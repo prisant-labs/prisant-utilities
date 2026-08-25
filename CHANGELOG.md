@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   em-dash and en-dash check. Until now the conformance gate was a command in `AGENTS.md` that a human
   had to remember, and the dash rule was enforced only by a hook on one machine, which a copy-based
   migration bypassed once at 31 dashes. CI reports; it never fixes, bumps, or tags.
+- `plab-wrap-session` now notices when the newest existing log covers the same arc as the session
+  being wrapped. The new log declares the supersession in Summary and offers to archive the older
+  file to `_local/_session-logs/_superseded/`, under the same per-action confirmation the hygiene
+  sweep uses. Two real logs five hours apart previously covered the same work with nothing noticing.
+  Discovery already excluded the directory, so resume is unaffected.
 - Capture-lite records are now read, not just written. A SessionEnd hook has been writing JSONL
   records that nothing consumed. `plab-wrap-session` now reports how many sessions since the last log
   were never wrapped, in Outstanding Issues; `plab-continue-session` surfaces a one-line orientation

@@ -46,6 +46,8 @@ Before writing the log, gather facts:
 
 7. In deep and final modes, when `_local/_session-logs/_capture/` exists, read its `.jsonl` files (there may be more than one) and filter to records with a non-null `session_id` and a `ts` after the newest existing log's filename timestamp (see `plab-continue-session/references/log-discovery.md` for the newest-wins sort; if no existing log exists, every qualifying record counts). If any remain, note the count and the earliest-to-latest `head` for Outstanding Issues below. Say nothing if the directory is absent or nothing qualifies.
 
+8. In deep and final modes, determine the newest existing log in `_local/_session-logs/` (see `plab-continue-session/references/log-discovery.md` for the newest-wins sort across the flat store and any `YYYY-MM/` folders) and judge whether it covers the same arc as this session. If it does, prepare one archive proposal under the same per-action confirmation protocol the hygiene sweep uses (see `references/hygiene-sweep.md`): propose moving the older file to `_local/_session-logs/_superseded/`, execute only on explicit approval, and record the disposition, declared plus archived-or-not, in the new log's Summary.
+
 If git is unavailable, note that and proceed with session context only.
 
 ## Pre-Wrap Hygiene Sweep (deep and final modes)
@@ -133,7 +135,7 @@ resumed-from: # written only by an in-session /plab-continue-session resume; nev
 
 ### Body Sections (Final Mode)
 
-**Summary** - 2-4 sentences. What happened and why it matters.
+**Summary** - 2-4 sentences. What happened and why it matters. When the Evidence Gathering same-arc check above judges the newest existing log to cover the same arc as this session, end Summary with one additional sentence naming that log by filename only (no path) and stating whether it was archived to `_superseded/` or not archived.
 
 **Work Completed** - Bulleted list of what was accomplished.
 

@@ -2,9 +2,9 @@
 id: D-05
 title: "Implementation plan: Declare and archive same-arc superseding session logs"
 type: implementation-plan
-status: draft
+status: complete
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-24
 linked-spec: spec.md
 linked-release: docs/internal/release-plans/plan_v0.4.0/plan_v0.4.0.md
 ac-coverage: complete
@@ -54,9 +54,9 @@ Gate (f)), not something any single effort's plan performs. See Human-facing doc
 
 | Phase | Goal | Fulfills AC | Owner | Status |
 |---|---|---|---|---|
-| P1 | Wrap-side same-arc check, declaration, and archive mechanics | AC-1, AC-2, AC-3, AC-4, AC-5 | agent | Not started |
-| P2 | Continue-side `_superseded/` documentation | AC-6 | agent | Not started |
-| P3 | Repo bookkeeping and AC-7 verification | AC-7 | agent | Not started |
+| P1 | Wrap-side same-arc check, declaration, and archive mechanics | AC-1, AC-2, AC-3, AC-4, AC-5 | agent | Done |
+| P2 | Continue-side `_superseded/` documentation | AC-6 | agent | Done |
+| P3 | Repo bookkeeping and AC-7 verification | AC-7 | agent | Done |
 
 ---
 
@@ -73,7 +73,7 @@ disposition in Summary, and executes the archive move only on explicit confirmat
 
 **Steps:**
 
-- [ ] Step 1: Add a new numbered item to `## Evidence Gathering` (after the existing item 6, "List
+- [x] Step 1: Add a new numbered item to `## Evidence Gathering` (after the existing item 6, "List
   skills invoked this session...", and before the closing "If git is unavailable..." sentence).
   Renumber to the next available integer if a sibling effort already added an item 7 this release
   (see Global constraints):
@@ -88,7 +88,7 @@ disposition in Summary, and executes the archive move only on explicit confirmat
      disposition, declared plus archived-or-not, in the new log's Summary.
   ```
 
-- [ ] Step 2: Append one sentence to the **Summary** bullet under `### Body Sections (Final Mode)`
+- [x] Step 2: Append one sentence to the **Summary** bullet under `### Body Sections (Final Mode)`
   (the line reading "**Summary** - 2-4 sentences. What happened and why it matters."):
 
   ```markdown
@@ -97,7 +97,7 @@ disposition in Summary, and executes the archive move only on explicit confirmat
   path) and stating whether it was archived to `_superseded/` or not archived.
   ```
 
-- [ ] Step 3: Bump wrap's frontmatter:
+- [x] Step 3: Bump wrap's frontmatter:
 
   ```yaml
   metadata:
@@ -105,7 +105,7 @@ disposition in Summary, and executes the archive move only on explicit confirmat
     updated: 2026-08-23
   ```
 
-- [ ] Step 4: Add (or append to, if present) the `## 1.6.0` row and section in
+- [x] Step 4: Add (or append to, if present) the `## 1.6.0` row and section in
   `skills/plab-wrap-session/HISTORY.md`. If the row and heading already exist (a sibling v0.4.0 effort
   landed first), add this paragraph under the existing heading rather than duplicating the row.
 
@@ -155,7 +155,7 @@ already excludes, with no change to either search pipeline.
 
 **Steps:**
 
-- [ ] Step 1: In the "Store layout: flat or month folders" table, change the last row from:
+- [x] Step 1: In the "Store layout: flat or month folders" table, change the last row from:
 
   ```markdown
   | `_session-logs/<anything else>/` | **no** | deliberately outside the corpus (`_capture/`) |
@@ -167,7 +167,7 @@ already excludes, with no change to either search pipeline.
   | `_session-logs/<anything else>/` | **no** | deliberately outside the corpus (`_capture/`, `_superseded/`) |
   ```
 
-- [ ] Step 2: Add one sentence after the existing allowlist paragraph (the one ending "...the
+- [x] Step 2: Add one sentence after the existing allowlist paragraph (the one ending "...the
   mechanism any future deliberately-hidden subdirectory relies on."):
 
   ```markdown
@@ -176,7 +176,7 @@ already excludes, with no change to either search pipeline.
   allowlist above already excludes it; neither pipeline below needed to change.
   ```
 
-- [ ] Step 3: Bump continue's frontmatter, only if no sibling v0.4.0 effort (most likely D-04) has
+- [x] Step 3: Bump continue's frontmatter, only if no sibling v0.4.0 effort (most likely D-04) has
   already bumped it this release:
 
   ```yaml
@@ -185,7 +185,7 @@ already excludes, with no change to either search pipeline.
     updated: 2026-08-23
   ```
 
-- [ ] Step 4: Add (or append to, if present) the `## 1.4.0` row and section in
+- [x] Step 4: Add (or append to, if present) the `## 1.4.0` row and section in
   `skills/plab-continue-session/HISTORY.md`, same create-or-append rule as Phase 1 Step 4.
 
   Paragraph to add under `## 1.4.0 - 2026-08-23`:
@@ -226,23 +226,23 @@ Expected: version in both files.
 
 **Steps:**
 
-- [ ] Step 1: In `library.json`, set `components.skills[plab-wrap-session].version` to `"1.6.0"` and
+- [x] Step 1: In `library.json`, set `components.skills[plab-wrap-session].version` to `"1.6.0"` and
   `components.skills[plab-continue-session].version` to `"1.4.0"`, if not already at those values from
   a sibling effort. Do not change the top-level `version` field (stays `"0.2.0"`; see Target versions
   above).
 
-- [ ] Step 2: In `docs/skills/plab-wrap-session/README.md`, update the `**Version:**` line to `1.6.0`
+- [x] Step 2: In `docs/skills/plab-wrap-session/README.md`, update the `**Version:**` line to `1.6.0`
   and add one sentence to the Reference Files or Output Shape section describing the same-arc check
   and `_superseded/`, cross-referencing `references/log-discovery.md` rather than restating it.
 
-- [ ] Step 3: In `docs/skills/plab-continue-session/README.md`, update the `**Version:**` line to
+- [x] Step 3: In `docs/skills/plab-continue-session/README.md`, update the `**Version:**` line to
   `1.4.0` and add `_superseded/` to the "Store layout" table shown in that README (mirrors Phase 2
   Step 1).
 
-- [ ] Step 4: In root `README.md`'s skill table, bump the Version column for `plab-wrap-session` to
+- [x] Step 4: In root `README.md`'s skill table, bump the Version column for `plab-wrap-session` to
   `1.6.0` and `plab-continue-session` to `1.4.0`, if not already bumped by a sibling effort.
 
-- [ ] Step 5: Add a bullet under `CHANGELOG.md`'s `[Unreleased]` heading (in the existing
+- [x] Step 5: Add a bullet under `CHANGELOG.md`'s `[Unreleased]` heading (in the existing
   "What changes for you" voice, `### Added`):
 
   ```markdown
@@ -252,7 +252,7 @@ Expected: version in both files.
     frontmatter field.
   ```
 
-- [ ] Step 6: Verify AC-7 directly:
+- [x] Step 6: Verify AC-7 directly:
 
   ```bash
   grep -rn "supersedes:" skills/plab-wrap-session/references/frontmatter-schema.md
