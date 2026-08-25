@@ -2,7 +2,7 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
-| 2.2.2 | 2026-08-23 | unreleased | fix | Three internal contradictions with the v2.0.0 one-or-two-page contract, plus vestigial em-dash-sweep wording. |
+| 2.2.2 | 2026-08-23 | v0.3.0 | fix | Three internal contradictions with the v2.0.0 one-or-two-page contract, plus vestigial em-dash-sweep wording. |
 | 2.2.1 | 2026-08-14 | v0.1.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 2.2.1; prior history remains there. |
 
 ## 2.2.2 - 2026-08-23

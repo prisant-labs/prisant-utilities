@@ -2,7 +2,7 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
-| 1.3.0 | 2026-08-24 | unreleased | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.3.0; prior history remains there. |
+| 1.3.0 | 2026-08-24 | v0.3.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.3.0; prior history remains there. |
 
 ## 1.3.0 - 2026-08-24
 
