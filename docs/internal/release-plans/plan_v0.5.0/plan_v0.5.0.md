@@ -5,8 +5,8 @@ type: release-plan
 status: in-progress
 created: 2026-08-23
 updated: 2026-08-23
-theme: "Derived facts"
-includes: [D-10, W-02]
+theme: "Reconcile at resume"
+includes: [C-02, C-03]
 spec-count: 2
 plan-count: 2
 checklist-complete: false
@@ -16,48 +16,35 @@ checklist-complete: false
 
 ## Theme
 
-Derive every fact that can be derived, and leave the model authoring only judgment.
+Give the read side the discipline the write side already has.
 
 ## Context
 
-`plab-wrap-session` is mature in its judgment layer and immature in its evidence layer. It writes an
-excellent narrative, and it reconstructs its factual sections from the model's memory of a session
-that may have run for hours. The files-changed list, the commit range, the machine and branch and
-repository fields, the decision count, and the verification table are all facts a command can
-produce exactly, and all of them are currently recalled instead.
+`plab-continue-session` trusts the log. The log is a claim about the past, written by a model at the
+end of a long session; the repository is the truth. Between a wrap and the resume that follows it,
+commits land, releases get cut from other checkouts, named next actions get done by other means,
+branches move, and files get renamed. The skill currently replays the claim without checking any of
+it, and the longer the gap the more confidently it walks the maintainer into a stale plan.
 
-W-02 (derived log facts) splits the log into a derived layer and an authored layer. A script inside
-the skill emits the factual block; the skill wraps prose around it and authors only the four sections
-that need a model: Summary, Decisions Made, Waiting on You, and the Continuation Prompt. The argument
-is not primarily cost. A long session's early hours are the haziest part of the model's context and
-are exactly where the factual sections draw from, so derivation is the only version that stays
-correct as sessions get longer. The accuracy problem is worse than the token problem and far less
-visible.
+This release contains the two efforts that fix that, and they are the same fix at two distances.
+C-02 (reconcile against reality) handles the case where a recent log exists but may be wrong: derive
+current state, diff it against the log's claims, and lead with the delta. C-03 (cold-repo
+degradation) handles the case where no useful log exists at all, which across roughly forty local
+project directories is the common case rather than the exception. Today that path produces a short
+menu of options, described in the source roadmap as a dead end dressed as a choice.
 
-D-10 (log format contract) is the structural cause underneath four already-observed drift defects,
-and it ships here because W-02 is what makes it fixable. The wrap/continue log-format contract
-currently has no single source of truth: the template lives in wrap's references, the parsing
-expectations live in continue's references, the frontmatter schema is a third document, and the
-pairing contract is asserted in two more places while nothing checks any of it. The recommendation on
-record is explicitly not to build a shared schema as a new artifact. Instead, W-02's script output
-becomes the contract, and every other document defers to it. D-10 is that consolidation.
+The asymmetry these close is worth naming. `plab-wrap-session` 1.3.0 added a pre-wrap hygiene sweep
+that checks remote divergence and release state. The resume side got none of it, even though resume
+is arguably the moment that needs it more: at wrap time the maintainer has just been working in the
+repository, and at resume time they have not.
 
-The drift is worse than the source documents record, which is itself evidence for this effort. The
-2026-08-18 addendum says the "move and version together" claim sits in both HISTORY files. Verified
-2026-08-23, it is in `skills/plab-continue-session/HISTORY.md:69` and the root `README.md:17`, with
-nothing on the wrap side, and the two surviving copies use different wording. D-10's consolidation
-should therefore preserve one existing wording verbatim rather than introducing a third phrasing,
-since a reworded "fix" would silently break any check written against the old text.
+**Skill versions.** `plab-continue-session` 1.5.0, plugin 0.5.0. `plab-wrap-session` does not bump.
+See D1 (pairing contract scope) below.
 
-This ordering matters and should not be reversed. Shipping D-10 without W-02 would mean choosing one
-of the three existing restatements as canonical, which is a coin flip. Shipping W-02 without D-10
-would add a fourth statement of the contract to the three that already disagree.
-
-**Skill versions.** `plab-wrap-session` 1.7.0, `plab-continue-session` 1.6.0, plugin 0.5.0. Both bump:
-the log's generated frontmatter is a format change, and continue's parser defers to it.
-
-**Depth.** Full-fidelity specs; structurally complete plans with lighter step detail, because two
-releases land on these same files first.
+**Depth.** Specs in this release are full fidelity; implementation plans are structurally complete
+with every acceptance criterion mapped to a phase, but lighter on step-level detail than v0.4.0's.
+That is deliberate: v0.4.0 changes the files these efforts build on, so step detail written now would
+be rewritten before it ran.
 
 ---
 
@@ -67,8 +54,8 @@ Generated by `--update`. Do not hand-edit rows.
 
 | id | title | spec-status | plan-status | AC-coverage | has-plan? |
 |----|-------|-------------|-------------|-------------|-----------|
-| D-10 | Make derive-log-facts.py's output the single log-format c... | draft | draft | complete | yes |
-| W-02 | Derive session-log facts from git instead of model recall | draft | draft | complete | yes |
+| C-02 | Reconcile the Session Log Against Repo Reality at Resume | draft | draft | complete | yes |
+| C-03 | Build Orientation From Repo Reality When No Recent Log Ex... | draft | draft | complete | yes |
 
 ---
 
@@ -83,7 +70,8 @@ Generated by `--update`. Do not hand-edit rows.
 | (e) Staleness | No `spec.md` edited after its sibling `implementation-plan.md`'s last edit | Not evaluated |
 | (f) Manifest version | Both `plugin.json` files declare the release version | Not evaluated |
 
-Gates (a), (d), and (f) are expected to FAIL until this release is executed.
+Gates (a), (d), and (f) are expected to FAIL until this release is executed. That is the honest state
+of planned work, not a problem to fix in advance.
 
 ---
 
@@ -95,14 +83,14 @@ Gates (a), (d), and (f) are expected to FAIL until this release is executed.
 | `README.md` | Bump any version references | [ ] |
 | `AGENTS.md` | Reflect new or renamed skills | [ ] |
 | `docs/skills/README.md` | Sync per-skill version table | [x] N/A - no `docs/skills/README.md` in this repo |
-| `skills/*/HISTORY.md` | Append the version's changes (wrap 1.7.0, continue 1.6.0) | [ ] |
+| `skills/*/HISTORY.md` | Append the version's changes (continue 1.5.0) | [ ] |
 | `.claude-plugin/plugin.json` | Bump plugin `version` to 0.5.0 | [ ] |
-| `skills/*/SKILL.md` | Bump per-skill `version` frontmatter (wrap, continue) | [ ] |
+| `skills/*/SKILL.md` | Bump `version` frontmatter (continue only) | [ ] |
 | `.codex-plugin/plugin.json` | Bump `version` to match `.claude-plugin/plugin.json` | [ ] |
-| `library.json` | Bump plugin version and both affected component versions | [ ] |
+| `library.json` | Bump plugin version and the continue component version | [ ] |
 | `manifest.generated.json` | Regenerate from `library.json`; do not hand-edit | [ ] |
-| `docs/skills/<skill>/README.md` | Bump the version line for wrap and continue | [ ] |
-| `README.md` skill table | Bump the Version column for wrap and continue | [ ] |
+| `docs/skills/<skill>/README.md` | Bump the version line for continue | [ ] |
+| `README.md` skill table | Bump the Version column for continue | [ ] |
 | Git tag `v0.5.0` | Create the annotated tag once all of the above are done | [ ] |
 
 ---
@@ -117,69 +105,75 @@ work it governs.
 
 | ID | Title | Resolution | Status | Updated |
 |----|-------|------------|--------|---------|
-| D1 | Shared schema artifact or generated contract | Generated contract | Proposed | 2026-08-23 |
-| D2 | What happens when the derive script is absent | Degrade to authored, state it | Open | 2026-08-23 |
+| D1 | Does the pairing contract force a wrap bump | No; format unchanged | Proposed | 2026-08-23 |
+| D2 | Reintroducing the "where were we" trigger | Deferred to C-03 execution | Open | 2026-08-23 |
 
-### D1: Shared schema artifact or generated contract (Proposed)
+### D1: Does the pairing contract force a wrap bump (Proposed)
 
-**Summary.** Whether to fix the log-format drift by writing a shared schema document or by making the
-derive script's output the contract.
+**Summary.** Whether `plab-wrap-session` must bump alongside `plab-continue-session` in this release.
 
-**Context.** Four drift defects (D-01, D-02, D-05, D-08) trace to the same cause: the log format is
-stated in at least three places that can disagree. The obvious fix is a fourth document declared
-canonical. The recommendation already on record rejects that, on the grounds that a schema nobody
-generates from is just one more statement to drift, and this repository's dominant defect class is
-precisely text contradicting text.
+**Context.** The pairing contract says the two skills move and version together. Read literally that
+would force a wrap bump here. Read for intent, the contract exists because a change to the
+session-log format breaks the other side of the pair. Neither C-02 nor C-03 changes the log format:
+both are read-side behavior operating on logs already written, plus git state the log never contained.
 
-**Desired outcome.** Exactly one statement of the log's factual contract, in a form that cannot go
-stale because everything else is produced from it or checked against it.
+Where that contract actually lives is worth stating, because the source documents get it wrong.
+Verified 2026-08-23: it appears in `skills/plab-continue-session/HISTORY.md:69` ("The two move and
+version together") and in the root `README.md:17` ("They are versioned and released together"). It
+does not appear in `skills/plab-wrap-session/HISTORY.md` at all, although the 2026-08-18 defect
+addendum says it appears in both.
+
+**Desired outcome.** The contract keeps protecting format compatibility without generating empty
+version bumps that make the history harder to read.
 
 **Options / approaches.**
 
-* **Option A:** A shared schema document both skills cite. Familiar, and immediately available
-  without W-02. Adds a fourth text that must be kept true by discipline.
-* **Option B:** W-02's script output is the contract; template and parser defer to it. The contract is
-  executable, so drift is detectable rather than merely discouraged. Requires W-02 to ship first.
+* **Option A:** Bump continue only. Honors the contract's purpose; the wrap HISTORY gains no entry
+  for a release in which wrap did not change.
+* **Option B:** Bump both. Literal reading, at the cost of a version whose changelog entry would have
+  to say "no changes".
 
-**Recommendation.** Option B, which is what the source recommendation already says. The test of
-success is checkable: after this release, any given field of the log's factual block should be
-defined in exactly one file, verifiable by grep.
+**Recommendation.** Option A, and amend the contract's two real homes to say what it actually
+governs: a change to the session-log format or its gates requires a matching change in the other
+skill. Note that D-10 (log format contract) in v0.6.0 owns consolidating those statements, so this
+release should correct the wording in place rather than adding a third copy on the wrap side.
 
 ---
 
 > **Maintainer decision:** _(pending ratification)_
 >
 > * **Status:** Proposed as this session's working default; NOT yet ratified
-> * **Choice (proposed):** Option B, the generated output is the contract.
-> * **Reasoning:** An executable contract cannot drift silently; a fourth document can.
+> * **Choice (proposed):** Option A, continue bumps alone; clarify the contract wording.
+> * **Reasoning:** The contract protects format compatibility, and the format is untouched here.
 > * **Proposed by / date:** Claude, planning session 2026-08-23. No maintainer input has been received on this item.
 
-### D2: What happens when the derive script is absent (Open)
+### D2: Reintroducing the "where were we" trigger (Open)
 
-**Summary.** How wrap should behave when it cannot run the derivation script.
+**Summary.** Whether C-03 should restore the status-question phrases that D-01 deliberately removed.
 
-**Context.** The skill ships from a marketplace and runs in more than one harness. The script lives
-inside the skill directory, so it should always be present, but Python availability, sandbox
-restrictions, and partial installs are all real. Two failure styles are available and they have
-opposite risks: refusing to wrap protects the contract but can strand a session's context entirely,
-while silently falling back to model-authored facts reintroduces exactly the unreliability this
-release exists to remove, without telling anyone.
+**Context.** The phrases "where were we" and "what were we doing" were removed from the trigger
+surface because the skill was over-firing: sampled transcripts showed every invocation preceded by a
+status question rather than a resume request, and the skill answered a question with a resume ritual.
+The 2026-08-18 addendum records that removal as a decision and warns future readers not to treat it as
+an oversight. C-03 is the path where those phrases are asked most sincerely, because a maintainer
+returning to a cold repository genuinely does not know where they were. Restoring them carelessly
+re-breaks a shipped fix; refusing them permanently means the honest case stays unserved.
 
-**Desired outcome.** A session is never lost because a script is missing, and a log never claims
-derived provenance for facts that were recalled.
+**Desired outcome.** The phrase fires when the user wants orientation and stays silent when they want
+a one-line status answer, with the difference decided by something more reliable than phrasing.
 
 **Options / approaches.**
 
-* **Option A:** Hard fail. Wrap refuses until the script runs. Maximum contract integrity, worst case
-  is a lost session log.
-* **Option B:** Degrade to authored facts and stamp the log with a field recording that the factual
-  block was recalled rather than derived. The log stays honest about its own provenance, and any later
-  consumer can filter on it.
+* **Option A:** Leave the trigger surface alone. C-03 improves only the already-invoked path. Zero
+  regression risk, and the cold-repo case is only reached when the user explicitly resumes.
+* **Option B:** Restore the phrases with an explicit carve-out in the skill body, so a status question
+  gets a direct answer and only an orientation request proceeds. Serves the sincere case, but the
+  carve-out is prose discipline, which is precisely what failed the first time.
 
-**Recommendation.** Option B. It matches this repository's established preference for reporting a
-degraded state over failing closed, and the provenance stamp is what keeps the degradation visible
-instead of silent. This is the same three-state discipline as D-11: clean, degraded, and broken are
-different, and collapsing them is the defect.
+**Recommendation.** Option A for this release. Ship C-03's degradation behavior on the explicit-resume
+path, observe whether the cold-repo case is actually being reached, and revisit the trigger only with
+transcript evidence. The description is the router and the body is the program; changing the router
+without evidence is what produced the original defect.
 
 ---
 
@@ -194,6 +188,6 @@ different, and collapsing them is the defect.
 
 ## Notes
 
-W-02 is described in the source roadmap as the biggest maturity step available to the wrap skill.
-It is also the substrate for v0.6.0's aggregation work, because a digest over logs whose facts were
-recalled inherits every recall error. Sequencing this release before aggregation is deliberate.
+C-03 depends on D-04 (capture-lite consumers) from v0.4.0 for its orientation substrate. If v0.4.0
+slips, C-03 still ships with a smaller evidence base: git history, open issues, and working-tree
+state carry it without capture records.

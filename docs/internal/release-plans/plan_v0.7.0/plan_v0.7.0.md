@@ -5,8 +5,8 @@ type: release-plan
 status: in-progress
 created: 2026-08-23
 updated: 2026-08-23
-theme: "Escape and measure"
-includes: [C-04, W-03]
+theme: "Aggregation"
+includes: [C-05, W-04]
 spec-count: 2
 plan-count: 2
 checklist-complete: false
@@ -16,41 +16,40 @@ checklist-complete: false
 
 ## Theme
 
-Blockers get somewhere to live, and the whole loop finally gets a payout metric.
+Stop treating session logs as write-only.
 
 ## Context
 
-Two long-standing gaps close here, and they are the last two items on the wrap and continue roadmaps
-that are not deliberately deferred.
+At roughly four logs a week, the store holds a corpus nobody queries. Two events supplied the pull
+for changing that. Reconstructing a single month's arc required hand-reading three documents across
+two repositories. A portfolio analysis needed per-skill usage across time and had to mine raw
+transcripts, because no aggregate view of the logs existed.
 
-W-03 (Waiting-on escapes gitignore) fixes a section that works as a record and fails as a mechanism.
-One log listed a source-of-truth ruling as blocking. It was blocking the month before, and the month
-before that. The section lives in a gitignored file that only the next resume reads, so nothing can
-act on it, nothing notifies anyone, and nothing accumulates a history. A to-do list stored where
-nothing can act on it is a diary entry, not a tracker. The fix is to offer, at wrap time, to promote
-each blocked item to a GitHub issue, which gives it a URL, a state, a notification surface, and a
-history. It stays an offer under per-action confirmation, reusing the resolution protocol the hygiene
-sweep already implements rather than inventing a second one.
+This release adds one aggregation layer and two consumers of it. W-04 (digest mode) is the write-side
+consumer: a `--digest` mode over the last N logs answering what shipped, what was decided, and what
+is still outstanding across all of them. The third question is the one that pays, because a blocker
+that individual logs let you skim past becomes unavoidable when it appears in a list of everything
+still open. C-05 (arc resume) is the read-side consumer: after a long gap, the newest log is the
+least useful thing to read in isolation, because it is the end of a story the reader no longer
+remembers the middle of.
 
-C-04 (consumption disposition) closes the measurement loop that has been open since the first wrap
-roadmap. Consumption is already recorded: a field notes which log a resume consumed. What is missing
-is outcome. The valuable question is not whether the log was read but whether its named next action
-survived contact with reality, and there are three answers worth distinguishing: fulfilled,
-superseded, and ignored. The third is the falsifier. A resumption that quietly re-derives context and
-does its own thing is the signal that would tell the maintainer to stop wrapping, and nothing
-currently measures it.
+The central design constraint is that these are twins, not two features. Both source roadmaps say the
+two should share whatever aggregation is built rather than each growing their own. W-04 owns the
+shared layer and the digest; C-05 declares a dependency and owns only the arc-resume consumer.
+Specifying the aggregation twice would reproduce this repository's dominant defect class.
 
-Both efforts are small on purpose. W-03 is a proposal path on top of machinery that exists. C-04 is
-one frontmatter field written back by the next wrap. The honest assessment recorded against the
-existing consumption field applies to C-04 too: keep it because it costs one line, and invest nothing
-further. This release should not grow an analytics system.
+Two earlier releases make this one honest. D-04 (capture-lite consumers, v0.4.0) means the corpus is
+no longer biased toward sessions that were important enough to wrap. D-05 (superseding logs, v0.4.0)
+removes the same-arc double-count at write time, so neither consumer here needs dedup logic. W-02
+(derived log facts, v0.6.0) means the facts being aggregated were derived rather than recalled.
+Aggregating recalled facts would have multiplied recall errors across the whole corpus.
 
-D-07 (the Waiting-on blocker contract) from v0.3.0 is the interim step for the same problem W-03
-finally solves, and it is a prerequisite rather than a rival: by the time W-03 ships, items already
-carry blocked-since dates and have been carried forward across wraps, so the issues it opens are born
-with real age on them.
+One constraint carries directly into the acceptance criteria: every number the digest reports must
+state which harnesses it covers. A previous count was wrong specifically because it was
+harness-blind, measuring one harness while a second carried a large share of the work. The failure
+was not the missing data, it was a number presented without its scope.
 
-**Skill versions.** `plab-wrap-session` 1.9.0, `plab-continue-session` 1.8.0, plugin 0.7.0.
+**Skill versions.** `plab-wrap-session` 1.8.0, `plab-continue-session` 1.7.0, plugin 0.7.0.
 
 **Depth.** Full-fidelity specs; structurally complete plans with lighter step detail.
 
@@ -62,8 +61,8 @@ Generated by `--update`. Do not hand-edit rows.
 
 | id | title | spec-status | plan-status | AC-coverage | has-plan? |
 |----|-------|-------------|-------------|-------------|-----------|
-| C-04 | Record whether a resumed log's next action survived conta... | draft | draft | complete | yes |
-| W-03 | Waiting-on items escape the gitignored log via offered Gi... | draft | draft | complete | yes |
+| C-05 | Arc resume: read the last N logs, not just the newest | draft | draft | complete | yes |
+| W-04 | Digest mode: aggregate the last N session logs | draft | draft | complete | yes |
 
 ---
 
@@ -90,7 +89,7 @@ Gates (a), (d), and (f) are expected to FAIL until this release is executed.
 | `README.md` | Bump any version references | [ ] |
 | `AGENTS.md` | Reflect new or renamed skills | [ ] |
 | `docs/skills/README.md` | Sync per-skill version table | [x] N/A - no `docs/skills/README.md` in this repo |
-| `skills/*/HISTORY.md` | Append the version's changes (wrap 1.9.0, continue 1.8.0) | [ ] |
+| `skills/*/HISTORY.md` | Append the version's changes (wrap 1.8.0, continue 1.7.0) | [ ] |
 | `.claude-plugin/plugin.json` | Bump plugin `version` to 0.7.0 | [ ] |
 | `skills/*/SKILL.md` | Bump per-skill `version` frontmatter (wrap, continue) | [ ] |
 | `.codex-plugin/plugin.json` | Bump `version` to match `.claude-plugin/plugin.json` | [ ] |
@@ -112,84 +111,106 @@ work it governs.
 
 | ID | Title | Resolution | Status | Updated |
 |----|-------|------------|--------|---------|
-| D1 | W-06 (log as a checkable contract) | Deferred, not scheduled | Proposed | 2026-08-23 |
-| D2 | Where promoted blockers are filed | This repo by default | Open | 2026-08-23 |
+| D1 | Where the shared aggregation layer lives | REOPENED, conflicts with `lib/README.md` | Needs ruling | 2026-08-24 |
+| D2 | Whether arc resume is ever a default | Flag only in this release | Proposed | 2026-08-23 |
 
-### D1: W-06 (log as a checkable contract) is deferred, not scheduled (Proposed)
+### D1: Where the shared aggregation layer lives (REOPENED, needs a ruling)
 
-**Summary.** Whether the roadmap's final speculative item belongs in this release, which is otherwise
-the last one planned.
+> **Reopened 2026-08-24.** This decision originally recommended Option A and was written into W-04 and
+> C-05 as though settled. It contradicts an existing, documented convention in this repository that was
+> not consulted when the decision was made. Do not execute either effort until this is ruled on.
 
-**Context.** W-06 would turn the continuation prompt into a checkable contract: the log declares an
-expected next action plus an observable that would prove it happened, and the next wrap reports
-whether the prior contract was fulfilled, deferred, or abandoned. It is the most conceptually
-appealing item on either roadmap, and its own source marks it speculative with an explicit
-instruction not to build it before the earlier items. The stated risk is that it adds ceremony to the
-one part of the skill that currently works beautifully, with a failure mode of a wrap that spends
-tokens litigating whether the last session did its homework.
+**Summary.** Where the aggregation code that both the digest and the arc resume read should live.
 
-**Desired outcome.** The idea stays available and does not quietly become an obligation just because
-the roadmap ran out of other items.
+**Context.** Both consumers need the same thing: the log corpus, resolved through the date-shaped
+allowlist, parsed into per-log facts and open threads. Two or more skills invoking one piece of
+deterministic logic is a situation this repository has already ruled on in general.
+
+`lib/README.md` states the rule plainly: "If a script is invoked by a skill at runtime, it goes in
+`lib/`", and it should be added there when "2 or more skills would invoke the same logic", with the
+counterpart rule that a script only one skill consumes stays under that skill's own `scripts/`. The
+existing occupant, `lib/render-mermaid.py`, is exactly this shape, and skills invoke it by relative
+path. The aggregation layer is consumed by both skills, so the existing rule points at `lib/`.
+
+**How the error happened, recorded because the mechanism matters.** The original Option A
+recommendation was reasoned from the wrap skill owning the log-format contract, without reading
+`lib/README.md`. The agent that wrote W-04 and C-05 initially placed the script at
+`lib/aggregate-logs.py`, correctly following the documented convention, then reversed roughly 40 path
+references to match this decision because the decision block claimed to be maintainer-accepted. That
+approval was fabricated (see the status legend above), so a correct, convention-following design was
+abandoned in favor of an unratified one. The paths in both efforts currently reflect the reversal.
+
+**Desired outcome.** One implementation, one place to fix a parsing bug, consistent with whatever rule
+this repository actually follows for shared skill-time scripts.
 
 **Options / approaches.**
 
-* **Option A:** Defer indefinitely; revisit only if C-04's disposition data shows a real gap that a
-  contract would close. Costs nothing now.
-* **Option B:** Prototype one field of it in this release, as the source suggests, alongside C-04.
-  Cheap, but it doubles the measurement surface in the same release that introduces the first one.
+* **Option A:** `skills/plab-wrap-session/scripts/aggregate-logs.py`, with continue invoking it across
+  the skill boundary. Keeps the aggregation adjacent to the log-format contract that v0.6.0 puts in
+  wrap. Contradicts `lib/README.md` as written, so taking it requires amending that file to record a
+  named exception rather than leaving two rules in conflict.
+* **Option B:** `lib/aggregate-logs.py`, following the existing convention verbatim. Matches
+  `render-mermaid.py`'s precedent, needs no documentation amendment, and keeps `lib/` meaning what it
+  says. Costs the adjacency argument: the aggregation layer and the format contract it must agree with
+  would live in different trees.
+* **Option C:** A third location. Rejected; nothing recommends it and it multiplies the conventions.
 
-**Recommendation.** Option A. C-04 is the cheaper measurement and lands first; if its fulfilled,
-superseded, and ignored counts turn out to be uninformative, that is evidence about the contract idea
-too. Recording the deferral here means a future reader finds a decision rather than an omission.
+**Recommendation.** Option B. An existing written convention beats a fresh argument, particularly one
+made without reading it, and this repository's dominant defect class is precisely two texts disagreeing.
+The adjacency concern behind Option A is real but is better answered by having the aggregation layer
+cite the format contract explicitly than by moving the file. If Option A is chosen anyway, amend
+`lib/README.md` in the same release so the rule and the practice agree.
+
+**Concrete consequence either way.** W-04 and C-05 currently carry 37 path references assuming Option
+A. Choosing Option B requires updating those references, in both specs and then both plans, in that
+order, before either effort is executed.
+
+---
+
+> **Maintainer decision:** _(required before execution)_
+>
+> * **Status:** REOPENED. The earlier "Proposed: Option A" was made without consulting `lib/README.md`
+>   and is withdrawn as a default.
+> * **Choice:** (none)
+> * **Reasoning:** (none)
+> * **Reopened by / date:** Claude, 2026-08-24. No maintainer input has been received on this item.
+
+### D2: Whether arc resume is ever a default (Proposed)
+
+**Summary.** Whether C-05 reads multiple logs automatically or only behind an explicit flag.
+
+**Context.** The source roadmap promoted arc resume out of speculative because transcripts showed the
+maintainer asking for it in their own words on two of four sampled invocations. The same roadmap
+keeps one caution: it costs tokens proportional to the gap, which is exactly when the user is least
+willing to spend them, and it competes with simply reading the git log.
+
+**Desired outcome.** The capability exists for the case that asked for it, without silently making
+every resume more expensive.
+
+**Options / approaches.**
+
+* **Option A:** Explicit flag only in this release. Zero cost when unused; the maintainer opts in
+  when the gap warrants it.
+* **Option B:** Automatic when the gap exceeds a threshold. Better ergonomics, but it spends tokens
+  on the maintainer's behalf at the worst moment, based on a threshold nobody has calibrated.
+
+**Recommendation.** Option A, as the roadmap already specifies. Revisit automatic behavior only with
+usage evidence showing the flag is being reached for consistently, which is the same evidence bar
+applied everywhere else in this portfolio.
 
 ---
 
 > **Maintainer decision:** _(pending ratification)_
 >
 > * **Status:** Proposed as this session's working default; NOT yet ratified
-> * **Choice (proposed):** Option A, deferred indefinitely, revisit on C-04 evidence.
-> * **Reasoning:** Measure with the one-line field before building the ceremony.
+> * **Choice (proposed):** Option A, explicit flag.
+> * **Reasoning:** Prototype before defaulting; the cost lands at the worst possible moment.
 > * **Proposed by / date:** Claude, planning session 2026-08-23. No maintainer input has been received on this item.
-
-### D2: Where promoted blockers are filed (Open)
-
-**Summary.** Which repository receives an issue when a Waiting-on item is promoted.
-
-**Context.** Blockers recorded during a wrap are not always about the repository being wrapped. The
-longest-standing example, a source-of-truth ruling, spans several repositories at once. Filing it
-against whichever repo happened to be open when the wrap ran would scatter cross-cutting decisions
-across the fleet, and finding them later would be exactly the problem this effort is meant to solve.
-
-**Desired outcome.** A promoted blocker is findable later without the maintainer remembering which
-repository they were in when it was recorded.
-
-**Options / approaches.**
-
-* **Option A:** Always the current repository. Simplest, no configuration, and wrong for
-  cross-cutting items.
-* **Option B:** Current repository by default, with the wrap offering an alternate target when the
-  item is not repo-specific. One extra question, only on promotion, only when it matters.
-* **Option C:** A single designated tracker repository for all promoted blockers. Consistent, but
-  divorces issues from the code they concern and creates a second place to look.
-
-**Recommendation.** Option B. The promotion is already an interactive, per-action-confirmed step, so
-the target question costs nothing extra on the paths where the default is right. Resolve this before
-the effort is executed, since it changes the shape of the proposal prompt.
-
----
-
-> **Maintainer decision:** _(pending)_
->
-> * **Status:** Open
-> * **Choice (proposed):** (none)
-> * **Reasoning:** (none)
-> * **Decided by / date:** (none)
 
 ---
 
 ## Notes
 
-This is the last planned release for the wrap and continue pair. After it, both roadmaps are fully
-consumed except W-06, deferred above by D1. That is the right moment to ask the harder question the
-skill-candidates memo raised: whether the pair's total cost is still earning its keep, which C-04's
-disposition data will be the first evidence able to answer.
+The digest is deliberately not a dashboard. It answers three questions and stops. The moment it grows
+a fourth view it becomes something the maintainer has to maintain rather than something that pays
+them back, and the portfolio's measured problem has never been too few views.

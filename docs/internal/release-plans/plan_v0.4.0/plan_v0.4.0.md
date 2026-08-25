@@ -5,10 +5,10 @@ type: release-plan
 status: in-progress
 created: 2026-08-23
 updated: 2026-08-23
-theme: "Reconcile at resume"
-includes: [C-02, C-03]
-spec-count: 2
-plan-count: 2
+theme: "Gates that cannot fail open"
+includes: [CI-01, D-03, D-04, D-05, D-06, D-07, D-11, D-12]
+spec-count: 8
+plan-count: 8
 checklist-complete: false
 ---
 
@@ -16,35 +16,50 @@ checklist-complete: false
 
 ## Theme
 
-Give the read side the discipline the write side already has.
+Make the verification apparatus trustworthy before building anything else on top of it.
 
 ## Context
 
-`plab-continue-session` trusts the log. The log is a claim about the past, written by a model at the
-end of a long session; the repository is the truth. Between a wrap and the resume that follows it,
-commits land, releases get cut from other checkouts, named next actions get done by other means,
-branches move, and files get renamed. The skill currently replays the claim without checking any of
-it, and the longer the gap the more confidently it walks the maintainer into a stale plan.
+This release closes the five confirmed defects that the 2026-08-18 defect pass left unshipped, adds
+two that were found the week after, and gives the repository continuous integration for the first
+time.
 
-This release contains the two efforts that fix that, and they are the same fix at two distances.
-C-02 (reconcile against reality) handles the case where a recent log exists but may be wrong: derive
-current state, diff it against the log's claims, and lead with the delta. C-03 (cold-repo
-degradation) handles the case where no useful log exists at all, which across roughly forty local
-project directories is the common case rather than the exception. Today that path produces a short
-menu of options, described in the source roadmap as a dead end dressed as a choice.
+The five carried forward are D-03 (bidirectional drift check), D-04 (capture-lite consumers), D-05
+(superseding logs), D-06 (resumed-from semantics), and D-07 (the Waiting-on blocker contract). The
+2026-08-18 addendum batched exactly these as one release and stated why: they touch the session-log
+format or its gates, and the pairing contract requires that a format change in one skill be matched
+in the other. That batching is preserved here rather than re-cut.
 
-The asymmetry these close is worth naming. `plab-wrap-session` 1.3.0 added a pre-wrap hygiene sweep
-that checks remote divergence and release state. The resume side got none of it, even though resume
-is arguably the moment that needs it more: at wrap time the maintainer has just been working in the
-repository, and at resume time they have not.
+A correction to the source while citing it: the addendum says that contract is asserted in "both
+HISTORY files". It is not. Verified 2026-08-23, it appears in
+`skills/plab-continue-session/HISTORY.md:69` and in the root `README.md:17`, and nowhere in
+`skills/plab-wrap-session/HISTORY.md`. The contract still binds, but a reader looking for it on the
+wrap side will not find it, which is itself a small instance of the drift D-10 (log format contract)
+exists to end.
 
-**Skill versions.** `plab-continue-session` 1.5.0, plugin 0.4.0. `plab-wrap-session` does not bump.
-See D1 (pairing contract scope) below.
+Two efforts are new. D-11 (three-state gate canaries) and D-12 (path citation precision) were added
+to the defect ledger on 2026-08-23 after three separate detector failures inside seven days: a dash
+sweep written as a shell escape that expanded to a literal string, a replacement sweep in Perl that
+read undecoded bytes and could never match, and a path-existence gate that produced six false
+positives out of seven flags. All three reported success while being structurally incapable of
+detecting anything. That is the failure class this release is named for.
 
-**Depth.** Specs in this release are full fidelity; implementation plans are structurally complete
-with every acceptance criterion mapped to a phase, but lighter on step-level detail than v0.3.0's.
-That is deliberate: v0.3.0 changes the files these efforts build on, so step detail written now would
-be rewritten before it ran.
+CI-01 (CI bootstrap) is greenfield. The repository has no `.github/` directory at all, so every gate
+it relies on today runs only when a human remembers to run it on one machine. Two consequences drove
+its inclusion here rather than later: the no-dash rule is currently enforced by a PreToolUse hook on
+a single machine, which a commit from anywhere else bypasses entirely (this has already happened, at
+31 dashes), and D-11's canary-before-trust discipline needs somewhere to live that is not a habit.
+
+**Sequencing note.** Standing guidance in the skill-candidates memo (`_local/ideas/2026-08-15_skill-candidates.md`)
+is to fix the two weak skill descriptions and build the cross-harness usage report before starting
+new feature work. Nothing in this release contradicts that: every effort here is a correctness or
+verification fix to shipped behavior, not a new capability. The usage report remains the right thing
+to build alongside it, and it is not tracked in this release plan.
+
+**Skill versions.** `plab-wrap-session` 1.6.0, `plab-continue-session` 1.4.0, plugin 0.4.0. Both
+skills bump together because D-04 (capture-lite consumers), D-05 (superseding logs), D-06
+(resumed-from semantics), and D-07 (the Waiting-on blocker contract) touch the log format or its
+gates.
 
 ---
 
@@ -54,12 +69,20 @@ Generated by `--update`. Do not hand-edit rows.
 
 | id | title | spec-status | plan-status | AC-coverage | has-plan? |
 |----|-------|-------------|-------------|-------------|-----------|
-| C-02 | Reconcile the Session Log Against Repo Reality at Resume | draft | draft | complete | yes |
-| C-03 | Build Orientation From Repo Reality When No Recent Log Ex... | draft | draft | complete | yes |
+| CI-01 | CI bootstrap - toolkit standard gate and repo-wide dash c... | draft | draft | complete | yes |
+| D-03 | Make the documentation-drift check bidirectional | draft | draft | complete | yes |
+| D-04 | Consume capture-lite records in wrap and continue | draft | draft | complete | yes |
+| D-05 | Declare and archive same-arc superseding session logs | draft | draft | complete | yes |
+| D-06 | Fix resumed-from semantics: written only by an in-session... | draft | draft | complete | yes |
+| D-07 | Restore Waiting on You as an enforced blocker contract | draft | draft | complete | yes |
+| D-11 | Three-state, canary-verified detector gates in the Log Se... | draft | draft | complete | yes |
+| D-12 | Narrow the path-existence gate to real path citations | draft | draft | complete | yes |
 
 ---
 
 ## Hygiene Gates
+
+These conditions block tagging. `--gate` reports current pass/fail.
 
 | Gate | Condition | Status |
 |------|-----------|--------|
@@ -70,27 +93,32 @@ Generated by `--update`. Do not hand-edit rows.
 | (e) Staleness | No `spec.md` edited after its sibling `implementation-plan.md`'s last edit | Not evaluated |
 | (f) Manifest version | Both `plugin.json` files declare the release version | Not evaluated |
 
-Gates (a), (d), and (f) are expected to FAIL until this release is executed. That is the honest state
-of planned work, not a problem to fix in advance.
+**Expected state at authoring time.** Gates (a), (d), and (f) are expected to FAIL for this entire
+release until the work is actually executed: specs are born `draft` and only a human promotes them to
+`committed`, no phase has run, and both manifests correctly still declare 0.2.0. Those failures are
+the honest state of planned-but-unstarted work. Do not chase them green before the work exists.
 
 ---
 
 ## Doc-Update Checklist
+
+Every box must be checked before the release tag. Built-in defaults plus the project extensions in
+`docs/internal/release-plans/release-checklist.yaml`.
 
 | Doc | Update | Done |
 |-----|--------|------|
 | `CHANGELOG.md` | Move items from [Unreleased] to v0.4.0 section | [ ] |
 | `README.md` | Bump any version references | [ ] |
 | `AGENTS.md` | Reflect new or renamed skills | [ ] |
-| `docs/skills/README.md` | Sync per-skill version table | [x] N/A - no `docs/skills/README.md` in this repo |
-| `skills/*/HISTORY.md` | Append the version's changes (continue 1.5.0) | [ ] |
+| `docs/skills/README.md` | Sync per-skill version table | [x] N/A - no `docs/skills/README.md` in this repo; see the per-skill row below |
+| `skills/*/HISTORY.md` | Append the version's changes (wrap 1.6.0, continue 1.4.0) | [ ] |
 | `.claude-plugin/plugin.json` | Bump plugin `version` to 0.4.0 | [ ] |
-| `skills/*/SKILL.md` | Bump `version` frontmatter (continue only) | [ ] |
-| `.codex-plugin/plugin.json` | Bump `version` to match `.claude-plugin/plugin.json` | [ ] |
-| `library.json` | Bump plugin version and the continue component version | [ ] |
+| `skills/*/SKILL.md` | Bump per-skill `version` frontmatter (wrap, continue) | [ ] |
+| `.codex-plugin/plugin.json` | Bump `version` to match `.claude-plugin/plugin.json` (gate (f) reads both) | [ ] |
+| `library.json` | Bump plugin version and both affected component versions | [ ] |
 | `manifest.generated.json` | Regenerate from `library.json`; do not hand-edit | [ ] |
-| `docs/skills/<skill>/README.md` | Bump the version line for continue | [ ] |
-| `README.md` skill table | Bump the Version column for continue | [ ] |
+| `docs/skills/<skill>/README.md` | Bump the version line for wrap and continue | [ ] |
+| `README.md` skill table | Bump the Version column for wrap and continue | [ ] |
 | Git tag `v0.4.0` | Create the annotated tag once all of the above are done | [ ] |
 
 ---
@@ -105,75 +133,102 @@ work it governs.
 
 | ID | Title | Resolution | Status | Updated |
 |----|-------|------------|--------|---------|
-| D1 | Does the pairing contract force a wrap bump | No; format unchanged | Proposed | 2026-08-23 |
-| D2 | Reintroducing the "where were we" trigger | Deferred to C-03 execution | Open | 2026-08-23 |
+| D1 | Batch as one release or split | Ship as one v0.4.0 | Proposed | 2026-08-23 |
+| D2 | Dash rule promotion to CI | Promote; keep the local hook | Proposed | 2026-08-23 |
+| D3 | Whether CI enables SARIF upload | Recommend yes | Open | 2026-08-23 |
 
-### D1: Does the pairing contract force a wrap bump (Proposed)
+### D1: Batch as one release or split (Proposed)
 
-**Summary.** Whether `plab-wrap-session` must bump alongside `plab-continue-session` in this release.
+**Summary.** Whether the five carried-forward defects, the two new gate defects, and CI ship as one
+release or as two.
 
-**Context.** The pairing contract says the two skills move and version together. Read literally that
-would force a wrap bump here. Read for intent, the contract exists because a change to the
-session-log format breaks the other side of the pair. Neither C-02 nor C-03 changes the log format:
-both are read-side behavior operating on logs already written, plus git state the log never contained.
+**Context.** An earlier draft of this plan split them: gates and CI in v0.4.0, the log-corpus defects
+in v0.5.0. That contradicted two existing records. The 2026-08-18 addendum's own batching table
+groups D-3 through D-7 as a single release on the grounds that they touch the log format together,
+and the pairing contract requires both skills to bump together when that happens. Splitting would
+have produced two releases that each half-bump the pair.
 
-Where that contract actually lives is worth stating, because the source documents get it wrong.
-Verified 2026-08-23: it appears in `skills/plab-continue-session/HISTORY.md:69` ("The two move and
-version together") and in the root `README.md:17` ("They are versioned and released together"). It
-does not appear in `skills/plab-wrap-session/HISTORY.md` at all, although the 2026-08-18 defect
-addendum says it appears in both.
-
-**Desired outcome.** The contract keeps protecting format compatibility without generating empty
-version bumps that make the history harder to read.
+**Desired outcome.** One coherent unit of work whose theme a reader can state in a sentence, without
+contradicting the batching already recorded in the source documents.
 
 **Options / approaches.**
 
-* **Option A:** Bump continue only. Honors the contract's purpose; the wrap HISTORY gains no entry
-  for a release in which wrap did not change.
-* **Option B:** Bump both. Literal reading, at the cost of a version whose changelog entry would have
-  to say "no changes".
+* **Option A:** One v0.4.0 with all eight efforts. Larger release, single pair bump, matches the
+  addendum.
+* **Option B:** Split into v0.4.0 (gates, CI) and v0.5.0 (log corpus). Smaller units, but two pair
+  bumps for what the addendum treats as one format change, and a re-batch that no source document
+  supports.
 
-**Recommendation.** Option A, and amend the contract's two real homes to say what it actually
-governs: a change to the session-log format or its gates requires a matching change in the other
-skill. Note that D-10 (log format contract) in v0.5.0 owns consolidating those statements, so this
-release should correct the wording in place rather than adding a third copy on the wrap side.
+**Recommendation.** Option A. The theme survives the larger scope: every one of the eight is about
+making a check trustworthy, including the log-corpus three, which exist because the corpus feeds
+later checks.
 
 ---
 
 > **Maintainer decision:** _(pending ratification)_
 >
 > * **Status:** Proposed as this session's working default; NOT yet ratified
-> * **Choice (proposed):** Option A, continue bumps alone; clarify the contract wording.
-> * **Reasoning:** The contract protects format compatibility, and the format is untouched here.
+> * **Choice (proposed):** Option A, one v0.4.0 containing all eight efforts.
+> * **Reasoning:** Preserves the batching already recorded in the 2026-08-18 addendum and honors the
+>   pairing contract with a single coordinated bump.
 > * **Proposed by / date:** Claude, planning session 2026-08-23. No maintainer input has been received on this item.
 
-### D2: Reintroducing the "where were we" trigger (Open)
+### D2: Dash rule promotion to CI (Proposed)
 
-**Summary.** Whether C-03 should restore the status-question phrases that D-01 deliberately removed.
+**Summary.** Whether the no-em-dash rule should be enforced in CI as well as by the local hook.
 
-**Context.** The phrases "where were we" and "what were we doing" were removed from the trigger
-surface because the skill was over-firing: sampled transcripts showed every invocation preceded by a
-status question rather than a resume request, and the skill answered a question with a resume ritual.
-The 2026-08-18 addendum records that removal as a decision and warns future readers not to treat it as
-an oversight. C-03 is the path where those phrases are asked most sincerely, because a maintainer
-returning to a cold repository genuinely does not know where they were. Restoring them carelessly
-re-breaks a shipped fix; refusing them permanently means the honest case stays unserved.
+**Context.** The rule is currently enforced by a PreToolUse hook in the maintainer's home directory.
+That is rung 1 on the mechanization ladder but machine-local: a commit made from another machine,
+another harness, or a plain editor bypasses it. This is not hypothetical, 31 dashes entered a
+repository through a `cp` that the hook never saw. CI is the only enforcement point that covers every
+path into the repository.
 
-**Desired outcome.** The phrase fires when the user wants orientation and stays silent when they want
-a one-line status answer, with the difference decided by something more reliable than phrasing.
+**Desired outcome.** The rule holds regardless of which machine or tool produced the commit, without
+weakening the fast local feedback the hook provides.
 
 **Options / approaches.**
 
-* **Option A:** Leave the trigger surface alone. C-03 improves only the already-invoked path. Zero
-  regression risk, and the cold-repo case is only reached when the user explicitly resumes.
-* **Option B:** Restore the phrases with an explicit carve-out in the skill body, so a status question
-  gets a direct answer and only an orientation request proceeds. Serves the sincere case, but the
-  carve-out is prose discipline, which is precisely what failed the first time.
+* **Option A:** Add a CI check and keep the hook. Two enforcement points, fast local feedback plus a
+  backstop that cannot be bypassed.
+* **Option B:** CI only. One place to maintain, but the failure arrives minutes later in a pull
+  request rather than at write time.
 
-**Recommendation.** Option A for this release. Ship C-03's degradation behavior on the explicit-resume
-path, observe whether the cold-repo case is actually being reached, and revisit the trigger only with
-transcript evidence. The description is the router and the body is the program; changing the router
-without evidence is what produced the original defect.
+**Recommendation.** Option A. The hook is what makes the rule cheap to obey; CI is what makes it
+true. Note the constraint that follows: the repository's own standard forbids validation logic living
+in CI configuration, so the checker must be a committed script that CI invokes, and per D-11 it must
+prove it still detects against a known-positive canary before a clean result is trusted.
+
+---
+
+> **Maintainer decision:** _(pending ratification)_
+>
+> * **Status:** Proposed as this session's working default; NOT yet ratified
+> * **Choice (proposed):** Option A, CI check plus the existing hook.
+> * **Reasoning:** The observed bypass was real, and a check that cannot be reached from other
+>   machines is not enforcement.
+> * **Proposed by / date:** Claude, planning session 2026-08-23. No maintainer input has been received on this item.
+
+### D3: Whether CI enables SARIF upload (Open)
+
+**Summary.** Whether the conformance gate should emit SARIF and upload it to the GitHub Security tab.
+
+**Context.** The toolkit's reusable Action accepts `sarif: true` and exposes a `sarif-path` output for
+`github/codeql-action/upload-sarif`. The repository is public, so the Security tab and code scanning
+are available at no cost. The question is whether the findings this gate produces are the kind a
+security surface should carry, or whether inline annotations on the diff are the whole benefit.
+
+**Desired outcome.** Findings land wherever the maintainer will actually read them, without creating a
+second dashboard that goes unwatched.
+
+**Options / approaches.**
+
+* **Option A:** Annotations only. Findings appear inline on the pull request diff, where they are
+  read at review time and nowhere else.
+* **Option B:** Annotations plus SARIF upload. Adds a durable, filterable history in the Security
+  tab and costs one extra workflow step.
+
+**Recommendation.** Option B, with the caveat that it is reversible in one line. The durable history
+is what makes it possible to answer "when did this start failing", which the annotations cannot.
 
 ---
 
@@ -188,6 +243,7 @@ without evidence is what produced the original defect.
 
 ## Notes
 
-C-03 depends on D-04 (capture-lite consumers) from v0.3.0 for its orientation substrate. If v0.3.0
-slips, C-03 still ships with a smaller evidence base: git history, open issues, and working-tree
-state carry it without capture records.
+The two efforts added on 2026-08-23 both came from running the gates rather than reading them. That
+is worth remembering when planning later releases: the 2026-08-18 pass inspected artifacts and found
+ten defects, and the two it missed were only visible while a check was executing. Neither reading nor
+running alone is sufficient.

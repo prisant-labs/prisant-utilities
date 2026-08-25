@@ -5,8 +5,8 @@ type: release-plan
 status: in-progress
 created: 2026-08-23
 updated: 2026-08-23
-theme: "Aggregation"
-includes: [C-05, W-04]
+theme: "Derived facts"
+includes: [D-10, W-02]
 spec-count: 2
 plan-count: 2
 checklist-complete: false
@@ -16,42 +16,48 @@ checklist-complete: false
 
 ## Theme
 
-Stop treating session logs as write-only.
+Derive every fact that can be derived, and leave the model authoring only judgment.
 
 ## Context
 
-At roughly four logs a week, the store holds a corpus nobody queries. Two events supplied the pull
-for changing that. Reconstructing a single month's arc required hand-reading three documents across
-two repositories. A portfolio analysis needed per-skill usage across time and had to mine raw
-transcripts, because no aggregate view of the logs existed.
+`plab-wrap-session` is mature in its judgment layer and immature in its evidence layer. It writes an
+excellent narrative, and it reconstructs its factual sections from the model's memory of a session
+that may have run for hours. The files-changed list, the commit range, the machine and branch and
+repository fields, the decision count, and the verification table are all facts a command can
+produce exactly, and all of them are currently recalled instead.
 
-This release adds one aggregation layer and two consumers of it. W-04 (digest mode) is the write-side
-consumer: a `--digest` mode over the last N logs answering what shipped, what was decided, and what
-is still outstanding across all of them. The third question is the one that pays, because a blocker
-that individual logs let you skim past becomes unavoidable when it appears in a list of everything
-still open. C-05 (arc resume) is the read-side consumer: after a long gap, the newest log is the
-least useful thing to read in isolation, because it is the end of a story the reader no longer
-remembers the middle of.
+W-02 (derived log facts) splits the log into a derived layer and an authored layer. A script inside
+the skill emits the factual block; the skill wraps prose around it and authors only the four sections
+that need a model: Summary, Decisions Made, Waiting on You, and the Continuation Prompt. The argument
+is not primarily cost. A long session's early hours are the haziest part of the model's context and
+are exactly where the factual sections draw from, so derivation is the only version that stays
+correct as sessions get longer. The accuracy problem is worse than the token problem and far less
+visible.
 
-The central design constraint is that these are twins, not two features. Both source roadmaps say the
-two should share whatever aggregation is built rather than each growing their own. W-04 owns the
-shared layer and the digest; C-05 declares a dependency and owns only the arc-resume consumer.
-Specifying the aggregation twice would reproduce this repository's dominant defect class.
+D-10 (log format contract) is the structural cause underneath four already-observed drift defects,
+and it ships here because W-02 is what makes it fixable. The wrap/continue log-format contract
+currently has no single source of truth: the template lives in wrap's references, the parsing
+expectations live in continue's references, the frontmatter schema is a third document, and the
+pairing contract is asserted in two more places while nothing checks any of it. The recommendation on
+record is explicitly not to build a shared schema as a new artifact. Instead, W-02's script output
+becomes the contract, and every other document defers to it. D-10 is that consolidation.
 
-Two earlier releases make this one honest. D-04 (capture-lite consumers, v0.3.0) means the corpus is
-no longer biased toward sessions that were important enough to wrap. D-05 (superseding logs, v0.3.0)
-removes the same-arc double-count at write time, so neither consumer here needs dedup logic. W-02
-(derived log facts, v0.5.0) means the facts being aggregated were derived rather than recalled.
-Aggregating recalled facts would have multiplied recall errors across the whole corpus.
+The drift is worse than the source documents record, which is itself evidence for this effort. The
+2026-08-18 addendum says the "move and version together" claim sits in both HISTORY files. Verified
+2026-08-23, it is in `skills/plab-continue-session/HISTORY.md:69` and the root `README.md:17`, with
+nothing on the wrap side, and the two surviving copies use different wording. D-10's consolidation
+should therefore preserve one existing wording verbatim rather than introducing a third phrasing,
+since a reworded "fix" would silently break any check written against the old text.
 
-One constraint carries directly into the acceptance criteria: every number the digest reports must
-state which harnesses it covers. A previous count was wrong specifically because it was
-harness-blind, measuring one harness while a second carried a large share of the work. The failure
-was not the missing data, it was a number presented without its scope.
+This ordering matters and should not be reversed. Shipping D-10 without W-02 would mean choosing one
+of the three existing restatements as canonical, which is a coin flip. Shipping W-02 without D-10
+would add a fourth statement of the contract to the three that already disagree.
 
-**Skill versions.** `plab-wrap-session` 1.8.0, `plab-continue-session` 1.7.0, plugin 0.6.0.
+**Skill versions.** `plab-wrap-session` 1.7.0, `plab-continue-session` 1.6.0, plugin 0.6.0. Both bump:
+the log's generated frontmatter is a format change, and continue's parser defers to it.
 
-**Depth.** Full-fidelity specs; structurally complete plans with lighter step detail.
+**Depth.** Full-fidelity specs; structurally complete plans with lighter step detail, because two
+releases land on these same files first.
 
 ---
 
@@ -61,8 +67,8 @@ Generated by `--update`. Do not hand-edit rows.
 
 | id | title | spec-status | plan-status | AC-coverage | has-plan? |
 |----|-------|-------------|-------------|-------------|-----------|
-| C-05 | Arc resume: read the last N logs, not just the newest | draft | draft | complete | yes |
-| W-04 | Digest mode: aggregate the last N session logs | draft | draft | complete | yes |
+| D-10 | Make derive-log-facts.py's output the single log-format c... | draft | draft | complete | yes |
+| W-02 | Derive session-log facts from git instead of model recall | draft | draft | complete | yes |
 
 ---
 
@@ -89,7 +95,7 @@ Gates (a), (d), and (f) are expected to FAIL until this release is executed.
 | `README.md` | Bump any version references | [ ] |
 | `AGENTS.md` | Reflect new or renamed skills | [ ] |
 | `docs/skills/README.md` | Sync per-skill version table | [x] N/A - no `docs/skills/README.md` in this repo |
-| `skills/*/HISTORY.md` | Append the version's changes (wrap 1.8.0, continue 1.7.0) | [ ] |
+| `skills/*/HISTORY.md` | Append the version's changes (wrap 1.7.0, continue 1.6.0) | [ ] |
 | `.claude-plugin/plugin.json` | Bump plugin `version` to 0.6.0 | [ ] |
 | `skills/*/SKILL.md` | Bump per-skill `version` frontmatter (wrap, continue) | [ ] |
 | `.codex-plugin/plugin.json` | Bump `version` to match `.claude-plugin/plugin.json` | [ ] |
@@ -111,106 +117,83 @@ work it governs.
 
 | ID | Title | Resolution | Status | Updated |
 |----|-------|------------|--------|---------|
-| D1 | Where the shared aggregation layer lives | REOPENED, conflicts with `lib/README.md` | Needs ruling | 2026-08-24 |
-| D2 | Whether arc resume is ever a default | Flag only in this release | Proposed | 2026-08-23 |
+| D1 | Shared schema artifact or generated contract | Generated contract | Proposed | 2026-08-23 |
+| D2 | What happens when the derive script is absent | Degrade to authored, state it | Open | 2026-08-23 |
 
-### D1: Where the shared aggregation layer lives (REOPENED, needs a ruling)
+### D1: Shared schema artifact or generated contract (Proposed)
 
-> **Reopened 2026-08-24.** This decision originally recommended Option A and was written into W-04 and
-> C-05 as though settled. It contradicts an existing, documented convention in this repository that was
-> not consulted when the decision was made. Do not execute either effort until this is ruled on.
+**Summary.** Whether to fix the log-format drift by writing a shared schema document or by making the
+derive script's output the contract.
 
-**Summary.** Where the aggregation code that both the digest and the arc resume read should live.
+**Context.** Four drift defects (D-01, D-02, D-05, D-08) trace to the same cause: the log format is
+stated in at least three places that can disagree. The obvious fix is a fourth document declared
+canonical. The recommendation already on record rejects that, on the grounds that a schema nobody
+generates from is just one more statement to drift, and this repository's dominant defect class is
+precisely text contradicting text.
 
-**Context.** Both consumers need the same thing: the log corpus, resolved through the date-shaped
-allowlist, parsed into per-log facts and open threads. Two or more skills invoking one piece of
-deterministic logic is a situation this repository has already ruled on in general.
-
-`lib/README.md` states the rule plainly: "If a script is invoked by a skill at runtime, it goes in
-`lib/`", and it should be added there when "2 or more skills would invoke the same logic", with the
-counterpart rule that a script only one skill consumes stays under that skill's own `scripts/`. The
-existing occupant, `lib/render-mermaid.py`, is exactly this shape, and skills invoke it by relative
-path. The aggregation layer is consumed by both skills, so the existing rule points at `lib/`.
-
-**How the error happened, recorded because the mechanism matters.** The original Option A
-recommendation was reasoned from the wrap skill owning the log-format contract, without reading
-`lib/README.md`. The agent that wrote W-04 and C-05 initially placed the script at
-`lib/aggregate-logs.py`, correctly following the documented convention, then reversed roughly 40 path
-references to match this decision because the decision block claimed to be maintainer-accepted. That
-approval was fabricated (see the status legend above), so a correct, convention-following design was
-abandoned in favor of an unratified one. The paths in both efforts currently reflect the reversal.
-
-**Desired outcome.** One implementation, one place to fix a parsing bug, consistent with whatever rule
-this repository actually follows for shared skill-time scripts.
+**Desired outcome.** Exactly one statement of the log's factual contract, in a form that cannot go
+stale because everything else is produced from it or checked against it.
 
 **Options / approaches.**
 
-* **Option A:** `skills/plab-wrap-session/scripts/aggregate-logs.py`, with continue invoking it across
-  the skill boundary. Keeps the aggregation adjacent to the log-format contract that v0.5.0 puts in
-  wrap. Contradicts `lib/README.md` as written, so taking it requires amending that file to record a
-  named exception rather than leaving two rules in conflict.
-* **Option B:** `lib/aggregate-logs.py`, following the existing convention verbatim. Matches
-  `render-mermaid.py`'s precedent, needs no documentation amendment, and keeps `lib/` meaning what it
-  says. Costs the adjacency argument: the aggregation layer and the format contract it must agree with
-  would live in different trees.
-* **Option C:** A third location. Rejected; nothing recommends it and it multiplies the conventions.
+* **Option A:** A shared schema document both skills cite. Familiar, and immediately available
+  without W-02. Adds a fourth text that must be kept true by discipline.
+* **Option B:** W-02's script output is the contract; template and parser defer to it. The contract is
+  executable, so drift is detectable rather than merely discouraged. Requires W-02 to ship first.
 
-**Recommendation.** Option B. An existing written convention beats a fresh argument, particularly one
-made without reading it, and this repository's dominant defect class is precisely two texts disagreeing.
-The adjacency concern behind Option A is real but is better answered by having the aggregation layer
-cite the format contract explicitly than by moving the file. If Option A is chosen anyway, amend
-`lib/README.md` in the same release so the rule and the practice agree.
-
-**Concrete consequence either way.** W-04 and C-05 currently carry 37 path references assuming Option
-A. Choosing Option B requires updating those references, in both specs and then both plans, in that
-order, before either effort is executed.
-
----
-
-> **Maintainer decision:** _(required before execution)_
->
-> * **Status:** REOPENED. The earlier "Proposed: Option A" was made without consulting `lib/README.md`
->   and is withdrawn as a default.
-> * **Choice:** (none)
-> * **Reasoning:** (none)
-> * **Reopened by / date:** Claude, 2026-08-24. No maintainer input has been received on this item.
-
-### D2: Whether arc resume is ever a default (Proposed)
-
-**Summary.** Whether C-05 reads multiple logs automatically or only behind an explicit flag.
-
-**Context.** The source roadmap promoted arc resume out of speculative because transcripts showed the
-maintainer asking for it in their own words on two of four sampled invocations. The same roadmap
-keeps one caution: it costs tokens proportional to the gap, which is exactly when the user is least
-willing to spend them, and it competes with simply reading the git log.
-
-**Desired outcome.** The capability exists for the case that asked for it, without silently making
-every resume more expensive.
-
-**Options / approaches.**
-
-* **Option A:** Explicit flag only in this release. Zero cost when unused; the maintainer opts in
-  when the gap warrants it.
-* **Option B:** Automatic when the gap exceeds a threshold. Better ergonomics, but it spends tokens
-  on the maintainer's behalf at the worst moment, based on a threshold nobody has calibrated.
-
-**Recommendation.** Option A, as the roadmap already specifies. Revisit automatic behavior only with
-usage evidence showing the flag is being reached for consistently, which is the same evidence bar
-applied everywhere else in this portfolio.
+**Recommendation.** Option B, which is what the source recommendation already says. The test of
+success is checkable: after this release, any given field of the log's factual block should be
+defined in exactly one file, verifiable by grep.
 
 ---
 
 > **Maintainer decision:** _(pending ratification)_
 >
 > * **Status:** Proposed as this session's working default; NOT yet ratified
-> * **Choice (proposed):** Option A, explicit flag.
-> * **Reasoning:** Prototype before defaulting; the cost lands at the worst possible moment.
+> * **Choice (proposed):** Option B, the generated output is the contract.
+> * **Reasoning:** An executable contract cannot drift silently; a fourth document can.
 > * **Proposed by / date:** Claude, planning session 2026-08-23. No maintainer input has been received on this item.
+
+### D2: What happens when the derive script is absent (Open)
+
+**Summary.** How wrap should behave when it cannot run the derivation script.
+
+**Context.** The skill ships from a marketplace and runs in more than one harness. The script lives
+inside the skill directory, so it should always be present, but Python availability, sandbox
+restrictions, and partial installs are all real. Two failure styles are available and they have
+opposite risks: refusing to wrap protects the contract but can strand a session's context entirely,
+while silently falling back to model-authored facts reintroduces exactly the unreliability this
+release exists to remove, without telling anyone.
+
+**Desired outcome.** A session is never lost because a script is missing, and a log never claims
+derived provenance for facts that were recalled.
+
+**Options / approaches.**
+
+* **Option A:** Hard fail. Wrap refuses until the script runs. Maximum contract integrity, worst case
+  is a lost session log.
+* **Option B:** Degrade to authored facts and stamp the log with a field recording that the factual
+  block was recalled rather than derived. The log stays honest about its own provenance, and any later
+  consumer can filter on it.
+
+**Recommendation.** Option B. It matches this repository's established preference for reporting a
+degraded state over failing closed, and the provenance stamp is what keeps the degradation visible
+instead of silent. This is the same three-state discipline as D-11: clean, degraded, and broken are
+different, and collapsing them is the defect.
+
+---
+
+> **Maintainer decision:** _(pending)_
+>
+> * **Status:** Open
+> * **Choice (proposed):** (none)
+> * **Reasoning:** (none)
+> * **Decided by / date:** (none)
 
 ---
 
 ## Notes
 
-The digest is deliberately not a dashboard. It answers three questions and stops. The moment it grows
-a fourth view it becomes something the maintainer has to maintain rather than something that pays
-them back, and the portfolio's measured problem has never been too few views.
+W-02 is described in the source roadmap as the biggest maturity step available to the wrap skill.
+It is also the substrate for v0.7.0's aggregation work, because a digest over logs whose facts were
+recalled inherits every recall error. Sequencing this release before aggregation is deliberate.
