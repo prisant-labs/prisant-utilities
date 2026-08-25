@@ -133,9 +133,9 @@ work it governs.
 
 | ID | Title | Resolution | Status | Updated |
 |----|-------|------------|--------|---------|
-| D1 | Batch as one release or split | Ship as one v0.4.0 | Proposed | 2026-08-23 |
-| D2 | Dash rule promotion to CI | Promote; keep the local hook | Proposed | 2026-08-23 |
-| D3 | Whether CI enables SARIF upload | Recommend yes | Open | 2026-08-23 |
+| D1 | Batch as one release or split | Ship as one v0.4.0 | Ratified | 2026-08-25 |
+| D2 | Dash rule promotion to CI | Promote; keep the local hook | Ratified | 2026-08-25 |
+| D3 | Whether CI enables SARIF upload | Option B, annotations plus SARIF upload | Resolved | 2026-08-25 |
 
 ### D1: Batch as one release or split (Proposed)
 

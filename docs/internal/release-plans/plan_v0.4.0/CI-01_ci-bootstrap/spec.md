@@ -2,9 +2,9 @@
 id: CI-01
 title: CI bootstrap - toolkit standard gate and repo-wide dash check
 type: spec
-status: draft
+status: fulfilled
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-24
 linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
 linked-plan: implementation-plan.md
 ac-count: 8
@@ -19,22 +19,22 @@ priority: P1
 
 ## Task Summary
 
-**Status:** Draft
-**Last updated:** 2026-08-23
+**Status:** Fulfilled
+**Last updated:** 2026-08-24
 **Linked plan:** `implementation-plan.md`
 **Open questions:** 4 (see Open Questions / Decisions)
 **Revisions:** None yet; this is the initial draft.
 
 ### Acceptance Criteria Fulfillment
 
-- [ ] AC-1: `gate.yml` triggers on pull requests and on pushes to `main`.
-- [ ] AC-2: The standard-gate job invokes the toolkit Action pinned to `v1.16.1` with `fail-on-error: true`.
-- [ ] AC-3: The standard-gate job runs with `sarif: true` and uploads the result to the Security tab.
-- [ ] AC-4: `gate.yml` excludes the two toolkit-internal scripts, with a comment stating why for each.
-- [ ] AC-5: `scripts/check-dashes.py` is a portable, ripgrep-backed scan with exactly one named exclusion.
-- [ ] AC-6: The dash check proves its own detector before trusting a result: clean, findings, or broken.
-- [ ] AC-7: No file under `.github/workflows/` contains inline pass/fail logic of its own.
-- [ ] AC-8: Nothing in the gate tags a release, edits a changelog, bumps a version, or pushes a commit.
+- [x] AC-1: `gate.yml` triggers on pull requests and on pushes to `main`.
+- [x] AC-2: The standard-gate job invokes the toolkit Action pinned to `v1.16.1` with `fail-on-error: true`.
+- [x] AC-3: The standard-gate job runs with `sarif: true` and uploads the result to the Security tab.
+- [x] AC-4: `gate.yml` excludes the two toolkit-internal scripts, with a comment stating why for each.
+- [x] AC-5: `scripts/check-dashes.py` is a portable, ripgrep-backed scan with exactly one named exclusion.
+- [x] AC-6: The dash check proves its own detector before trusting a result: clean, findings, or broken.
+- [x] AC-7: No file under `.github/workflows/` contains inline pass/fail logic of its own.
+- [x] AC-8: Nothing in the gate tags a release, edits a changelog, bumps a version, or pushes a commit.
 
 ### Currently In Progress
 

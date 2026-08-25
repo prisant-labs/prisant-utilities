@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- The repository has continuous integration for the first time. `.github/workflows/gate.yml` runs on
+  every pull request and every push to `main`, grading against the Advanced Skill Library Standard
+  via the pinned toolkit Action (with SARIF uploaded to the Security tab) and running a repo-wide
+  em-dash and en-dash check. Until now the conformance gate was a command in `AGENTS.md` that a human
+  had to remember, and the dash rule was enforced only by a hook on one machine, which a copy-based
+  migration bypassed once at 31 dashes. CI reports; it never fixes, bumps, or tags.
 - Both detector-backed `plab-wrap-session` Log Self-Check gates now run committed, canary-verified
   scripts that report one of three states: clean, findings, or broken. `scripts/dash-check.py` and
   `scripts/path-citation-check.py` each prove their detector against a canary corpus before scanning,

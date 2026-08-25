@@ -97,6 +97,7 @@ Initialize agent development infrastructure in a repository: `AGENTS.md`, `CLAUD
 ## Build and validate
 
 - Conformance gate: `node <agent-skills-toolkit>/scripts/check.mjs .`
+- CI runs the same gate automatically: `.github/workflows/gate.yml` grades against the Advanced Skill Library Standard on every pull request and every push to `main`, and runs `scripts/check-dashes.py` repo-wide. CI reports; it never fixes, bumps, or tags. The two toolkit-internal scripts it deliberately skips are named and explained in the workflow header.
 - The canonical manifest is `library.json`. `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` are generated from it; do not hand-edit them.
 - Regenerate native manifests: `node <agent-skills-toolkit>/scripts/generators/gen-manifest.mjs . --write --target=all`
 

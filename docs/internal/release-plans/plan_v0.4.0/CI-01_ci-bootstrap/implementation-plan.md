@@ -2,9 +2,9 @@
 id: CI-01
 title: "Implementation plan: CI bootstrap - toolkit standard gate and repo-wide dash check"
 type: implementation-plan
-status: draft
+status: complete
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-24
 linked-spec: spec.md
 linked-release: docs/internal/release-plans/plan_v0.4.0/plan_v0.4.0.md
 ac-coverage: complete
@@ -36,9 +36,9 @@ phase-count: 3
 
 | Phase | Goal | Fulfills AC | Owner | Status |
 |---|---|---|---|---|
-| P1 | Build the canary-proven dash detector | AC-5, AC-6 | agent | Not started |
-| P2 | Wire both gate jobs into `gate.yml` | AC-1, AC-2, AC-3, AC-4, AC-8 | agent | Not started |
-| P3 | Verify no inline gate logic; update agent- and human-facing docs | AC-7 | agent | Not started |
+| P1 | Build the canary-proven dash detector | AC-5, AC-6 | agent | Done |
+| P2 | Wire both gate jobs into `gate.yml` | AC-1, AC-2, AC-3, AC-4, AC-8 | agent | Done |
+| P3 | Verify no inline gate logic; update agent- and human-facing docs | AC-7 | agent | Done |
 
 ---
 
@@ -51,15 +51,15 @@ phase-count: 3
 **Fulfills:** AC-5, AC-6
 
 **Steps:**
-- [ ] Step 1: Create `scripts/check-dashes.py` with a `#!/usr/bin/env python3` shebang and a module docstring that names the three exit states, cites `spec.md`, and states why ripgrep rather than perl or a shell-escaped pattern is the detection engine (spec.md R5: both have independently failed open on this codebase's own tooling).
-- [ ] Step 2: Define the two banned characters by Unicode code point, U+2014 and U+2013 (for example via Python's `chr()` builtin, called on each code point separately), and combine the two resulting single-character strings into one character-class pattern for ripgrep. Do not type either character directly into the source file: doing so would both defeat the point of this script and risk tripping the PreToolUse hook this effort promotes to CI. This mirrors the reason `~/.claude/hooks/no-em-dashes.py` also builds its own comparison values from code points rather than literal characters.
-- [ ] Step 3: Define an exclusion set naming exactly one file, `skills/plab-guide/references/voice-and-style.md`, with a comment stating why: that file displays the literal banned characters as pedagogical "what this looks like" examples (spec.md R6), and this is a fixed, single-entry list, not a general suppression mechanism.
-- [ ] Step 4: Implement `rg_path() -> str`: `shutil.which("rg")`; if `None`, print `BROKEN: ripgrep (rg) not found on PATH.` to stderr and `sys.exit(2)` before doing anything else.
-- [ ] Step 5: Implement `run_rg(rg: str, text: str) -> int`: run ripgrep as a subprocess (`-n`, `--color=never`, the pattern from Step 2) with `text` piped via stdin (`input=text, capture_output=True, text=True`); return its exit code. Ripgrep's own convention: 0 means matched, 1 means no match, 2 means an rg-internal error.
-- [ ] Step 6: Implement `self_test(rg: str) -> None`: build a known-positive string (containing both banned characters, from the same code points as Step 2) and a known-negative string (containing only plain hyphens and a numeric range such as "2-5"). Assert `run_rg(rg, known_positive) == 0` and `run_rg(rg, known_negative) == 1`. On either failure, print a `BROKEN:` message naming which side failed (known-positive not detected, or known-negative wrongly flagged) and `sys.exit(2)`. No real scan runs past this point unless both hold.
-- [ ] Step 7: Implement `tracked_files() -> list[str]`: run `["git", "ls-files"]`, split stdout on newlines, drop anything in the exclusion set from Step 3.
-- [ ] Step 8: Implement `main()`: call `rg_path()`, then `self_test(rg)`, then `tracked_files()`, then run ripgrep against the tracked-file list with the same pattern and flags as Step 5. Map its exit code: `2` prints ripgrep's own stderr under a `BROKEN:` prefix and exits 2; `0` (matched) prints the matching lines, prints a `FINDINGS: N line(s)...` summary to stderr, and exits 1; `1` (no match) prints `CLEAN: canary proved, no banned characters found in tracked files.` and exits 0.
-- [ ] Step 9: Guard with `if __name__ == "__main__": main()`.
+- [x] Step 1: Create `scripts/check-dashes.py` with a `#!/usr/bin/env python3` shebang and a module docstring that names the three exit states, cites `spec.md`, and states why ripgrep rather than perl or a shell-escaped pattern is the detection engine (spec.md R5: both have independently failed open on this codebase's own tooling).
+- [x] Step 2: Define the two banned characters by Unicode code point, U+2014 and U+2013 (for example via Python's `chr()` builtin, called on each code point separately), and combine the two resulting single-character strings into one character-class pattern for ripgrep. Do not type either character directly into the source file: doing so would both defeat the point of this script and risk tripping the PreToolUse hook this effort promotes to CI. This mirrors the reason `~/.claude/hooks/no-em-dashes.py` also builds its own comparison values from code points rather than literal characters.
+- [x] Step 3: Define an exclusion set naming exactly one file, `skills/plab-guide/references/voice-and-style.md`, with a comment stating why: that file displays the literal banned characters as pedagogical "what this looks like" examples (spec.md R6), and this is a fixed, single-entry list, not a general suppression mechanism.
+- [x] Step 4: Implement `rg_path() -> str`: `shutil.which("rg")`; if `None`, print `BROKEN: ripgrep (rg) not found on PATH.` to stderr and `sys.exit(2)` before doing anything else.
+- [x] Step 5: Implement `run_rg(rg: str, text: str) -> int`: run ripgrep as a subprocess (`-n`, `--color=never`, the pattern from Step 2) with `text` piped via stdin (`input=text, capture_output=True, text=True`); return its exit code. Ripgrep's own convention: 0 means matched, 1 means no match, 2 means an rg-internal error.
+- [x] Step 6: Implement `self_test(rg: str) -> None`: build a known-positive string (containing both banned characters, from the same code points as Step 2) and a known-negative string (containing only plain hyphens and a numeric range such as "2-5"). Assert `run_rg(rg, known_positive) == 0` and `run_rg(rg, known_negative) == 1`. On either failure, print a `BROKEN:` message naming which side failed (known-positive not detected, or known-negative wrongly flagged) and `sys.exit(2)`. No real scan runs past this point unless both hold.
+- [x] Step 7: Implement `tracked_files() -> list[str]`: run `["git", "ls-files"]`, split stdout on newlines, drop anything in the exclusion set from Step 3.
+- [x] Step 8: Implement `main()`: call `rg_path()`, then `self_test(rg)`, then `tracked_files()`, then run ripgrep against the tracked-file list with the same pattern and flags as Step 5. Map its exit code: `2` prints ripgrep's own stderr under a `BROKEN:` prefix and exits 2; `0` (matched) prints the matching lines, prints a `FINDINGS: N line(s)...` summary to stderr, and exits 1; `1` (no match) prints `CLEAN: canary proved, no banned characters found in tracked files.` and exits 0.
+- [x] Step 9: Guard with `if __name__ == "__main__": main()`.
 
 **Verification:**
 ```
@@ -86,16 +86,16 @@ Expected: prints `BROKEN: ripgrep (rg) not found on PATH.` and reports `exit: 2`
 **Fulfills:** AC-1, AC-2, AC-3, AC-4, AC-8
 
 **Steps:**
-- [ ] Step 1: Create `.github/workflows/gate.yml` with `name: Gate` and a header comment block stating: (a) this file makes no pass/fail decision of its own, per Standard sec 4.1/4.4; (b) `check-parity.mjs` is not invoked because it is the toolkit's own validator-parity harness, run by the toolkit's own CI, not by consumer repos (spec.md R2, S2); (c) `verify-tag-matches-manifests.mjs` is not invoked because it requires a `package.json` this repo has never had, and `AGENTS.md` names only `check.mjs` as this repo's gate (spec.md R2, R3, S3, S4); (d) CI reports, it does not release, auto-fix, or tag (spec.md AC-8).
-- [ ] Step 2: Add the trigger block:
+- [x] Step 1: Create `.github/workflows/gate.yml` with `name: Gate` and a header comment block stating: (a) this file makes no pass/fail decision of its own, per Standard sec 4.1/4.4; (b) `check-parity.mjs` is not invoked because it is the toolkit's own validator-parity harness, run by the toolkit's own CI, not by consumer repos (spec.md R2, S2); (c) `verify-tag-matches-manifests.mjs` is not invoked because it requires a `package.json` this repo has never had, and `AGENTS.md` names only `check.mjs` as this repo's gate (spec.md R2, R3, S3, S4); (d) CI reports, it does not release, auto-fix, or tag (spec.md AC-8).
+- [x] Step 2: Add the trigger block:
   ```yaml
   on:
     pull_request:
     push:
       branches: [main]
   ```
-- [ ] Step 3: Add a top-level `permissions: contents: read`.
-- [ ] Step 4: Add the `standard-gate` job:
+- [x] Step 3: Add a top-level `permissions: contents: read`.
+- [x] Step 4: Add the `standard-gate` job:
   ```yaml
   jobs:
     standard-gate:
@@ -127,7 +127,7 @@ Expected: prints `BROKEN: ripgrep (rg) not found on PATH.` and reports `exit: 2`
             echo "Earned tier: ${{ steps.gate.outputs.tier }}"
             echo "${{ steps.gate.outputs.errors }} error(s), ${{ steps.gate.outputs.warnings }} warning(s)"
   ```
-- [ ] Step 5: Add the `dash-check` job in the same `jobs:` block:
+- [x] Step 5: Add the `dash-check` job in the same `jobs:` block:
   ```yaml
     dash-check:
       name: "No em-dash / en-dash (repo-wide)"
@@ -162,10 +162,10 @@ End-to-end: push the branch and open a PR. Confirm two checks appear, named "Adv
 **Fulfills:** AC-7
 
 **Steps:**
-- [ ] Step 1: Re-read the finished `.github/workflows/gate.yml` end to end. Confirm every conditional (`if:`) references a step output (`steps.<id>.outputs.*`) or a prior step's success/failure, never file content matched inline; confirm no `run:` block contains a regex or string comparison evaluated against tracked-file contents (the only content-inspecting logic in the whole workflow is the call to `python3 scripts/check-dashes.py`, which is a committed script, not inline YAML logic).
-- [ ] Step 2: In `AGENTS.md`'s `## Build and validate` section, immediately after the existing "Conformance gate" bullet (`AGENTS.md:71`), add one bullet stating that `.github/workflows/gate.yml` now runs this gate automatically on every pull request and push to `main`, alongside the dash check.
-- [ ] Step 3: Propose a short `CHANGELOG.md [Unreleased]` entry (an `### Added` line) stating that the repo's first CI gate now exists, covering the toolkit standard grade and the dash check. State the exact proposed line to the maintainer and confirm before writing it (spec.md OQ-4; this repo's own `doc-update-rules.md` excludes routine "CI tweaks" from this file, but this is the first CI, not a tweak, so the judgment call is surfaced rather than made silently in either direction).
-- [ ] Step 4: Do not modify `README.md` (excluded by this repo's own `doc-update-rules.md` for CI/infrastructure changes, and by this effort's Non-Goals). Do not modify `library.json`, `.claude-plugin/plugin.json`, or `.codex-plugin/plugin.json` (version bumps are release-level, not per-effort).
+- [x] Step 1: Re-read the finished `.github/workflows/gate.yml` end to end. Confirm every conditional (`if:`) references a step output (`steps.<id>.outputs.*`) or a prior step's success/failure, never file content matched inline; confirm no `run:` block contains a regex or string comparison evaluated against tracked-file contents (the only content-inspecting logic in the whole workflow is the call to `python3 scripts/check-dashes.py`, which is a committed script, not inline YAML logic).
+- [x] Step 2: In `AGENTS.md`'s `## Build and validate` section, immediately after the existing "Conformance gate" bullet (`AGENTS.md:71`), add one bullet stating that `.github/workflows/gate.yml` now runs this gate automatically on every pull request and push to `main`, alongside the dash check.
+- [x] Step 3: Propose a short `CHANGELOG.md [Unreleased]` entry (an `### Added` line) stating that the repo's first CI gate now exists, covering the toolkit standard grade and the dash check. State the exact proposed line to the maintainer and confirm before writing it (spec.md OQ-4; this repo's own `doc-update-rules.md` excludes routine "CI tweaks" from this file, but this is the first CI, not a tweak, so the judgment call is surfaced rather than made silently in either direction).
+- [x] Step 4: Do not modify `README.md` (excluded by this repo's own `doc-update-rules.md` for CI/infrastructure changes, and by this effort's Non-Goals). Do not modify `library.json`, `.claude-plugin/plugin.json`, or `.codex-plugin/plugin.json` (version bumps are release-level, not per-effort).
 
 **Verification:**
 ```

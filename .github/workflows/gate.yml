@@ -1,0 +1,75 @@
+# Gate
+#
+# This file makes no pass/fail decision of its own. It invokes committed gates
+# and reports what they say (Standard sec 4.1 / 4.4). Validation logic lives in
+# scripts and in the toolkit Action, never inline here.
+#
+# Two toolkit scripts are deliberately NOT invoked:
+#
+#   check-parity.mjs                 the toolkit's own validator-parity harness.
+#                                    It is run by the toolkit's CI against the
+#                                    toolkit, not by consumer repositories
+#                                    (spec.md R2, S2).
+#
+#   verify-tag-matches-manifests.mjs requires a package.json this repository has
+#                                    never had, and AGENTS.md names only
+#                                    check.mjs as this repo's gate
+#                                    (spec.md R2, R3, S3, S4).
+#
+# CI reports. It does not release, auto-fix, bump, or tag (spec.md AC-8).
+
+name: Gate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  standard-gate:
+    name: Advanced Skill Library Standard
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write   # required to upload SARIF to the Security tab
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Grade against the Advanced Skill Library Standard
+        id: gate
+        uses: product-on-purpose/agent-skills-toolkit@v1.16.1   # pin a released tag, never a branch
+        with:
+          path: .
+          fail-on-error: true
+          annotations: true
+          sarif: true
+
+      - name: Upload SARIF to the Security tab
+        if: always() && steps.gate.outputs.sarif-path != ''
+        uses: github/codeql-action/upload-sarif@v3   # matches the toolkit's own documented example; spec.md OQ-3
+        with:
+          sarif_file: ${{ steps.gate.outputs.sarif-path }}
+
+      - name: Report tier
+        run: |
+          echo "Earned tier: ${{ steps.gate.outputs.tier }}"
+          echo "${{ steps.gate.outputs.errors }} error(s), ${{ steps.gate.outputs.warnings }} warning(s)"
+
+  dash-check:
+    name: "No em-dash / en-dash (repo-wide)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install ripgrep
+        run: sudo apt-get update -qq && sudo apt-get install -y ripgrep
+
+      - name: Run the dash check
+        run: python3 scripts/check-dashes.py
