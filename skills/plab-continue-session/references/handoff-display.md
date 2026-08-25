@@ -12,7 +12,7 @@ The structured resumption context shown to the user in Phase 3 of `/plab-continu
 **Branch:** `<branch>` <warning if mismatch>
 
 ### Waiting on you
-<bullets from `## Waiting on You`, links intact, or "Nothing pending." Lead with these: they are the maintainer's open obligations. If the log predates the section (pre-1.3.0 wrap), say so instead of fabricating a list.>
+<bullets from `## Waiting on You`, sorted oldest-blocked-first by each item's `(blocked since YYYY-MM-DD)` marker, links intact, or "Nothing pending." Lead with these: they are the maintainer's open obligations. If the log predates the section (pre-1.3.0 wrap), say so instead of fabricating a list.>
 
 ### Outstanding from last session
 <bullets from `## Outstanding Issues`, or "None recorded.">
@@ -44,6 +44,7 @@ After this block, ask the user one question (Phase 4): resume with the named imm
 - The full `## Files Changed` list (git status gives the same info, fresher)
 - The full `## Verification` checklist (the user can read it if they want depth)
 - The `## Summary` body paragraph (the frontmatter summary line is enough)
+- The `## Parked` list (optional context; read the log directly if wanted)
 
 The display is a header for re-entry, not a re-read of the entire log. If the user wants depth, they can open the log file (give them the path).
 

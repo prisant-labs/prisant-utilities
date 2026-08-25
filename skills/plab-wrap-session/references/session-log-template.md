@@ -72,10 +72,19 @@ resumed-from: # log filename if this session resumed from one. Filename only, ne
 
 ## Waiting on You
 
-<!-- REQUIRED in every mode. One bullet per item blocked on the maintainer:
-  what is awaited, why it blocks, links to relevant files.
+<!-- REQUIRED in every mode. Only items blocked on the maintainer's decision or
+  action belong here: what is awaited, why it blocks, a (blocked since YYYY-MM-DD)
+  marker, and links to relevant files. Optional or nice-to-have items go in the
+  Parked list below, never here.
   Write "Nothing pending." explicitly when empty; never omit this section.
   Mirror the list inside the continuation prompt. -->
+
+## Parked
+
+<!-- Optional or nice-to-have context that does not meet the Waiting on You bar:
+  smoke tests never run, cosmetic cleanups, ideas worth remembering but nobody
+  is blocked on. One bullet each. Omit the section entirely when there is
+  nothing to park. -->
 
 ## What's Next
 
@@ -120,7 +129,7 @@ status: completed
 
 ## Waiting on You
 
-[One bullet per item awaited from the maintainer with file links, or "Nothing pending."]
+[One bullet per item blocked on the maintainer, each with a (blocked since YYYY-MM-DD) marker and file links, or "Nothing pending." Optional items do not belong here.]
 
 ## Continuation Prompt
 
@@ -162,7 +171,7 @@ status: blocked
 
 ## Waiting on You
 
-[One bullet per item awaited from the maintainer with file links; the blocker itself belongs here when the maintainer is the unblocker.]
+[One bullet per item blocked on the maintainer, each with a (blocked since YYYY-MM-DD) marker and file links; the blocker itself belongs here when the maintainer is the unblocker.]
 
 ## Continuation Prompt
 

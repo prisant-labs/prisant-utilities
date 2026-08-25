@@ -2,9 +2,9 @@
 id: D-07
 title: "Implementation plan: Restore Waiting on You as an enforced blocker contract"
 type: implementation-plan
-status: draft
+status: complete
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-24
 linked-spec: spec.md
 linked-release: docs/internal/release-plans/plan_v0.4.0/plan_v0.4.0.md
 ac-coverage: complete
@@ -34,11 +34,11 @@ phase-count: 5
 
 | Phase | Goal | Fulfills AC | Owner | Status |
 |---|---|---|---|---|
-| P1 | Tighten the Waiting-on definition and add two Log Self-Check gates | AC-1, AC-2, AC-3 | agent | Not started |
-| P2 | Add the carry-forward Evidence Gathering step | AC-4, AC-8 | agent | Not started |
-| P3 | Add the Parked list and update template comments | AC-6, AC-7 | agent | Not started |
-| P4 | Sort the read-side display oldest-first | AC-5 | agent | Not started |
-| P5 | Version bump and documentation coverage | (packaging for AC-1 through AC-8) | agent | Not started |
+| P1 | Tighten the Waiting-on definition and add two Log Self-Check gates | AC-1, AC-2, AC-3 | agent | Done |
+| P2 | Add the carry-forward Evidence Gathering step | AC-4, AC-8 | agent | Done |
+| P3 | Add the Parked list and update template comments | AC-6, AC-7 | agent | Done |
+| P4 | Sort the read-side display oldest-first | AC-5 | agent | Done |
+| P5 | Version bump and documentation coverage | (packaging for AC-1 through AC-8) | agent | Done |
 
 ---
 
@@ -49,7 +49,7 @@ phase-count: 5
 **Fulfills:** AC-1, AC-2, AC-3
 
 **Steps:**
-- [ ] Step 1: In `skills/plab-wrap-session/SKILL.md`, replace the Waiting on You bullet in Body Sections (Final Mode) (currently line 153) from:
+- [x] Step 1: In `skills/plab-wrap-session/SKILL.md`, replace the Waiting on You bullet in Body Sections (Final Mode) (currently line 153) from:
 
   ```
   **Waiting on You** - Required in every mode. Every item blocked on the maintainer's decision or action, one bullet each: what is awaited, why it blocks, and links to the relevant files. Write "Nothing pending" explicitly when the list is empty; never omit the section. Mirror the list inside the continuation prompt so the next session re-presents it.
@@ -61,7 +61,7 @@ phase-count: 5
   **Waiting on You** - Required in every mode. Only items blocked on the maintainer's decision or action belong here, one bullet each: what is awaited, why it blocks, a `(blocked since YYYY-MM-DD)` marker, and links to the relevant files. Optional or nice-to-have items are not blockers; route them to What's Next or the Parked list instead. Write "Nothing pending" explicitly when the list is empty; never omit the section. Mirror the list inside the continuation prompt so the next session re-presents it.
   ```
 
-- [ ] Step 2: In the same file's Log Self-Check list (currently lines 190-195, six bullets ending with "No em-dash or en-dash characters anywhere in the log"), add two bullets:
+- [x] Step 2: In the same file's Log Self-Check list (currently lines 190-195, six bullets ending with "No em-dash or en-dash characters anywhere in the log"), add two bullets:
 
   ```
   - No Waiting on You item begins with "Optional"
@@ -79,7 +79,7 @@ phase-count: 5
 **Fulfills:** AC-4, AC-8
 
 **Steps:**
-- [ ] Step 1: In `skills/plab-wrap-session/SKILL.md`'s Evidence Gathering list (currently 6 numbered items, lines 40-45), add a 7th item:
+- [x] Step 1: In `skills/plab-wrap-session/SKILL.md`'s Evidence Gathering list (currently 6 numbered items, lines 40-45), add a 7th item:
 
   ```
   7. Locate the previous session log using `plab-continue-session`'s newest-log selection rule (`references/log-discovery.md` in that skill), read its Waiting on You section, and carry forward items still applicable, preserving each item's original `(blocked since YYYY-MM-DD)` date. If the previous log predates this marker (no date to preserve), record the carried item as newly observed with today's date instead of fabricating one. If no previous log exists, skip this step; there is nothing to carry.
@@ -96,7 +96,7 @@ phase-count: 5
 **Fulfills:** AC-6, AC-7
 
 **Steps:**
-- [ ] Step 1: In Final Mode, replace the Waiting on You comment (currently lines 75-78):
+- [x] Step 1: In Final Mode, replace the Waiting on You comment (currently lines 75-78):
 
   ```
   <!-- REQUIRED in every mode. One bullet per item blocked on the maintainer:
@@ -116,7 +116,7 @@ phase-count: 5
     Mirror the list inside the continuation prompt. -->
   ```
 
-- [ ] Step 2: Immediately after the Waiting on You block and before `## What's Next` in Final Mode, add:
+- [x] Step 2: Immediately after the Waiting on You block and before `## What's Next` in Final Mode, add:
 
   ```
   ## Parked
@@ -127,7 +127,7 @@ phase-count: 5
     nothing to park. -->
   ```
 
-- [ ] Step 3: In Quick Mode, replace the Waiting on You comment (currently line 123):
+- [x] Step 3: In Quick Mode, replace the Waiting on You comment (currently line 123):
 
   ```
   [One bullet per item awaited from the maintainer with file links, or "Nothing pending."]
@@ -139,7 +139,7 @@ phase-count: 5
   [One bullet per item blocked on the maintainer, each with a (blocked since YYYY-MM-DD) marker and file links, or "Nothing pending." Optional items do not belong here.]
   ```
 
-- [ ] Step 4: In Blocked Mode, replace the Waiting on You comment (currently line 165):
+- [x] Step 4: In Blocked Mode, replace the Waiting on You comment (currently line 165):
 
   ```
   [One bullet per item awaited from the maintainer with file links; the blocker itself belongs here when the maintainer is the unblocker.]
@@ -164,7 +164,7 @@ phase-count: 5
 **Fulfills:** AC-5
 
 **Steps:**
-- [ ] Step 1: Replace the "Waiting on you" bullet under "### Waiting on you" section description (currently line 15):
+- [x] Step 1: Replace the "Waiting on you" bullet under "### Waiting on you" section description (currently line 15):
 
   ```
   <bullets from `## Waiting on You`, links intact, or "Nothing pending." Lead with these: they are the maintainer's open obligations. If the log predates the section (pre-1.3.0 wrap), say so instead of fabricating a list.>
@@ -176,7 +176,7 @@ phase-count: 5
   <bullets from `## Waiting on You`, sorted oldest-blocked-first by each item's `(blocked since YYYY-MM-DD)` marker, links intact, or "Nothing pending." Lead with these: they are the maintainer's open obligations. If an item predates this marker (pre-1.6.0 wrap), display it last, unordered, rather than guessing its age. If the log predates the section entirely (pre-1.3.0 wrap), say so instead of fabricating a list.>
   ```
 
-- [ ] Step 2: In the "What to elide" list (currently lines 41-46), add a bullet so the new Parked section is accounted for rather than left silently undocumented:
+- [x] Step 2: In the "What to elide" list (currently lines 41-46), add a bullet so the new Parked section is accounted for rather than left silently undocumented:
 
   ```
   - The `## Parked` list (optional context; read the log directly if wanted)
@@ -193,13 +193,13 @@ phase-count: 5
 **Fulfills:** Packaging for AC-1 through AC-8 (no single AC maps to this phase; it ships the release artifacts for all of them).
 
 **Steps:**
-- [ ] Step 1: `skills/plab-wrap-session/SKILL.md` frontmatter: `version: "1.5.0"` to `version: "1.6.0"`; bump `updated:` to the ship date.
-- [ ] Step 2: `skills/plab-continue-session/SKILL.md` frontmatter: `version: "1.3.0"` to `version: "1.4.0"`; bump `updated:` to the ship date.
-- [ ] Step 3: `skills/plab-wrap-session/HISTORY.md`: add a `1.6.0` row to the table and a matching section describing the tightened Waiting-on contract, the two new gates, and the carry-forward step. If another effort in this same v0.4.0 release has already opened a `1.6.0` entry, add this effort's paragraph to it rather than creating a duplicate entry.
-- [ ] Step 4: `skills/plab-continue-session/HISTORY.md`: add a `1.4.0` row and section describing the oldest-first sort and the Parked-list elision. Same duplicate-entry check as Step 3.
-- [ ] Step 5: `library.json`: bump the `plab-wrap-session` component version (currently line 32) to `1.6.0` and the `plab-continue-session` component version (currently line 39) to `1.4.0`.
-- [ ] Step 6: Root `README.md`: bump the version-table entries (currently lines 11-12) to `1.6.0` and `1.4.0`.
-- [ ] Step 7: `CHANGELOG.md`: add an entry under `[Unreleased]` (or a new `v0.4.0` heading if the release has been cut by the time this lands) describing the tightened Waiting-on contract in plain-English, user-facing terms: what a diluted list looked like before, what it looks like now, and that Parked is the new home for optional context.
+- [x] Step 1: `skills/plab-wrap-session/SKILL.md` frontmatter: `version: "1.5.0"` to `version: "1.6.0"`; bump `updated:` to the ship date.
+- [x] Step 2: `skills/plab-continue-session/SKILL.md` frontmatter: `version: "1.3.0"` to `version: "1.4.0"`; bump `updated:` to the ship date.
+- [x] Step 3: `skills/plab-wrap-session/HISTORY.md`: add a `1.6.0` row to the table and a matching section describing the tightened Waiting-on contract, the two new gates, and the carry-forward step. If another effort in this same v0.4.0 release has already opened a `1.6.0` entry, add this effort's paragraph to it rather than creating a duplicate entry.
+- [x] Step 4: `skills/plab-continue-session/HISTORY.md`: add a `1.4.0` row and section describing the oldest-first sort and the Parked-list elision. Same duplicate-entry check as Step 3.
+- [x] Step 5: `library.json`: bump the `plab-wrap-session` component version (currently line 32) to `1.6.0` and the `plab-continue-session` component version (currently line 39) to `1.4.0`.
+- [x] Step 6: Root `README.md`: bump the version-table entries (currently lines 11-12) to `1.6.0` and `1.4.0`.
+- [x] Step 7: `CHANGELOG.md`: add an entry under `[Unreleased]` (or a new `v0.4.0` heading if the release has been cut by the time this lands) describing the tightened Waiting-on contract in plain-English, user-facing terms: what a diluted list looked like before, what it looks like now, and that Parked is the new home for optional context.
 
 **Verification:** `grep -rn "1.6.0\|1.4.0" skills/plab-wrap-session/SKILL.md skills/plab-continue-session/SKILL.md library.json README.md` shows consistent version strings across all four files. `grep -c "^| 1\." skills/plab-wrap-session/HISTORY.md skills/plab-continue-session/HISTORY.md` confirms exactly one new table row was added per file, not a duplicate.
 

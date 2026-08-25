@@ -34,6 +34,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- The Waiting on You section is an enforced contract again. It had diluted into a suggestion list:
+  one real log carried five items, four prefixed "Optional:", with a genuine blocker open since July
+  hidden among them, and it passed every self-check. Only items blocked on the maintainer belong
+  there now, each carrying a `(blocked since YYYY-MM-DD)` marker, with two new gates rejecting the
+  observed failure. Optional context moves to a new Parked section. Unresolved items carry forward
+  across wraps with their original dates, so a blocker's age no longer resets every session, and
+  `plab-continue-session` displays them oldest-blocked-first.
 - `plab-wrap-session` `resumed-from:` is now written only when `/plab-continue-session` performed the
   resume in the current session, never back-filled from memory, and omitted rather than guessed when
   no resume occurred. Both real logs in this repository carried an unresolvable cross-repo value from

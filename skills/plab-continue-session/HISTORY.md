@@ -22,6 +22,11 @@ is a producer with no consumer, the same defect class this plugin has shipped be
 same-arc superseded log to `_local/_session-logs/_superseded/`. The existing one-level-deep allowlist
 already excluded it, so this only documents the name. No pipeline change.
 
+**Changed: Waiting-on items display oldest-blocked-first.** The handoff now sorts them by each item's
+`(blocked since YYYY-MM-DD)` marker, so the longest-open obligation leads. The new `## Parked` section
+is elided from the display like the other optional sections, rather than being left silently
+undocumented.
+
 ## 1.3.0 - 2026-08-18
 
 **Added: month-folder discovery.** The session-log store can now be archived into `YYYY-MM/`

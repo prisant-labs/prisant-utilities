@@ -48,6 +48,8 @@ Before writing the log, gather facts:
 
 8. In deep and final modes, determine the newest existing log in `_local/_session-logs/` (see `plab-continue-session/references/log-discovery.md` for the newest-wins sort across the flat store and any `YYYY-MM/` folders) and judge whether it covers the same arc as this session. If it does, prepare one archive proposal under the same per-action confirmation protocol the hygiene sweep uses (see `references/hygiene-sweep.md`): propose moving the older file to `_local/_session-logs/_superseded/`, execute only on explicit approval, and record the disposition, declared plus archived-or-not, in the new log's Summary.
 
+9. Locate the previous session log using `plab-continue-session`'s newest-log selection rule (`references/log-discovery.md` in that skill) and read its Waiting on You section. Carry every still-unresolved item forward into this log with its original `(blocked since YYYY-MM-DD)` date, never today's, so a blocker's age survives across wraps instead of resetting. If no previous log exists, or it has no Waiting on You section, start fresh and say nothing.
+
 If git is unavailable, note that and proceed with session context only.
 
 ## Pre-Wrap Hygiene Sweep (deep and final modes)
@@ -154,7 +156,7 @@ resumed-from: # written only by an in-session /plab-continue-session resume; nev
 
 **Hygiene Sweep** - Findings from the pre-wrap sweep: state found, actions proposed, actions taken vs declined.
 
-**Waiting on You** - Required in every mode. Every item blocked on the maintainer's decision or action, one bullet each: what is awaited, why it blocks, and links to the relevant files. Write "Nothing pending" explicitly when the list is empty; never omit the section. Mirror the list inside the continuation prompt so the next session re-presents it.
+**Waiting on You** - Required in every mode. Only items blocked on the maintainer's decision or action belong here, one bullet each: what is awaited, why it blocks, a `(blocked since YYYY-MM-DD)` marker carrying the date the item first blocked, and links to the relevant files. Optional or nice-to-have items go in the Parked list, never here; an item nobody is blocked on dilutes the section until a real blocker hides inside it. Write "Nothing pending" explicitly when the list is empty; never omit the section. Mirror the list inside the continuation prompt so the next session re-presents it.
 
 **What's Next** - Ordered list. Most important action first. When one decision unlocks the rest, name it as the single unlocking decision.
 
@@ -199,6 +201,8 @@ The two detector-backed gates below report one of three states: clean, findings,
 - Frontmatter Tier 1 complete, including `machine:`
 - Path citations resolve, detector-backed, three-state: run `python scripts/path-citation-check.py <log-path> --repo-root <project-root>`. Checks only citations that assert a location: one containing a path separator must exist as written, and a backtick-wrapped citation with no separator is resolved against the repo root and passes silently if it does not resolve. A bare word with a file extension and neither signal is prose, not a path claim, and is not checked. Separator-bearing tokens that are URIs, drive-letter absolute paths, globs, template placeholders, single-segment slash commands, or extensionless are excluded too; see the script docstring for the canary corpus. Exit 0 clean, 1 findings, 2 broken; broken blocks exactly like findings
 - No em-dash or en-dash characters anywhere in the log, detector-backed, three-state: run `python scripts/dash-check.py <log-path>`. Exit 0 clean, 1 findings, 2 broken; broken blocks exactly like findings
+- No Waiting on You item begins with "Optional"
+- Every Waiting on You item carries a `(blocked since YYYY-MM-DD)` marker
 
 ## Surrounding Document Updates
 

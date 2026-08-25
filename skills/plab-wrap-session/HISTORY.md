@@ -74,6 +74,20 @@ No `supersedes:` frontmatter field was added. It would have had zero consumers t
 same producer-with-no-consumer shape that capture-lite was already in. The declaration lives in prose,
 where a reader actually encounters it.
 
+**Fixed: Waiting on You is an enforced contract again.** The section had diluted into a suggestion
+list. One real log carried five items, four prefixed "Optional:", with a genuine blocker open since
+July camouflaged among them, and the log passed every Log Self-Check gate.
+
+Only items actually blocked on the maintainer belong there now, each carrying a
+`(blocked since YYYY-MM-DD)` marker. Two new gates make the observed failure mechanically rejectable:
+no item may begin with "Optional", and every item must carry the marker. Optional context moved to a
+new Parked section in the template, which exists so demoted items have a named destination rather
+than being deleted.
+
+A carry-forward step reads the previous log's Waiting on You section and brings unresolved items
+forward with their original dates, never today's, so a blocker's age survives across wraps instead of
+resetting every session. That age is what made the July item visible once it was finally displayed.
+
 ## 1.5.0 - 2026-08-18
 
 **Added: `--organize`.** A flat session-log store grows without bound. `--organize` files logs older

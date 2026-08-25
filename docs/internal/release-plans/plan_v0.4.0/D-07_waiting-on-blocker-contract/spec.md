@@ -2,9 +2,9 @@
 id: D-07
 title: Restore Waiting on You as an enforced blocker contract
 type: spec
-status: draft
+status: fulfilled
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-24
 linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
 linked-plan: implementation-plan.md
 ac-count: 8
@@ -19,22 +19,22 @@ priority: P1
 
 ## Task Summary
 
-**Status:** Draft
-**Last updated:** 2026-08-23
+**Status:** Fulfilled
+**Last updated:** 2026-08-24
 **Linked plan:** implementation-plan.md
 **Open questions:** 2 (see Open Questions / Decisions)
 **Revisions:** Initial draft created 2026-08-23.
 
 ### Acceptance Criteria Fulfillment
 
-- [ ] AC-1: Waiting on You definition tightened to blocked-on-maintainer items with a blocked-since marker
-- [ ] AC-2: Log Self-Check gains a gate rejecting any item beginning with "Optional"
-- [ ] AC-3: Log Self-Check gains a gate rejecting any item missing a blocked-since marker
-- [ ] AC-4: Evidence Gathering gains a carry-forward step from the previous log
-- [ ] AC-5: handoff-display.md sorts Waiting-on bullets oldest first
-- [ ] AC-6: session-log-template.md's Waiting on You comment states the tightened contract
-- [ ] AC-7: session-log-template.md gains a Parked list section
-- [ ] AC-8: Carry-forward degrades sensibly against a previous log written before this schema existed
+- [x] AC-1: Waiting on You definition tightened to blocked-on-maintainer items with a blocked-since marker
+- [x] AC-2: Log Self-Check gains a gate rejecting any item beginning with "Optional"
+- [x] AC-3: Log Self-Check gains a gate rejecting any item missing a blocked-since marker
+- [x] AC-4: Evidence Gathering gains a carry-forward step from the previous log
+- [x] AC-5: handoff-display.md sorts Waiting-on bullets oldest first
+- [x] AC-6: session-log-template.md's Waiting on You comment states the tightened contract
+- [x] AC-7: session-log-template.md gains a Parked list section
+- [x] AC-8: Carry-forward degrades sensibly against a previous log written before this schema existed
 
 ### Currently In Progress
 
