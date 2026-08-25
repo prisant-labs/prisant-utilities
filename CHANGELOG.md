@@ -5,6 +5,22 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2026-08-25
+
+### Fixed
+
+- Session-log body prose is no longer hard-wrapped. Nothing ever asked for it: no rule existed in the
+  skill, the template, or the repository, and logs written a week apart drifted from 800-character
+  paragraphs to a hard wrap near 100 columns. Hard wrapping makes an edit reflow the whole paragraph
+  so diffs show paragraph-sized churn, makes the continuation prompt arrive ragged when pasted into a
+  chat box, and makes any grep for a phrase longer than the wrap width silently fail. The rule is
+  stated once and is deliberately not a self-check gate, because nothing can mechanically tell a
+  wrapped line from a short sentence.
+- The CI pin moved from `agent-skills-toolkit@v1.16.1` to `v1.16.2`. The v1.16.1 Action failed before
+  it graded anything: its `Set up Node` step pointed `cache-dependency-path` at an absolute path
+  outside the workspace, which `setup-node` treats as an error, so the composite step failed and
+  skipped the gate. The first CI run this repository ever made hit it. Fixed upstream in v1.16.2.
+
 ## [0.4.0] - 2026-08-25
 
 ### Added

@@ -2,6 +2,8 @@
 
 Adapt section depth to the selected mode. Remove instructional comments before delivery.
 
+Body prose is not hard-wrapped: one paragraph is one line. See `SKILL.md`'s Session Log Output section for why.
+
 ---
 
 ## Final Mode

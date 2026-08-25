@@ -12,7 +12,7 @@ description: "Document and close agentic coding sessions with structured session
 argument-hint: "[mode: quick|final|deep|blocked] [--organize]"
 license: MIT
 metadata:
-  version: "1.6.0"
+  version: "1.6.1"
   updated: 2026-08-25
 ---
 
@@ -75,6 +75,12 @@ Write to: `_local/_session-logs/YYYY-MM-DD_HH-MM_<llm>_<brief-kebab-title>.md`
 - All agents write to the same directory - chronological project timeline
 - Create the directory if it doesn't exist
 - Session logs are machine-local by design. `_local/` is gitignored, so logs stay out of version control and out of the repo's public surface
+
+**Do not hard-wrap body prose.** One paragraph is one line, however long. A session log is a document to be read rendered or in a soft-wrapping editor, not source to be diffed line by line, and hard wrapping costs it three things: editing one sentence reflows the paragraph so diffs show paragraph-sized churn, the continuation prompt arrives ragged when pasted into a chat box, and any grep for a phrase longer than the wrap width silently fails. That last one is the expensive one, because searching a log is the main thing a log is for.
+
+Tables, code blocks, and frontmatter keep their natural line structure. This rule is about prose.
+
+It is deliberately not a Log Self-Check gate. Nothing can mechanically tell a hard-wrapped line from a genuinely short sentence, so a gate for it would either flag ordinary prose or pass everything, and this release exists to stop shipping checks that cannot do what they claim.
 
 **Always write to the current path**, even when a legacy directory exists. Do not write to a legacy path and do not move existing logs automatically. If either legacy directory contains logs, add one migration note after writing:
 

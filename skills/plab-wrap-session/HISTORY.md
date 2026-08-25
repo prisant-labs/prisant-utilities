@@ -2,10 +2,28 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
+| 1.6.1 | 2026-08-25 | v0.4.1 | fixed | Session-log body prose is not hard-wrapped. CI pin moved to the toolkit release that fixed the Action. |
 | 1.6.0 | 2026-08-25 | v0.4.0 | fixed | Detector gates that could not fail open, plus the log-format and hygiene fixes batched with them. |
 | 1.5.0 | 2026-08-18 | v0.2.0 | added | `--organize` files old logs into `YYYY-MM/` folders. Hygiene sweep gained Check 5. |
 | 1.4.1 | 2026-08-18 | v0.1.2 | fixed | Dropped the "what did we do" trigger. Added `type:` to the frontmatter block and `machine:` to the Quick and Blocked templates. |
 | 1.4.0 | 2026-08-14 | v0.1.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.4.0; prior history remains there. |
+
+## 1.6.1 - 2026-08-25
+
+**Fixed: body prose is not hard-wrapped.** Nothing ever told the skill to wrap, and it drifted into
+doing so anyway: logs written a week apart went from 800-character paragraphs to a hard wrap near 100
+columns, with no rule anywhere in the skill, the template, or the repository asking for it.
+
+Hard wrapping is right for source that gets diffed line by line and wrong for a document that gets
+read rendered. It costs three things here. Editing one sentence reflows the paragraph, so a diff
+shows paragraph-sized churn instead of the changed line. The continuation prompt arrives ragged when
+pasted into a chat box, which is exactly how it is meant to be used. And a grep for any phrase longer
+than the wrap width silently fails, which breaks the one operation a session log exists to support.
+
+The rule is stated once and is deliberately not a Log Self-Check gate: nothing can mechanically
+distinguish a wrapped line from a short sentence, so such a gate would either flag ordinary prose or
+pass everything. Adding a check that cannot do what it claims would contradict the release this
+skill just shipped in.
 
 ## 1.6.0 - 2026-08-25
 
