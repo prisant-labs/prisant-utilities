@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Both detector-backed `plab-wrap-session` Log Self-Check gates now run committed, canary-verified
+  scripts that report one of three states: clean, findings, or broken. `scripts/dash-check.py` and
+  `scripts/path-citation-check.py` each prove their detector against a canary corpus before scanning,
+  and a gate reporting broken blocks the log exactly as findings does. They replace improvised checks
+  that silently failed open three times in one week, each reporting success while structurally
+  incapable of detecting anything.
+
 ### Fixed
 
 - The `plab-wrap-session` path-existence Log Self-Check gate flagged bare filenames mentioned in

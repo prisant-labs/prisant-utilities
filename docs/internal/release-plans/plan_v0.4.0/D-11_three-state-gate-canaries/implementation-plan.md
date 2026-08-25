@@ -2,9 +2,9 @@
 id: D-11
 title: "Implementation plan: Three-state, canary-verified detector gates in the Log Self-Check"
 type: implementation-plan
-status: draft
+status: complete
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-24
 linked-spec: spec.md
 linked-release: docs/internal/release-plans/plan_v0.4.0/plan_v0.4.0.md
 ac-coverage: complete
@@ -63,10 +63,10 @@ every v0.4.0 effort that touches wrap. Do not bump `metadata.version` in this pl
 
 | Phase | Goal | Fulfills AC | Owner | Status |
 |---|---|---|---|---|
-| P1 | Build the canary-verified dash-sweep script | AC-1, AC-2, AC-3, AC-7 | agent | Not started |
-| P2 | Build the canary-verified path-citation script | AC-4, AC-7 | agent | Not started |
-| P3 | Rewrite the SKILL.md gate bullets to invoke both scripts | AC-5, AC-6 | agent | Not started |
-| P4 | Documentation and version-trail content | N/A (documentation) | agent | Not started |
+| P1 | Build the canary-verified dash-sweep script | AC-1, AC-2, AC-3, AC-7 | agent | Done |
+| P2 | Build the canary-verified path-citation script | AC-4, AC-7 | agent | Done |
+| P3 | Rewrite the SKILL.md gate bullets to invoke both scripts | AC-5, AC-6 | agent | Done |
+| P4 | Documentation and version-trail content | N/A (documentation) | agent | Done |
 
 ---
 
@@ -81,14 +81,14 @@ trusting any scan of a drafted log, and reports one of three states.
 
 **Steps:**
 
-- [ ] Step 1: Create the file with a module docstring modeled on `_local/migration/2026-08-14/pii-gate.py`'s
+- [x] Step 1: Create the file with a module docstring modeled on `_local/migration/2026-08-14/pii-gate.py`'s
   own docstring shape: state the exit-code contract up front (0 clean, 1 findings, 2 broken, "never
   interpret 2 as clean"), and state explicitly why the canary strings are built with `chr()` rather than
   a string escape (see Global constraints above), so a future editor does not "helpfully" rewrite them
   back into an escape or a literal character.
-- [ ] Step 2: Add argparse with a positional `log_path` (the drafted log file to scan) and a
+- [x] Step 2: Add argparse with a positional `log_path` (the drafted log file to scan) and a
   `--self-test-only` flag, mirroring `pii-gate.py`'s own `--self-test-only` flag.
-- [ ] Step 3: Define the canary corpus as module-level lists, built with `chr()`:
+- [x] Step 3: Define the canary corpus as module-level lists, built with `chr()`:
   - `MUST_MATCH`: at least two entries, one containing `chr(0x2014)` (em-dash) mid-string and one
     containing `chr(0x2013)` (en-dash) mid-string, each embedded in an otherwise-ordinary sentence
     fragment (for example: the concatenation of `"a sentence with a dash right"`, `chr(0x2014)`, and
@@ -96,17 +96,17 @@ trusting any scan of a drafted log, and reports one of three states.
   - `MUST_NOT_MATCH`: at least three entries: a sentence using a plain ASCII hyphen
     (`"a sentence with a plain hyphen - right here"`), a sentence spelling out the words "em dash" with
     no actual character, and a numeric range written with a plain hyphen (`"a range like 2-5"`).
-- [ ] Step 4: Implement `self_test()`: for every `MUST_MATCH` string, confirm the detection regex finds
+- [x] Step 4: Implement `self_test()`: for every `MUST_MATCH` string, confirm the detection regex finds
   a hit; for every `MUST_NOT_MATCH` string, confirm it finds none. On any failure, print a
   "GATE SELF-TEST FAILED" message to stderr naming which canary or anti-canary failed and return
   `False`; on success print a one-line pass summary with the corpus sizes and return `True`. Mirror
   `pii-gate.py:206-227`'s structure exactly.
-- [ ] Step 5: Implement the scan: read `log_path` with `open(log_path, encoding="utf-8")` (never rely on
+- [x] Step 5: Implement the scan: read `log_path` with `open(log_path, encoding="utf-8")` (never rely on
   a platform-default encoding; this matters specifically on Windows, per `pii-gate.py:238` and `:299`),
   iterate lines, and on each line search for either target codepoint using a character class built from
   the same `chr()` calls used in the canary corpus (not a re-typed escape). Collect `(line_number,
   line_text)` for every hit.
-- [ ] Step 6: Wire `main()`: run `self_test()` first, always, even when scanning is also requested. On
+- [x] Step 6: Wire `main()`: run `self_test()` first, always, even when scanning is also requested. On
   failure, print to stderr and `sys.exit(2)`. If `--self-test-only`, exit 0 after a passing self-test
   without scanning anything. Otherwise scan `log_path`; if any hits, print them with line numbers and
   `sys.exit(1)`; if none, print a clean confirmation and `sys.exit(0)`.
@@ -144,16 +144,16 @@ it already reflects the narrowed rule; if it does not, stop this phase and land 
 
 **Steps:**
 
-- [ ] Step 1: Create the file with a module docstring stating the exit-code contract (same 0/1/2 shape
+- [x] Step 1: Create the file with a module docstring stating the exit-code contract (same 0/1/2 shape
   as Phase 1) and a one-line summary of D-12's subject-matching rule, with a pointer to
   `docs/internal/release-plans/plan_v0.4.0/D-12_path-citation-precision/spec.md` rather than restating
   the full rule's reasoning.
-- [ ] Step 2: Add argparse with a positional `log_path`, an optional `--repo-root` (default: current
+- [x] Step 2: Add argparse with a positional `log_path`, an optional `--repo-root` (default: current
   working directory), and `--self-test-only`. Document in the docstring, following the precedent
   already set by `organize-logs.py` (`SKILL.md:91`, "the store argument is relative to the project being
   wrapped. Do not assume the two share a root"), that `--repo-root` must be the project being wrapped,
   not this skill's own installed location.
-- [ ] Step 3: Implement citation extraction from the log text: find every backtick-wrapped span
+- [x] Step 3: Implement citation extraction from the log text: find every backtick-wrapped span
   (`` `...` ``), and separately find every whitespace-delimited bare token containing a path separator
   (`/` or `\`) that is not already inside a backtick span (to avoid double-counting). For each
   candidate, classify per D-12's rule:
@@ -164,7 +164,7 @@ it already reflects the narrowed rule; if it does not, stop this phase and land 
     spec Requirement 2 and its Open Question D1: this branch can never produce a finding by design).
   - Neither backtick-wrapped nor separator-bearing: excluded entirely, never entered into the candidate
     set.
-- [ ] Step 4: Define the canary corpus so the self-test never depends on the tree of whatever project is
+- [x] Step 4: Define the canary corpus so the self-test never depends on the tree of whatever project is
   being wrapped. This script ships in a published plugin invoked against arbitrary repos, so a
   MUST_NOT_MATCH entry that asserts "this real, existing repo file is not flagged" is only valid in the
   one repo that happens to contain that file; in every other installation it would not exist, the
@@ -185,13 +185,13 @@ it already reflects the narrowed rule; if it does not, stop this phase and land 
     - a citation with a path separator pointing at the one file the fixture actually created, for
       example `` `real/canary-target.md` `` (must NOT be flagged, since inside the fixture it is a true
       positive for existence).
-- [ ] Step 5: Implement `self_test()` mirroring Phase 1's shape, using the fixture from Step 4 as the
+- [x] Step 5: Implement `self_test()` mirroring Phase 1's shape, using the fixture from Step 4 as the
   resolution root for every corpus entry: every `MUST_MATCH` entry must produce a finding; every
   `MUST_NOT_MATCH` entry must produce none. Exit 2 with a named failure on any mismatch, and tear down
   the fixture directory afterward regardless of outcome (use the context manager form so cleanup is not
   skippable). The production scan path (not self-test) still resolves against the real `--repo-root`
   argument as described in Step 3; only the self-test is fixture-isolated.
-- [ ] Step 6: Wire `main()` with the same 0 clean / 1 findings / 2 broken contract as Phase 1.
+- [x] Step 6: Wire `main()` with the same 0 clean / 1 findings / 2 broken contract as Phase 1.
 
 **Verification:**
 
@@ -222,26 +222,26 @@ detector-backed gate's backing script explicitly.
 
 **Steps:**
 
-- [ ] Step 1: Re-open `skills/plab-wrap-session/SKILL.md` and re-verify current line numbers for the Log
+- [x] Step 1: Re-open `skills/plab-wrap-session/SKILL.md` and re-verify current line numbers for the Log
   Self-Check section before editing (D-12's phase may have already shifted the path-existence bullet's
   wording, and other v0.4.0 efforts landing before this one may have shifted line numbers elsewhere in
   the file).
-- [ ] Step 2: Immediately below the section's existing intro sentence ("Verify the drafted log passes
+- [x] Step 2: Immediately below the section's existing intro sentence ("Verify the drafted log passes
   every gate; fix failures before writing, never after:"), add one to two sentences stating: the two
   detector-backed gates below report one of three states, clean, findings, or broken; each runs a
   canary self-test before scanning; a gate reporting broken blocks the log exactly as findings does.
-- [ ] Step 3: Replace the path-existence bullet (as D-12 left it) with a version that keeps D-12's
+- [x] Step 3: Replace the path-existence bullet (as D-12 left it) with a version that keeps D-12's
   subject-matching rule in full and adds the script invocation and exit-code contract, for example:
   "Path citations exist, detector-backed, three-state: run
   `python scripts/path-citation-check.py <log-path> --repo-root <project-root>`. Checks only citations
   with a path separator, or backtick-wrapped and resolving against the repo root; see the script's own
   docstring for the canary corpus. Exit 0 clean, 1 findings, 2 broken; broken blocks exactly like
   findings." Do not drop any part of D-12's subject-matching wording while adding this.
-- [ ] Step 4: Replace the em-dash/en-dash bullet with a version naming `dash-check.py`, for example:
+- [x] Step 4: Replace the em-dash/en-dash bullet with a version naming `dash-check.py`, for example:
   "No em-dash or en-dash characters, detector-backed, three-state: run
   `python scripts/dash-check.py <log-path>`. Exit 0 clean, 1 findings, 2 broken; broken blocks exactly
   like findings."
-- [ ] Step 5: Leave the continuation-prompt, Waiting-on-You, summary-length, and frontmatter-Tier-1
+- [x] Step 5: Leave the continuation-prompt, Waiting-on-You, summary-length, and frontmatter-Tier-1
   bullets exactly as they are. Do not reformat or reorder the list.
 
 **Verification:** `git diff skills/plab-wrap-session/SKILL.md` shows changes confined to the section
@@ -261,12 +261,12 @@ changed, why, and where the new scripts live.
 
 **Steps:**
 
-- [ ] Step 1: Add a bullet under `CHANGELOG.md`'s `## [Unreleased]` section, in a `### Added` subsection
+- [x] Step 1: Add a bullet under `CHANGELOG.md`'s `## [Unreleased]` section, in a `### Added` subsection
   (this introduces new committed scripts, which is an addition, distinct from D-12's `### Fixed` entry).
   Content: state that the two detector-backed Log Self-Check gates now run committed, canary-verified
   scripts reporting clean, findings, or broken, replacing improvised checks that had silently failed
   open three times.
-- [ ] Step 2: Check `skills/plab-wrap-session/HISTORY.md` for an existing `## 1.6.0` heading (D-12, or
+- [x] Step 2: Check `skills/plab-wrap-session/HISTORY.md` for an existing `## 1.6.0` heading (D-12, or
   another co-landing v0.4.0 effort, may have already created it). Append this effort's bullet(s) under
   the existing heading without disturbing any other effort's content, following the file's established
   style (bold lead sentence, then supporting detail, as in the 1.5.0 and 1.4.1 entries). If no heading

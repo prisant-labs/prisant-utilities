@@ -23,6 +23,23 @@ evaluated at all.
 A gate that cries wolf six times out of seven trains its reader to skim the output, which is how the
 one real finding in that wrap nearly went unread.
 
+**Added: both detector gates became canary-verified scripts.** The dash gate and the path-citation
+gate now run `scripts/dash-check.py` and `scripts/path-citation-check.py`. Each proves its detector
+against a canary corpus before scanning anything and reports clean, findings, or broken. Broken
+blocks the log exactly as findings does, because a check that cannot prove it still works is not a
+passing check.
+
+This exists because the same failure happened three times in one week: a dash sweep written as a
+shell escape that expanded to a literal string, a replacement sweep in Perl that read undecoded bytes
+and could never match, and a path gate that produced six false positives out of seven. All three
+reported success. A two-state gate cannot tell "found nothing" from "never ran".
+
+Mechanizing the path rule also revealed that it was under-specified. Applied literally to a real log
+it produced 13 flags, 11 of them false, against the pre-D-12 gate's 7 and 6: separators appear in
+slash commands, repository slugs, git refs, globs, template placeholders and URLs, none of which
+claim where a file lives. The script excludes all six mechanically and lands at 4 flags. See the
+D-12 spec's Revisions entry for the superseded criterion.
+
 ## 1.5.0 - 2026-08-18
 
 **Added: `--organize`.** A flat session-log store grows without bound. `--organize` files logs older

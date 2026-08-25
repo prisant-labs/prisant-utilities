@@ -187,12 +187,14 @@ This default is a comply-or-explain rule: produce the verbose form, or produce a
 
 Verify the drafted log passes every gate; fix failures before writing, never after:
 
+The two detector-backed gates below report one of three states: clean, findings, or broken. Each proves its detector against a canary corpus before scanning, and a gate reporting broken blocks the log exactly as findings does. A check that cannot prove it still works is not a passing check.
+
 - Continuation prompt is self-contained (readable by a cold-start session with zero other context)
 - Waiting on You section present in every mode ("Nothing pending." counts; absence does not)
 - Summary is 120 characters or fewer
 - Frontmatter Tier 1 complete, including `machine:`
-- Every citation that asserts a location resolves: one containing a path separator must exist as written, and a backtick-wrapped citation with no separator is resolved against the repo root and passes silently if it does not resolve. A bare word with a file extension and neither signal is prose, not a path claim, and is not checked
-- No em-dash or en-dash characters anywhere in the log
+- Path citations resolve, detector-backed, three-state: run `python scripts/path-citation-check.py <log-path> --repo-root <project-root>`. Checks only citations that assert a location: one containing a path separator must exist as written, and a backtick-wrapped citation with no separator is resolved against the repo root and passes silently if it does not resolve. A bare word with a file extension and neither signal is prose, not a path claim, and is not checked. Separator-bearing tokens that are URIs, drive-letter absolute paths, globs, template placeholders, single-segment slash commands, or extensionless are excluded too; see the script docstring for the canary corpus. Exit 0 clean, 1 findings, 2 broken; broken blocks exactly like findings
+- No em-dash or en-dash characters anywhere in the log, detector-backed, three-state: run `python scripts/dash-check.py <log-path>`. Exit 0 clean, 1 findings, 2 broken; broken blocks exactly like findings
 
 ## Surrounding Document Updates
 

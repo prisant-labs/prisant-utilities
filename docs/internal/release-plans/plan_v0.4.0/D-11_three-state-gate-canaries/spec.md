@@ -2,9 +2,9 @@
 id: D-11
 title: Three-state, canary-verified detector gates in the Log Self-Check
 type: spec
-status: draft
+status: fulfilled
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-24
 linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
 linked-plan: implementation-plan.md
 ac-count: 7
@@ -19,21 +19,21 @@ priority: P1
 
 ## Task Summary
 
-**Status:** Draft
-**Last updated:** 2026-08-23
+**Status:** Fulfilled
+**Last updated:** 2026-08-24
 **Linked plan:** implementation-plan.md
 **Open questions:** 2 open, see Open Questions / Decisions
 **Revisions:** Initial draft
 
 ### Acceptance Criteria Fulfillment
 
-- [ ] AC-1: The dash-sweep gate runs a canary self-test before scanning the log
-- [ ] AC-2: A failed canary self-test reports broken and blocks exactly like findings
-- [ ] AC-3: A passed self-test yields correct clean or findings results for the dash-sweep gate
-- [ ] AC-4: The path-existence gate runs an equivalent canary self-test before scanning citations
-- [ ] AC-5: The SKILL.md gate bullets name each backing script explicitly
-- [ ] AC-6: The four non-detector gates are unchanged, with no canary mechanism added to them
-- [ ] AC-7: Both detectors are committed scripts requiring no new runtime dependency
+- [x] AC-1: The dash-sweep gate runs a canary self-test before scanning the log
+- [x] AC-2: A failed canary self-test reports broken and blocks exactly like findings
+- [x] AC-3: A passed self-test yields correct clean or findings results for the dash-sweep gate
+- [x] AC-4: The path-existence gate runs an equivalent canary self-test before scanning citations
+- [x] AC-5: The SKILL.md gate bullets name each backing script explicitly
+- [x] AC-6: The four non-detector gates are unchanged, with no canary mechanism added to them
+- [x] AC-7: Both detectors are committed scripts requiring no new runtime dependency
 
 ### Currently In Progress
 
@@ -265,7 +265,7 @@ string escapes. [S4]
 
 | ID | Title | Resolution | Status | Updated |
 |---|---|---|---|---|
-| D1 | Sequence this effort after D-12 | Recommend D-12 first | Open | 2026-08-23 |
+| D1 | Sequence this effort after D-12 | D-12 executed first; resolved by execution | Resolved | 2026-08-25 |
 | D2 | Precedence direction versus CI-01, reconcile the two Purpose sections | Applied: Option B, no direction claimed | Applied | 2026-08-23 |
 
 ### D1: Sequence this effort after D-12 (Open)

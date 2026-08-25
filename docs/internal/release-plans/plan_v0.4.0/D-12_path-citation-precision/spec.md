@@ -7,7 +7,7 @@ created: 2026-08-23
 updated: 2026-08-24
 linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
 linked-plan: implementation-plan.md
-ac-count: 5
+ac-count: 6
 source-count: 4
 requires-human-review: true
 target-release: v0.4.0
@@ -27,7 +27,8 @@ priority: P2
 
 ### Acceptance Criteria Fulfillment
 
-- [x] AC-1: A citation containing a path separator is checked for existence and flagged when missing
+- [x] AC-1: ~~A citation containing a path separator is checked for existence and flagged when missing~~ (SUPERSEDED 2026-08-25 by AC-6; see Revisions)
+- [x] AC-6: A citation containing a path separator is checked for existence and flagged when missing, except where it carries a URI scheme, a drive-letter absolute prefix, a glob character, a template placeholder, a single leading slash segment, or no file extension on its final component
 - [x] AC-2: A backtick-wrapped citation with no separator is tested against the repo root; non-resolution is not reported as a finding
 - [x] AC-3: A bare word with a file extension, carrying neither signal, is not evaluated at all
 - [x] AC-4: The scoping rule is stated as an explicit test in the SKILL.md gate line itself
@@ -178,6 +179,7 @@ never considered. [S1]
 | Date | Change |
 |---|---|
 | 2026-08-23 | Initial draft created |
+| 2026-08-25 | AC-1 superseded by AC-6. Mechanizing AC-1 in D-11 measured 13 flags / 11 false on a real log, against the pre-D-12 gate's 7 / 6. "Contains a path separator" holds as prose because a reader applies judgment; a script has none. AC-6 adds the mechanical exclusions. Maintainer decision 2026-08-25. |
 
 ## Sources & Evidence
 
