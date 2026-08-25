@@ -2,9 +2,9 @@
 id: D-03
 title: "Implementation plan: Make the documentation-drift check bidirectional"
 type: implementation-plan
-status: draft
+status: complete
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-24
 linked-spec: spec.md
 linked-release: docs/internal/release-plans/plan_v0.4.0/plan_v0.4.0.md
 ac-coverage: complete
@@ -34,9 +34,9 @@ phase-count: 3
 
 | Phase | Goal | Fulfills AC | Owner | Status |
 |---|---|---|---|---|
-| P1 | Write the bidirectional recipe in `hygiene-sweep.md` Check 4 | AC-1, AC-2, AC-4, AC-5 | agent | Not started |
-| P2 | Extend `SKILL.md`'s one-line Check 4 summary | AC-3 | agent | Not started |
-| P3 | Version bump and documentation coverage | (packaging for AC-1 through AC-5) | agent | Not started |
+| P1 | Write the bidirectional recipe in `hygiene-sweep.md` Check 4 | AC-1, AC-2, AC-4, AC-5 | agent | Done |
+| P2 | Extend `SKILL.md`'s one-line Check 4 summary | AC-3 | agent | Done |
+| P3 | Version bump and documentation coverage | (packaging for AC-1 through AC-5) | agent | Done |
 
 ---
 
@@ -47,7 +47,7 @@ phase-count: 3
 **Fulfills:** AC-1, AC-2, AC-4, AC-5
 
 **Steps:**
-- [ ] Step 1: Replace `## Check 4: Documentation drift` (currently lines 40-46) with:
+- [x] Step 1: Replace `## Check 4: Documentation drift` (currently lines 40-46) with:
 
   ```markdown
   ## Check 4: Documentation drift
@@ -136,7 +136,7 @@ Two checks, both already run once during the authoring of this plan with the res
 **Fulfills:** AC-3
 
 **Steps:**
-- [ ] Step 1: In the Pre-Wrap Hygiene Sweep numbered list (currently line 56), replace:
+- [x] Step 1: In the Pre-Wrap Hygiene Sweep numbered list (currently line 56), replace:
 
   ```
   4. **Documentation drift.** User or technical docs this session made stale: version tables, skill or feature READMEs vs source of truth, missing CHANGELOG entries.
@@ -159,11 +159,11 @@ Two checks, both already run once during the authoring of this plan with the res
 **Fulfills:** Packaging for AC-1 through AC-5 (no single AC maps to this phase).
 
 **Steps:**
-- [ ] Step 1: `skills/plab-wrap-session/SKILL.md` frontmatter: `version: "1.5.0"` to `version: "1.6.0"` (skip if D-07 (Waiting-on blocker contract) or another v0.4.0 effort has already made this edit); bump `updated:` to the ship date.
-- [ ] Step 2: `skills/plab-wrap-session/HISTORY.md`: add this effort's paragraph describing the bidirectional Check 4 to the `1.6.0` entry. If D-07 or another v0.4.0 effort already opened the `1.6.0` table row and section, add to it rather than duplicating the row.
-- [ ] Step 3: `library.json`: confirm or bump the `plab-wrap-session` component version (currently line 32) to `1.6.0`.
-- [ ] Step 4: Root `README.md`: confirm or bump the `plab-wrap-session` version-table entry (currently line 11) to `1.6.0`.
-- [ ] Step 5: `CHANGELOG.md`: add or extend an entry under `[Unreleased]` (or a new `v0.4.0` heading if already cut) in plain English: the hygiene sweep now catches a skill whose behavior changed without its version number moving, which is the same class of defect the `[Unreleased]` section's existing "documentation correctness" theme already covers.
+- [x] Step 1: `skills/plab-wrap-session/SKILL.md` frontmatter: `version: "1.5.0"` to `version: "1.6.0"` (skip if D-07 (Waiting-on blocker contract) or another v0.4.0 effort has already made this edit); bump `updated:` to the ship date.
+- [x] Step 2: `skills/plab-wrap-session/HISTORY.md`: add this effort's paragraph describing the bidirectional Check 4 to the `1.6.0` entry. If D-07 or another v0.4.0 effort already opened the `1.6.0` table row and section, add to it rather than duplicating the row.
+- [x] Step 3: `library.json`: confirm or bump the `plab-wrap-session` component version (currently line 32) to `1.6.0`.
+- [x] Step 4: Root `README.md`: confirm or bump the `plab-wrap-session` version-table entry (currently line 11) to `1.6.0`.
+- [x] Step 5: `CHANGELOG.md`: add or extend an entry under `[Unreleased]` (or a new `v0.4.0` heading if already cut) in plain English: the hygiene sweep now catches a skill whose behavior changed without its version number moving, which is the same class of defect the `[Unreleased]` section's existing "documentation correctness" theme already covers.
 
 **Verification:** `grep -n "1.6.0" skills/plab-wrap-session/SKILL.md library.json README.md` shows a consistent version string across all three files. `grep -c "^| 1\.6\.0" skills/plab-wrap-session/HISTORY.md` returns `1`, not more, confirming no duplicate row from coordinating with the other v0.4.0 efforts that also land in `plab-wrap-session` 1.6.0.
 

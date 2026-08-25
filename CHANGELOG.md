@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- The `plab-wrap-session` pre-wrap hygiene sweep's documentation-drift check now looks in both
+  directions. It caught a version bumped with a stale usage doc, but not the inverse, content changed
+  with no version bump, which is the drift that actually shipped in this repository. It now also
+  reports a skill whose `HISTORY.md` has no entry for the version it currently ships.
 - The `plab-wrap-session` path-existence Log Self-Check gate flagged bare filenames mentioned in
   prose as missing paths. In one observed wrap 6 of its 7 flags were false positives. It now checks
   only citations that assert a location: one carrying a path separator must exist as written, and a

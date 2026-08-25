@@ -2,9 +2,9 @@
 id: D-03
 title: Make the documentation-drift check bidirectional
 type: spec
-status: draft
+status: fulfilled
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-08-24
 linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
 linked-plan: implementation-plan.md
 ac-count: 5
@@ -19,19 +19,19 @@ priority: P1
 
 ## Task Summary
 
-**Status:** Draft
-**Last updated:** 2026-08-23
+**Status:** Fulfilled
+**Last updated:** 2026-08-24
 **Linked plan:** implementation-plan.md
 **Open questions:** 1 (see Open Questions / Decisions)
 **Revisions:** Initial draft created 2026-08-23.
 
 ### Acceptance Criteria Fulfillment
 
-- [ ] AC-1: Check 4 gains a recipe that flags content-changed-but-version-identical
-- [ ] AC-2: The same recipe flags a missing HISTORY.md entry for the current version
-- [ ] AC-3: SKILL.md's one-line Check 4 summary names both directions of drift
-- [ ] AC-4: The check degrades gracefully when the repository has no tags at all
-- [ ] AC-5: The check degrades gracefully when a skill directory did not exist at the last tag
+- [x] AC-1: Check 4 gains a recipe that flags content-changed-but-version-identical
+- [x] AC-2: The same recipe flags a missing HISTORY.md entry for the current version
+- [x] AC-3: SKILL.md's one-line Check 4 summary names both directions of drift
+- [x] AC-4: The check degrades gracefully when the repository has no tags at all
+- [x] AC-5: The check degrades gracefully when a skill directory did not exist at the last tag
 
 ### Currently In Progress
 

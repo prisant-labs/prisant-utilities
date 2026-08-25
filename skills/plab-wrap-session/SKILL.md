@@ -12,8 +12,8 @@ description: "Document and close agentic coding sessions with structured session
 argument-hint: "[mode: quick|final|deep|blocked] [--organize]"
 license: MIT
 metadata:
-  version: "1.5.0"
-  updated: 2026-08-18
+  version: "1.6.0"
+  updated: 2026-08-25
 ---
 
 # Wrap Session
@@ -53,7 +53,7 @@ Run before writing the log; record findings in the log's Hygiene Sweep section. 
 1. **Remote reconciliation.** `git fetch origin`, then compare: local branch vs its remote (ahead/behind), remote tags vs local, other remote branches. Parallel work from another checkout must surface at wrap time, not at the next release.
 2. **Working-tree and worktree state.** Uncommitted changes, untracked files, stashes, `git worktree list`, unpushed commits.
 3. **Release and repo hygiene.** Un-released CHANGELOG content, version fields vs the latest tag, and the repo's own CI validation scripts run locally when it has them (report results; never fix silently).
-4. **Documentation drift.** User or technical docs this session made stale: version tables, skill or feature READMEs vs source of truth, missing CHANGELOG entries.
+4. **Documentation drift, both directions.** User or technical docs this session made stale: version tables, skill or feature READMEs vs source of truth, missing CHANGELOG entries. And the inverse, which is the direction that actually shipped here: a skill whose content changed since the last tag while its `metadata.version` did not move, or whose `HISTORY.md` has no entry for the version it currently ships. `references/hygiene-sweep.md` carries the recipe.
 5. **Session-log store.** Logs from closed months sitting unfiled in `_local/_session-logs/`. Offer to file them into `YYYY-MM/` folders (see Organize Mode below). Read-only until confirmed; silent when there is nothing to file.
 
 **Resolution protocol: propose, then per-action confirmation.** For each finding, propose one concrete action (commit these files with this message, push, prune this worktree, apply this doc update) and execute only what the user approves, action by action. Declined or unanswered proposals are recorded in the log and carried into the continuation prompt. The sweep itself changes nothing; only confirmed actions do.

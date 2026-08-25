@@ -40,6 +40,17 @@ slash commands, repository slugs, git refs, globs, template placeholders and URL
 claim where a file lives. The script excludes all six mechanically and lands at 4 flags. See the
 D-12 spec's Revisions entry for the superseded criterion.
 
+**Fixed: hygiene Check 4 now looks both ways.** It caught a version bumped with a stale usage doc,
+but not the inverse: content changed with no version bump. The inverse is the one that actually
+shipped in this repository. Check 4 gained a recipe that walks every skill directory with a diff
+since the last tag and reports two findings: a `metadata.version` identical to the tagged one, and a
+`HISTORY.md` with no entry for the version currently shipping. A skill with no diff, or one that did
+not exist at the tag, is skipped silently rather than reported.
+
+The recipe proved itself during its own implementation. Run against this working tree it reported
+`plab-wrap-session changed since v0.3.0 but metadata.version is still 1.5.0`, which was true at that
+moment and is what the bump in this entry resolves.
+
 ## 1.5.0 - 2026-08-18
 
 **Added: `--organize`.** A flat session-log store grows without bound. `--organize` files logs older

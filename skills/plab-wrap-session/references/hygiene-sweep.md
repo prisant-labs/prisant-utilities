@@ -39,11 +39,42 @@ Flag: uncommitted changes older than this session (they belong to somebody; find
 
 ## Check 4: Documentation drift
 
-Compare what the session changed against what documents it:
+Compare what the session changed against what documents it, in both directions.
+
+Stale docs, caught by reading:
 
 - Skill or component version bumped but its usage doc still shows the old version
 - Feature behavior changed but README or reference docs describe the old behavior
 - Work completed with no CHANGELOG entry where the repo maintains one
+
+Unbumped versions, caught by this recipe. For each skill directory with content
+changed since the last tag, its `metadata.version` should have moved; if it did
+not, or if `HISTORY.md` has no entry for the version currently shipping, that is
+a finding:
+
+```bash
+LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
+if [ -z "$LAST_TAG" ]; then
+  echo "No tags yet; version-drift comparison has nothing to compare against, skipped."
+else
+  for dir in skills/*/; do
+    skill=$(basename "$dir")
+    skill_file="${dir}SKILL.md"
+    history_file="${dir}HISTORY.md"
+    git cat-file -e "$LAST_TAG:$skill_file" 2>/dev/null || continue    # new since last tag, skip
+    git diff --quiet "$LAST_TAG" HEAD -- "$dir" && continue            # unchanged, skip
+    head_version=$(grep -m1 'version:' "$skill_file" | sed -E 's/.*"([^"]+)".*/\1/')
+    tag_version=$(git show "$LAST_TAG:$skill_file" | grep -m1 'version:' | sed -E 's/.*"([^"]+)".*/\1/')
+    [ "$head_version" = "$tag_version" ] && echo "FINDING: $skill changed since $LAST_TAG but metadata.version is still $head_version"
+    grep -qE "^\| $head_version \|" "$history_file" 2>/dev/null || echo "FINDING: $skill/HISTORY.md has no entry for version $head_version"
+  done
+fi
+```
+
+Flag: content changed with the version identical to the last tag; a skill's
+`HISTORY.md` missing an entry for the version currently in its `metadata.version`.
+Skip silently, not as a finding: a skill with no diff since the last tag, and a
+skill that did not exist at the last tag.
 
 ## Check 5: Session-log store
 
