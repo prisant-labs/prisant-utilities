@@ -5,6 +5,27 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.3] - 2026-08-26
+
+### Changed
+
+- Install instructions in the root README and all eight skill usage docs now name the marketplace
+  `prisant-labs` rather than `agent-plugins`. The marketplace manifest at
+  `prisant-labs/agent-plugins` was renamed so its registered name matches the organisation instead
+  of the repository, which is the convention the sibling `product-on-purpose` marketplace already
+  used. The repository slug is unchanged, so `/plugin marketplace add prisant-labs/agent-plugins`
+  still reads the same; only the install target changes, to
+  `/plugin install prisant-utilities@prisant-labs`. An existing install registered under the old
+  name must be removed and reinstalled, because a marketplace is keyed by its manifest name.
+
+### Added
+
+- `docs/status-skills.md`, a status reference covering all eight skills: version, invocation mode,
+  argument hint, default behaviour, output location, and the setup each one requires, plus the
+  shared plugin-root dependencies and the conventions in force. Every value is derived from
+  `library.json`, `manifest.generated.json`, and skill frontmatter rather than authored, so the
+  file is regenerable and should not be hand-maintained.
+
 ## [0.4.2] - 2026-08-25
 
 ### Fixed
