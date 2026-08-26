@@ -27,7 +27,7 @@ The document trio is a pipeline: `plab-spec` writes the acceptance criteria, `/s
 
 ```
 /plugin marketplace add prisant-labs/agent-plugins
-/plugin install prisant-utilities@agent-plugins
+/plugin install prisant-utilities@prisant-labs
 ```
 
 Then invoke any skill by name, for example `/plab-wrap-session`.
