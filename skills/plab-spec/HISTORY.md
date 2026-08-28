@@ -2,9 +2,21 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
+| 1.3.1 | 2026-08-28 | v0.5.1 | changed | `linked-effort` documented as a string, not a path. A tracked artifact must not cite an untracked one. |
 | 1.3.0 | 2026-08-27 | unreleased | changed | Removed `disable-model-invocation`. The skill is auto-discoverable; a do-NOT-fire clause in the description replaces the binary gate. |
 | 1.2.1 | 2026-08-24 | v0.3.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.2.1; prior history remains there. |
 
+
+
+## 1.3.1 - 2026-08-28
+
+**Documentation only. No behavior change.**
+
+`references/frontmatter-schema.md` previously typed `linked-effort` as a path and gave a tracked path as its only example. In practice every spec in this repository set it to a file under gitignored `_local/`, which meant 16 tracked artifacts each carried a link that resolved for nobody who cloned the repository, and for the author only on one machine.
+
+The field is now typed as a string, and the schema states the rule that was previously only implicit: **a tracked artifact must not cite an untracked one.** When the source is private, name it descriptively and summarize its substance into the spec's own Sources and Evidence section, which is the convention Kubernetes KEPs, Rust RFCs and Python PEPs all share.
+
+This is a patch rather than a minor because no skill behavior changes: `plab-spec` never validated the field's contents, and specs written before this entry remain valid.
 
 ## 1.3.0 - 2026-08-27
 
