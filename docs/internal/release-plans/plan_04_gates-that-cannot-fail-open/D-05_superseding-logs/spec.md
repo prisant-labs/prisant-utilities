@@ -5,7 +5,7 @@ type: spec
 status: fulfilled
 created: 2026-08-23
 updated: 2026-08-24
-linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
+linked-effort: the maintainer's private defect record for the wrap/continue pair, 2026-08-18
 linked-plan: implementation-plan.md
 ac-count: 7
 source-count: 6
@@ -162,7 +162,7 @@ judges both to cover the same migration arc, when it drafts the new log, then:
   `_superseded/`." (on confirmation), or "...; not archived." (on decline).
 - Exactly one prompt appears: "Move `2026-08-17_17-10_claude_wave1-migration-publish-and-t0.md` to
   `_local/_session-logs/_superseded/`? (y/n)"
-- On "y": `_local/_session-logs/2026-08-17_17-10_claude_wave1-migration-publish-and-t0.md` no longer
+- On "y": the session log of 2026-08-17 17:10 no longer
   exists; `_local/_session-logs/_superseded/2026-08-17_17-10_claude_wave1-migration-publish-and-t0.md`
   does.
 
@@ -201,12 +201,12 @@ source; it follows from Requirement 1 having no log to read]
 
 ## Sources & Evidence
 
-- [S1] `_local/skill-roadmaps/2026-08-18/pair-defects.md`, D-5 section and the "Rejected and rescoped"
+- [S1] the maintainer's private defect record for the wrap/continue pair, 2026-08-18, D-5 section and the "Rejected and rescoped"
   table. Maintainer-local, class A (primary design source; the mechanism, cost, and rejection are
   authored analysis, not inference).
 - [S2] `skills/plab-wrap-session/references/hygiene-sweep.md`, the Resolution protocol (rules 1-5) and
   Check 5's report-nothing-when-empty norm. In-repo, class A, verified by direct read.
-- [S3] `_local/plans/2026-08-18_w5-log-archiving/spec.md`, the store-layout table naming "future
+- [S3] the maintainer's private W-5 log-archiving spec, 2026-08-18, the store-layout table naming "future
   `_superseded/`" and the explicit "D-5 ships separately" out-of-scope row. Maintainer-local, class A,
   verified by direct read; this document predates D-05 being a scheduled effort and independently
   anticipated the directory name.
@@ -214,8 +214,8 @@ source; it follows from Requirement 1 having no log to read]
   one-level-deep allowlist mechanism. In-repo, class A, verified by direct read.
 - [S5] `skills/plab-wrap-session/SKILL.md`, Evidence Gathering, the Summary bullet definition, and the
   Hygiene Sweep bullet definition. In-repo, class A, verified by direct read.
-- [S6] `_local/_session-logs/2026-08-17_17-10_claude_wave1-migration-publish-and-t0.md` and
-  `_local/_session-logs/2026-08-17_22-15_claude_migration-complete-t3-and-cutover.md`. Maintainer-local,
+- [S6] the session log of 2026-08-17 17:10 and
+  the session log of 2026-08-17 22:15. Maintainer-local,
   class B: existence verified directly (directory listing); the decisions-count and files-changed
   divergence is [S1]'s characterization of their content, not independently re-verified here.
 

@@ -5,7 +5,7 @@ type: spec
 status: draft
 created: 2026-08-23
 updated: 2026-08-23
-linked-effort: _local/skill-roadmaps/2026-08-16/wrap-session.md
+linked-effort: the maintainer's private plab-wrap-session evolution roadmap, 2026-08-16
 linked-plan: implementation-plan.md
 ac-count: 9
 source-count: 7
@@ -157,12 +157,12 @@ A session run in a harness that exposes no transcript or tool-call record, and w
 
 ## Sources & Evidence
 
-- [S1] `_local/skill-roadmaps/2026-08-16/wrap-session.md`, section "W-2. Split the log into a derived layer and an authored layer." Maintainer-local, gitignored, exists on disk. Credibility A (primary design source for this effort; the full section, including the fact/judgment table, was read before writing this spec).
+- [S1] the maintainer's private plab-wrap-session evolution roadmap, 2026-08-16, section "W-2. Split the log into a derived layer and an authored layer." Maintainer-local, gitignored, exists on disk. Credibility A (primary design source for this effort; the full section, including the fact/judgment table, was read before writing this spec).
 - [S2] `skills/plab-wrap-session/SKILL.md` (current, v1.5.0). Repo file, credibility A, read in full.
 - [S3] `skills/plab-wrap-session/references/frontmatter-schema.md`. Repo file, credibility A, read in full.
 - [S4] `skills/plab-wrap-session/scripts/organize-logs.py`. Repo file, credibility A, read in full.
 - [S5] `skills/plab-wrap-session/scripts/test-organize-logs.py`. Repo file, credibility A, read in full.
-- [S6] `_local/skill-roadmaps/2026-08-18/pair-defects.md`, section "D-4. Capture-lite is a producer with zero consumers." Maintainer-local, gitignored, exists on disk. Credibility A.
+- [S6] the maintainer's private defect record for the wrap/continue pair, 2026-08-18, section "D-4. Capture-lite is a producer with zero consumers." Maintainer-local, gitignored, exists on disk. Credibility A.
 - [S7] `skills/plab-wrap-session/references/hygiene-sweep.md`. Repo file, credibility A, read in full.
 
 ### Unverified Claims

@@ -5,7 +5,7 @@ type: spec
 status: draft
 created: 2026-08-23
 updated: 2026-08-23
-linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
+linked-effort: the maintainer's private defect record for the wrap/continue pair, 2026-08-18
 linked-plan: implementation-plan.md
 ac-count: 7
 source-count: 12
@@ -128,7 +128,7 @@ An agent picking up this effort's implementation plan first checks two things: d
 
 ## Sources & Evidence
 
-- [S1] `_local/skill-roadmaps/2026-08-18/pair-defects.md`, section "D-10. The structural cause under D-1, D-2, D-5, and D-8." Maintainer-local, gitignored, exists on disk. Credibility A (primary design source for this effort).
+- [S1] the maintainer's private defect record for the wrap/continue pair, 2026-08-18, section "D-10. The structural cause under D-1, D-2, D-5, and D-8." Maintainer-local, gitignored, exists on disk. Credibility A (primary design source for this effort).
 - [S2] `skills/plab-wrap-session/references/frontmatter-schema.md`. Repo file, credibility A, read in full.
 - [S3] `skills/plab-wrap-session/references/session-log-template.md`. Repo file, credibility A, read in full.
 - [S4] `skills/plab-continue-session/SKILL.md`. Repo file, credibility A, read in full.

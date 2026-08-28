@@ -5,7 +5,7 @@ type: spec
 status: fulfilled
 created: 2026-08-23
 updated: 2026-08-24
-linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
+linked-effort: the maintainer's private defect record for the wrap/continue pair, 2026-08-18
 linked-plan: implementation-plan.md
 ac-count: 4
 source-count: 4
@@ -151,7 +151,7 @@ real logs in this repository exhibit today: a value pointing at a jp-library fil
 
 ## Sources & Evidence
 
-- [S1] `_local/skill-roadmaps/2026-08-18/pair-defects.md`, D-6 section and the "Rejected and
+- [S1] the maintainer's private defect record for the wrap/continue pair, 2026-08-18, D-6 section and the "Rejected and
   rescoped" table. Maintainer-local, class A (primary design source).
 - [S2] `skills/plab-continue-session/SKILL.md`, Phase 5 (lines 95-99) and the Constraints list
   (cross-repo refusal at line 108, corrected from the source's approximate "around line 105", which

@@ -93,7 +93,7 @@ test.
 - `git diff skills/plab-wrap-session/SKILL.md` shows exactly one bullet line changed, no other lines
   touched.
 - Manually apply the new rule to three real citations from
-  `_local/_session-logs/2026-08-23_10-27_claude_doc-version-parity-and-guide-222.md` (maintainer-local;
+  the session log of 2026-08-23 10:27 (maintainer-local;
   read it directly to check) and confirm the outcome matches the spec's Behavior/Examples:
   - Line 52, `scripts/em-dash-sweep.sh` (path separator present): in scope, and does not exist at
     `skills/plab-guide/scripts/em-dash-sweep.sh` (confirm with a filesystem check), so it is flagged.

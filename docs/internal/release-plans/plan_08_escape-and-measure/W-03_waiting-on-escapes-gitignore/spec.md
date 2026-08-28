@@ -5,7 +5,7 @@ type: spec
 status: draft
 created: 2026-08-23
 updated: 2026-08-23
-linked-effort: _local/skill-roadmaps/2026-08-16/wrap-session.md
+linked-effort: the maintainer's private plab-wrap-session evolution roadmap, 2026-08-16
 linked-plan: implementation-plan.md
 ac-count: 6
 source-count: 8
@@ -174,11 +174,11 @@ usual. [S3]
 
 ## Sources & Evidence
 
-[S1] `_local/skill-roadmaps/2026-08-16/wrap-session.md` (maintainer-local, gitignored). Class A.
+[S1] the maintainer's private plab-wrap-session evolution roadmap, 2026-08-16. Class A.
 Section "W-3. Make 'Waiting on You' escape the gitignored folder," lines 62-73. Primary roadmap source
 for this effort; W-03 is the padded form of this document's W-3.
 
-[S2] `_local/skill-roadmaps/2026-08-18/pair-defects.md` (maintainer-local, gitignored). Class A.
+[S2] the maintainer's private defect record for the wrap/continue pair, 2026-08-18. Class A.
 Section "D-7. 'Waiting on You' has diluted from a blocker contract into a suggestion list," lines
 129-144. D-07 is the padded form of this document's D-7; it is this effort's prerequisite, not its
 replacement.
@@ -198,7 +198,7 @@ field, line 51; filename-only log-citation rule, line 100.
 [S7] `docs/internal/release-plans/plan_04_gates-that-cannot-fail-open/plan.md`. Class A. Confirms D-06 and D-07 ship in
 v0.4.0 and names the skill versions for that release (wrap 1.6.0, continue 1.4.0), lines 27-28 and 52.
 
-[S8] `_local/skill-roadmaps/2026-08-16/README.md` (maintainer-local, gitignored). Class B. Line 57, a
+[S8] the maintainer's private roadmap index, 2026-08-16. Class B. Line 57, a
 second, corroborating mention of backlog item S-06; adds no detail beyond [S1].
 
 ### Unverified Claims

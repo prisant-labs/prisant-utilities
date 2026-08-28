@@ -5,6 +5,18 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.1] - 2026-08-28
+
+### Fixed
+
+- **Tracked specs no longer cite gitignored files.** Every spec pointed at working notes under `_local/`, which is never committed, so 102 links across 21 files resolved for nobody who cloned the repository and for the author only on one machine. Each citation is replaced by a plain-language description of what the source was and what it said, following the convention Kubernetes KEPs, Rust RFCs and Python PEPs share: the rationale lives inside the document. The Sources and Evidence entries already carried that substance; they simply also carried a path.
+
+  Runtime paths are deliberately untouched. `_local/_session-logs/`, its `_capture/` and `_superseded/` subdirectories, and the capture filename pattern are the product's own interface rather than private content, and a spec about session-log archiving has to name the directory it archives into. 54 such references remain and are correct.
+
+- **A machine path containing the maintainer's username** was published in `CI-01`'s spec. Replaced with a description of the hook it named. Found by the repository's own PII gate.
+
+- `plab-spec` 1.3.1: `linked-effort` is documented as a string rather than a path, and the schema now states the rule that was previously only implicit: a tracked artifact must not cite an untracked one. Documentation only; no skill behavior changes.
+
 ## [0.5.0] - 2026-08-27
 
 ### Changed

@@ -5,7 +5,7 @@ type: spec
 status: fulfilled
 created: 2026-08-23
 updated: 2026-08-24
-linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
+linked-effort: the maintainer's private defect record for the wrap/continue pair, 2026-08-18
 linked-plan: implementation-plan.md
 ac-count: 8
 source-count: 7
@@ -100,7 +100,7 @@ The Waiting on You section of a session log exists to carry the maintainer's ope
 
 ## Behavior / Examples
 
-**Example 1: the motivating case, re-expressed under the new contract.** The real log at `_local/_session-logs/2026-08-17_22-15_claude_migration-complete-t3-and-cutover.md:105-111` carries five Waiting-on items; four begin "Optional:" and the fifth reads "Open since July: the source-of-truth ruling" [S5]. Under AC-1, the four optional items are not eligible for Waiting on You at all; they move to Parked (AC-7) or What's Next. The fifth remains, reformatted to carry a marker, illustratively:
+**Example 1: the motivating case, re-expressed under the new contract.** The real log at `the session log of 2026-08-17 22:15:105-111` carries five Waiting-on items; four begin "Optional:" and the fifth reads "Open since July: the source-of-truth ruling" [S5]. Under AC-1, the four optional items are not eligible for Waiting on You at all; they move to Parked (AC-7) or What's Next. The fifth remains, reformatted to carry a marker, illustratively:
 
 ```
 ### Waiting on You
@@ -132,11 +132,11 @@ The exact original date is illustrative here; AC-4's carry-forward is what would
 
 ## Sources & Evidence
 
-- [S1] `_local/skill-roadmaps/2026-08-18/pair-defects.md`, section "D-7. 'Waiting on You' has diluted from a blocker contract into a suggestion list" (lines 129-145). Class A: maintainer-authored roadmap with evidence verified against the shipped artifacts. Maintainer-local, gitignored, exists on disk.
+- [S1] the maintainer's private defect record for the wrap/continue pair, 2026-08-18, section "D-7. 'Waiting on You' has diluted from a blocker contract into a suggestion list" (lines 129-145). Class A: maintainer-authored roadmap with evidence verified against the shipped artifacts. Maintainer-local, gitignored, exists on disk.
 - [S2] `skills/plab-wrap-session/SKILL.md`. Class A: the file this effort edits. Cited lines: 36-47 (Evidence Gathering), 153 (Waiting on You definition), 186 (Log Self-Check heading), 190-195 (the six current gates).
 - [S3] `skills/plab-continue-session/references/handoff-display.md`. Class A: the file this effort edits. Cited lines: 14-15 (Waiting on you display block).
 - [S4] `skills/plab-wrap-session/references/session-log-template.md`. Class A: the file this effort edits. Cited lines: 73-78 (Final Mode comment), 121-123 (Quick Mode comment), 163-165 (Blocked Mode comment).
-- [S5] `_local/_session-logs/2026-08-17_22-15_claude_migration-complete-t3-and-cutover.md`. Class A: primary evidence artifact, a real shipped session log. Cited lines: 105-111 (Waiting on You section, five items, four "Optional:" prefixed).
+- [S5] the session log of 2026-08-17 22:15. Class A: primary evidence artifact, a real shipped session log. Cited lines: 105-111 (Waiting on You section, five items, four "Optional:" prefixed).
 - [S6] `skills/plab-continue-session/references/log-discovery.md`. Class A: the file defining the newest-log selection rule this effort's carry-forward step reuses by reference rather than restating. Cited lines: 40-57 (Selection rule and Sort rule).
 - [S7] `docs/skills/plab-continue-session/README.md`, lines 100-101. Class A: existing human-facing documentation. Its worked example already shows a Waiting-on item in the `(blocked since YYYY-MM-DD)` shape this spec formalizes, which corroborates that the target format is not a new invention but a generalization of an example already in the docs.
 

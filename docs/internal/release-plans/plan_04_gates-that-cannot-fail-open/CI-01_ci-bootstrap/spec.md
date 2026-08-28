@@ -5,7 +5,7 @@ type: spec
 status: fulfilled
 created: 2026-08-23
 updated: 2026-08-24
-linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
+linked-effort: the maintainer's private defect record for the wrap/continue pair, 2026-08-18
 linked-plan: implementation-plan.md
 ac-count: 8
 source-count: 15
@@ -138,12 +138,12 @@ Because `skills/plab-guide/references/voice-and-style.md` already legitimately c
 - [S3] `E:\Projects\product-on-purpose\agent-skills-toolkit\scripts\verify-tag-matches-manifests.mjs` (same clone, confirmed identical to `v1.16.1` via `git diff`). Header comment naming the four manifests it compares, including `package.json`, and a second, independent quote of Standard sec 4.4. Credibility A.
 - [S4] `AGENTS.md:71` (this repo). "Conformance gate: `node <agent-skills-toolkit>/scripts/check.mjs .`" Credibility A.
 - [S5] `skills/plab-wrap-session/SKILL.md:186-195` (this repo). The Log Self-Check gates, including the em-dash/en-dash gate and the file-existence gate, that D-11 later applies canaries to. Cited for the dependency-direction claim in Purpose. Credibility A.
-- [S6] `_local/skill-roadmaps/2026-08-18/pair-defects.md:187-207` (maintainer-local; gitignored, exists on disk). D-11 (three-state gate canaries): the three same-week detector failures, the clean / findings / broken mechanism, and the `pii-gate.py` precedent (14 canaries and 14 anti-canaries, exit 2 for broken). Credibility A.
-- [S7] `_local/ideas/2026-08-15_skill-candidates.md:46` (maintainer-local). "Your no-em-dash PreToolUse hook was bypassed by `cp`, letting 31 dashes into the new repo." Credibility A.
-- [S8] `_local/ideas/2026-08-15_skill-candidates.md:37-57` (maintainer-local). Candidate 1, verification integrity: the general idea CI-01 partially instantiates, independently citing the same `pii-gate.py` precedent. Credibility A.
+- [S6] `the maintainer's private defect record for the wrap/continue pair, 2026-08-18:187-207` (maintainer-local; gitignored, exists on disk). D-11 (three-state gate canaries): the three same-week detector failures, the clean / findings / broken mechanism, and the `pii-gate.py` precedent (14 canaries and 14 anti-canaries, exit 2 for broken). Credibility A.
+- [S7] `the maintainer's private skill-candidates memo, 2026-08-15:46` (maintainer-local). "Your no-em-dash PreToolUse hook was bypassed by `cp`, letting 31 dashes into the new repo." Credibility A.
+- [S8] `the maintainer's private skill-candidates memo, 2026-08-15:37-57` (maintainer-local). Candidate 1, verification integrity: the general idea CI-01 partially instantiates, independently citing the same `pii-gate.py` precedent. Credibility A.
 - [S9] `skills/plab-guide/references/voice-and-style.md:26-43,74-84` (this repo). The one file with literal em-dash/en-dash characters (deliberate pedagogical use), and G-11, `plab-guide`'s own existing, manual, rung-3 dash convention. Credibility A.
 - [S10] `CHANGELOG.md:20-38`, specifically lines 28-29 (this repo). Confirms G-11 is "a written-discipline rule verified by grep," not an automated sweep, and that a previously-documented but nonexistent sweep script was already corrected in `plab-guide` 2.2.2. Credibility A.
-- [S11] `C:\Users\jpris\.claude\hooks\no-em-dashes.py` (machine-local, outside this repo; annotated as such). The existing rung-1-but-single-machine hook this effort promotes to CI, and the source of the escape-sequence pattern (`"\u2014"` in source, not the literal character) `scripts/check-dashes.py`'s canary design reuses so it stays authorable under its own rule. Credibility A.
+- [S11] The maintainer's machine-local PreToolUse dash hook, installed under the user's Claude Code configuration directory and outside this repository. The existing single-machine enforcement this effort promotes to CI, and the source of the escape-sequence pattern that `scripts/check-dashes.py`'s canary design reuses: the banned codepoints are written as Unicode escapes in source rather than as literal characters, so the checker stays authorable under the rule it enforces. Credibility A: read directly. Named descriptively rather than by path, because a tracked artifact must not cite an absolute path on one machine.
 - [S12] Direct verification, this session. A ripgrep-backed scan (this session's Grep tool, pattern `[\u{2014}\u{2013}]`) across the full working tree, and a listing of the repo root, confirming both the absence of any `.github/` directory and that exactly one tracked file contains the banned characters. Credibility A (reproducible).
 - [S13] `https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github` (fetched this session). Confirms `github/codeql-action/upload-sarif@v4` as GitHub's current documented tag, and that code scanning applies to public repositories without the private/internal Advanced Security requirement. Credibility A.
 - [S14] `https://raw.githubusercontent.com/actions/runner-images/main/images/ubuntu/Ubuntu2404-Readme.md` (fetched this session). Confirms ripgrep is not among the tools preinstalled on the GitHub-hosted `ubuntu-latest` runner image. Credibility A.

@@ -5,7 +5,7 @@ type: spec
 status: draft
 created: 2026-08-23
 updated: 2026-08-23
-linked-effort: _local/skill-roadmaps/2026-08-16/continue-session.md
+linked-effort: the maintainer's private plab-continue-session evolution roadmap, 2026-08-16
 linked-plan: implementation-plan.md
 ac-count: 9
 source-count: 9
@@ -81,7 +81,7 @@ This effort is the roadmap's C-3 (zero-padded here to C-03 per this document set
 
 1. When discovery finds no log in any of the three stores, the skill must build orientation rather than present a dead end, per the roadmap's explicit instruction to treat "no recent log" as a supported path. [S1]
 2. The orientation must draw on the specific sources the roadmap names: commits since the maintainer's last authored commit, open issues and pull requests, README and AGENTS.md, the working-tree state, and capture-lite records where available. [S1]
-3. This effort must remain an extension of `plab-continue-session`, never a new skill, per the roadmap's explicit rejection of that alternative and the same reasoning already applied once in this codebase's own planning history (`_local/ideas/2026-08-15_skill-candidates.md`'s Candidate 4 reached the identical conclusion independently). [S1][S3]
+3. This effort must remain an extension of `plab-continue-session`, never a new skill, per the roadmap's explicit rejection of that alternative and the same reasoning already applied once in this codebase's own planning history (the maintainer's private skill-candidates memo, 2026-08-15's Candidate 4 reached the identical conclusion independently). [S1][S3]
 4. Working-tree state collection must reuse the git commands already defined in `hygiene-sweep.md` Check 2, rather than defining a parallel implementation. [S7]
 5. Capture-lite consumption must degrade silently when the capture directory or its records are absent, per D-04's own explicit mechanism note that both of its consumer clauses must degrade silently. [S2]
 6. The always-on `description` field must not change in this release; any routing change needed to reach the orientation path through a status question must be achieved, if at all, through the SKILL.md body, which is loaded only on invocation. [S8]
@@ -189,17 +189,17 @@ The two interactions differ only in which phrase the maintainer used. This relea
 
 ## Sources & Evidence
 
-[S1] `_local/skill-roadmaps/2026-08-16/continue-session.md` (maintainer-local, gitignored), section "C-3. Degrade gracefully when there is no recent log," and the "What not to do" section. Credibility A: first-party, maintainer-authored design intent, read in full. This document's C-03 is the roadmap's unpadded C-3.
+[S1] the maintainer's private plab-continue-session evolution roadmap, 2026-08-16, section "C-3. Degrade gracefully when there is no recent log," and the "What not to do" section. Credibility A: first-party, maintainer-authored design intent, read in full. This document's C-03 is the roadmap's unpadded C-3.
 
-[S2] `_local/skill-roadmaps/2026-08-18/pair-defects.md` (maintainer-local, gitignored), entries D-1 ("Trigger narrowing reached the router but not the program") and D-4 ("Capture-lite is a producer with zero consumers"). Credibility A: first-party, verified-against-file-and-line defect record, read in full. Padded here to D-01 and D-04 respectively; the source document uses the unpadded "D-1" and "D-4."
+[S2] the maintainer's private defect record for the wrap/continue pair, 2026-08-18, entries D-1 ("Trigger narrowing reached the router but not the program") and D-4 ("Capture-lite is a producer with zero consumers"). Credibility A: first-party, verified-against-file-and-line defect record, read in full. Padded here to D-01 and D-04 respectively; the source document uses the unpadded "D-1" and "D-4."
 
-[S3] `_local/ideas/2026-08-15_skill-candidates.md` (maintainer-local, gitignored), "Candidate 4: Cold-repo re-orientation," which independently reached the same "extend continue-session" conclusion the roadmap later adopted. Credibility A: first-party, maintainer-commissioned analysis, read in full.
+[S3] the maintainer's private skill-candidates memo, 2026-08-15, "Candidate 4: Cold-repo re-orientation," which independently reached the same "extend continue-session" conclusion the roadmap later adopted. Credibility A: first-party, maintainer-commissioned analysis, read in full.
 
 [S4] `skills/plab-continue-session/references/log-discovery.md`, the current "Empty or missing directory" dead-end menu and the existing 7-day "Age warning" section this effort extends. Credibility A: shipped, in-repo, read in full.
 
 [S5] `skills/plab-continue-session/SKILL.md`, current Phase 1 and the "When NOT to Use" section. Credibility A: shipped, in-repo, read in full.
 
-[S6] `_local/_session-logs/_capture/2026-08.jsonl` (maintainer-local, gitignored, but present on disk in this repository). Credibility A: directly observed real data; the field names cited in AC-6 (`ts`, `machine`, `harness`, `session_id`, `reason`, `repo`, `branch`, `head`, `dirty`, `untracked`, `stashes`, `last_tag`, `transcript`, `commits_today`) were read from actual records, not inferred from the hook's description.
+[S6] `_local/_session-logs/_capture/2026-08.jsonl` (private to the maintainer's machine). Credibility A: directly observed real data; the field names cited in AC-6 (`ts`, `machine`, `harness`, `session_id`, `reason`, `repo`, `branch`, `head`, `dirty`, `untracked`, `stashes`, `last_tag`, `transcript`, `commits_today`) were read from actual records, not inferred from the hook's description.
 
 [S7] `skills/plab-wrap-session/references/hygiene-sweep.md`, Check 2 ("Working-tree and worktree state"), the exact command block this effort reuses. Credibility A: shipped, in-repo, read in full.
 

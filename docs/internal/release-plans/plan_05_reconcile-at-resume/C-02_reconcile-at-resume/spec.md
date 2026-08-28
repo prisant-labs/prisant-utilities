@@ -5,7 +5,7 @@ type: spec
 status: draft
 created: 2026-08-23
 updated: 2026-08-23
-linked-effort: _local/skill-roadmaps/2026-08-16/continue-session.md
+linked-effort: the maintainer's private plab-continue-session evolution roadmap, 2026-08-16
 linked-plan: implementation-plan.md
 ac-count: 9
 source-count: 9
@@ -176,9 +176,9 @@ This is distinct from the existing branch-mismatch warning (which fires when the
 
 ## Sources & Evidence
 
-[S1] `_local/skill-roadmaps/2026-08-16/continue-session.md` (maintainer-local, gitignored), section "C-2. Reconcile the log against reality, do not just replay it." Credibility A: first-party, maintainer-authored design intent, read in full. This document's C-02 is the roadmap's unpadded C-2.
+[S1] the maintainer's private plab-continue-session evolution roadmap, 2026-08-16, section "C-2. Reconcile the log against reality, do not just replay it." Credibility A: first-party, maintainer-authored design intent, read in full. This document's C-02 is the roadmap's unpadded C-2.
 
-[S2] `_local/skill-roadmaps/2026-08-18/pair-defects.md` (maintainer-local, gitignored), entries D-11 ("The Log Self-Check gates are two-state and can fail open") and D-12 ("The path-existence gate treats bare filenames as repo-relative paths"). Credibility A: first-party, verified-against-file-and-line defect record, read in full. D-11 and D-12 are already two-digit in the source and need no repadding; this spec follows the same precision rule D-12 established for its own gate rather than restating a looser one.
+[S2] the maintainer's private defect record for the wrap/continue pair, 2026-08-18, entries D-11 ("The Log Self-Check gates are two-state and can fail open") and D-12 ("The path-existence gate treats bare filenames as repo-relative paths"). Credibility A: first-party, verified-against-file-and-line defect record, read in full. D-11 and D-12 are already two-digit in the source and need no repadding; this spec follows the same precision rule D-12 established for its own gate rather than restating a looser one.
 
 [S3] `skills/plab-wrap-session/references/hygiene-sweep.md`, Check 1 ("Remote reconciliation"), the exact command block this effort reuses. Credibility A: shipped, in-repo, read in full.
 

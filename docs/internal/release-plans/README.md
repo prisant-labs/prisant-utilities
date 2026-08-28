@@ -79,7 +79,7 @@ pair an ID with a short handle in prose, for example "D-07 (the Waiting-on block
 a bare ID forces the reader to go hunting for what it refers to.
 
 The source documents that define these efforts are maintainer-local and gitignored, under
-`_local/skill-roadmaps/`. Each spec's `linked-effort` frontmatter names the exact file. If you are
+the maintainer's private roadmap set. Each spec's `linked-effort` frontmatter names the exact file. If you are
 reading this from a clone, those sources will not be present; the specs are written to stand alone.
 
 ## Status, and why so much of it says "draft"

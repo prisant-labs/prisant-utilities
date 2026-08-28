@@ -5,7 +5,7 @@ type: spec
 status: draft
 created: 2026-08-23
 updated: 2026-08-23
-linked-effort: _local/skill-roadmaps/2026-08-16/continue-session.md
+linked-effort: the maintainer's private plab-continue-session evolution roadmap, 2026-08-16
 linked-plan: implementation-plan.md
 ac-count: 6
 source-count: 6
@@ -164,11 +164,11 @@ itself.
 
 ## Sources & Evidence
 
-[S1] `_local/skill-roadmaps/2026-08-16/continue-session.md` (maintainer-local, gitignored). Class A.
+[S1] the maintainer's private plab-continue-session evolution roadmap, 2026-08-16. Class A.
 Section "C-4. Close the consumption loop," lines 82-95. Primary roadmap source; C-04 is the padded
 form of this document's C-4.
 
-[S2] `_local/skill-roadmaps/2026-08-18/pair-defects.md` (maintainer-local, gitignored). Class A.
+[S2] the maintainer's private defect record for the wrap/continue pair, 2026-08-18. Class A.
 Section "D-6. The `resumed-from` field is an unresolvable pointer," lines 115-126. D-06 is the padded
 form of this document's D-6; its semantics fix and its cost-and-risk assessment are both inherited
 whole by this effort's field.

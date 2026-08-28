@@ -5,7 +5,7 @@ type: spec
 status: fulfilled
 created: 2026-08-23
 updated: 2026-08-24
-linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
+linked-effort: the maintainer's private defect record for the wrap/continue pair, 2026-08-18
 linked-plan: implementation-plan.md
 ac-count: 5
 source-count: 6
@@ -122,12 +122,12 @@ Content changed, version identical: exactly AC-1's finding condition. This is in
 
 ## Sources & Evidence
 
-- [S1] `_local/skill-roadmaps/2026-08-18/pair-defects.md`, section "D-3. The hygiene sweep checks documentation drift in one direction only" (lines 71-79). Class A: maintainer-authored roadmap with evidence verified against the shipped artifacts. Maintainer-local, gitignored, exists on disk.
+- [S1] the maintainer's private defect record for the wrap/continue pair, 2026-08-18, section "D-3. The hygiene sweep checks documentation drift in one direction only" (lines 71-79). Class A: maintainer-authored roadmap with evidence verified against the shipped artifacts. Maintainer-local, gitignored, exists on disk.
 - [S2] `skills/plab-wrap-session/SKILL.md`, line 56, the Check 4 one-line summary inside the Pre-Wrap Hygiene Sweep list ("**Documentation drift.** User or technical docs this session made stale: version tables, skill or feature READMEs vs source of truth, missing CHANGELOG entries."). Class A: the file this effort edits.
 - [S3] `skills/plab-wrap-session/references/hygiene-sweep.md`, lines 40-46 (Check 4) and lines 48-56 (Check 5, cited for contrast: the sweep's only script-backed check, and why). Class A: the file this effort edits.
 - [S4] `skills/plab-continue-session/HISTORY.md`, lines 44-54, the `1.2.1` "Erratum" entry. Class A: primary evidence, independently corroborates [S1]'s account and names the root cause on the writing side in the maintainer's own words.
 - [S5] This repository's git history: commits `9c7f5ce` and `38a75f0`, and tags `v0.1.0` / `v0.1.1`. Class A: primary evidence, verified directly during this spec's authoring via `git show`, `git diff --stat`, `git log`, `git merge-base --is-ancestor`, and `git tag -l`.
-- [S6] `_local/_session-logs/2026-08-17_22-15_claude_migration-complete-t3-and-cutover.md`, line 102 ("**Documentation drift:** none. `skills/` directories, AGENTS.md sections, README rows and `library.json` components all read 5."). Class A: primary evidence artifact, the real log that passed while sitting on the confirmed defect.
+- [S6] the session log of 2026-08-17 22:15, line 102 ("**Documentation drift:** none. `skills/` directories, AGENTS.md sections, README rows and `library.json` components all read 5."). Class A: primary evidence artifact, the real log that passed while sitting on the confirmed defect.
 
 ### Unverified Claims
 

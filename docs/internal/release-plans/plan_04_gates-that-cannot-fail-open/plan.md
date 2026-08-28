@@ -51,7 +51,7 @@ its inclusion here rather than later: the no-dash rule is currently enforced by 
 a single machine, which a commit from anywhere else bypasses entirely (this has already happened, at
 31 dashes), and D-11's canary-before-trust discipline needs somewhere to live that is not a habit.
 
-**Sequencing note.** Standing guidance in the skill-candidates memo (`_local/ideas/2026-08-15_skill-candidates.md`)
+**Sequencing note.** Standing guidance in the skill-candidates memo (the maintainer's private skill-candidates memo, 2026-08-15)
 is to fix the two weak skill descriptions and build the cross-harness usage report before starting
 new feature work. Nothing in this release contradicts that: every effort here is a correctness or
 verification fix to shipped behavior, not a new capability. The usage report remains the right thing

@@ -172,7 +172,7 @@ already excludes, with no change to either search pipeline.
 
   ```markdown
   As of `plab-wrap-session` 1.6.0, `_local/_session-logs/_superseded/` holds logs archived because a
-  newer log superseded them (D-05 in `_local/skill-roadmaps/2026-08-18/pair-defects.md`). The
+  newer log superseded them (D-05 in the maintainer's private defect record for the wrap/continue pair, 2026-08-18). The
   allowlist above already excludes it; neither pipeline below needed to change.
   ```
 
