@@ -12,7 +12,7 @@ The spec's YAML frontmatter is its machine-readable contract with downstream rea
 | `status` | enum | One of: `draft`, `committed`, `fulfilled`, `superseded`. | `draft` |
 | `created` | ISO date | When this spec file was first written. | `2026-04-14` |
 | `updated` | ISO date | Last substantive edit. | `2026-04-14` |
-| `linked-effort` | path | Relative path to the effort brief. | `docs/internal/efforts/S-04.md` |
+| `linked-effort` | string | What the spec grew out of. **A tracked path when the source is committed; otherwise a plain-language description of the source, never a path into a gitignored directory.** A tracked artifact must not cite an untracked one: the link resolves for nobody who clones the repository, including the author on another machine. When the source is private, summarize its substance into the Sources and Evidence section and name it here descriptively. | `docs/internal/efforts/S-04.md` or `the maintainer's private defect record, 2026-08-18` |
 | `ac-count` | integer | Number of acceptance criteria in this spec. Must match actual count. | `7` |
 
 ## Optional Fields
@@ -64,7 +64,7 @@ type: spec
 status: draft
 created: 2026-04-14
 updated: 2026-04-14
-linked-effort: docs/internal/efforts/S-04.md
+linked-effort: docs/internal/efforts/S-04.md   # or a description when the source is not tracked
 linked-plan: null
 linked-strategy-brief: docs/internal/efforts/S-04/S-04_strategy-brief.md
 gh-issue: 15

@@ -5,7 +5,7 @@ type: spec
 status: draft
 created: 2026-08-23
 updated: 2026-08-23
-linked-effort: _local/skill-roadmaps/2026-08-16/continue-session.md
+linked-effort: the maintainer's private plab-continue-session evolution roadmap, 2026-08-16
 linked-plan: implementation-plan.md
 ac-count: 7
 source-count: 7
@@ -154,12 +154,12 @@ The final section is the same verbatim-prompt guarantee the single-log flow alre
 
 ## Sources & Evidence
 
-- [S1] `_local/skill-roadmaps/2026-08-16/continue-session.md` (maintainer-local, gitignored; exists on disk). Section C-05 (the roadmap's own heading reads "C-5", lines 98-106, including the promotion note and the "share whatever aggregation is built" instruction on line 104), "What not to do" (lines 110-114). Credibility: A, first-party maintainer-authored roadmap.
+- [S1] the maintainer's private plab-continue-session evolution roadmap, 2026-08-16 (maintainer-local, gitignored; exists on disk). Section C-05 (the roadmap's own heading reads "C-5", lines 98-106, including the promotion note and the "share whatever aggregation is built" instruction on line 104), "What not to do" (lines 110-114). Credibility: A, first-party maintainer-authored roadmap.
 - [S2] `docs/internal/release-plans/plan_07_aggregation/W-04_digest-mode/spec.md`, this session's sibling artifact and the owner of the shared aggregation layer this spec depends on. Cited by section (Requirements item 8, AC-2, AC-7, AC-8) rather than by line number, since both documents were drafted in the same session. Credibility: A, first-party.
 - [S3] `skills/plab-continue-session/SKILL.md`. The current single-log Phase 1 through 5 flow (lines 34-99) and the never-paraphrase constraint (line 105) this effort must not relax. Credibility: A, verified current shipped file.
 - [S4] `skills/plab-continue-session/references/log-discovery.md` (lines 15-44). The corpus contract reused, not redefined, by the shared script. Credibility: A, verified current shipped file.
 - [S5] `skills/plab-continue-session/references/handoff-display.md` (lines 7-28 for the required structure, line 39 for "Never paraphrase"). The Phase 3 display format this effort extends. Credibility: A, verified current shipped file.
-- [S6] `_local/skill-roadmaps/2026-08-18/pair-defects.md` (maintainer-local, gitignored; exists on disk). D-05, same-arc superseding logs (the roadmap's own heading reads "D-5"), specifically the line stating the dedup hazard "for W-4 and C-5 is removed at write time instead of demanding dedup logic at read time forever" (lines 101-111, quoted line is 109; "W-4" and "C-5" in that quoted line are the source's own unpadded form for W-04 and C-05). Credibility: A, first-party maintainer-authored addendum, verified.
+- [S6] the maintainer's private defect record for the wrap/continue pair, 2026-08-18 (maintainer-local, gitignored; exists on disk). D-05, same-arc superseding logs (the roadmap's own heading reads "D-5"), specifically the line stating the dedup hazard "for W-4 and C-5 is removed at write time instead of demanding dedup logic at read time forever" (lines 101-111, quoted line is 109; "W-4" and "C-5" in that quoted line are the source's own unpadded form for W-04 and C-05). Credibility: A, first-party maintainer-authored addendum, verified.
 - [S7] `docs/internal/release-plans/plan_04_gates-that-cannot-fail-open/D-05_superseding-logs/spec.md`. D-05's own spec now exists in this repository (written independently of this document, targeting the earlier v0.4.0 release) and confirms, with its own AC-3 and AC-6, the mechanism [S6] describes from the proposal-stage `pair-defects.md`: the `_superseded/` archive path and its exclusion from `log-discovery.md`'s allowlist. Credibility: A, first-party, this release's own sibling planning artifact, verified by direct reading.
 
 ### Unverified Claims

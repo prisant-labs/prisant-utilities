@@ -81,7 +81,7 @@ trusting any scan of a drafted log, and reports one of three states.
 
 **Steps:**
 
-- [x] Step 1: Create the file with a module docstring modeled on `_local/migration/2026-08-14/pii-gate.py`'s
+- [x] Step 1: Create the file with a module docstring modeled on the maintainer's canary-verified PII gate script's
   own docstring shape: state the exit-code contract up front (0 clean, 1 findings, 2 broken, "never
   interpret 2 as clean"), and state explicitly why the canary strings are built with `chr()` rather than
   a string escape (see Global constraints above), so a future editor does not "helpfully" rewrite them

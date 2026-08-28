@@ -5,7 +5,7 @@ type: spec
 status: fulfilled
 created: 2026-08-23
 updated: 2026-08-24
-linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
+linked-effort: the maintainer's private defect record for the wrap/continue pair, 2026-08-18
 linked-plan: implementation-plan.md
 ac-count: 7
 source-count: 5
@@ -211,7 +211,7 @@ from Requirement 2's filter having no lower bound to apply]
 
 ## Sources & Evidence
 
-- [S1] `_local/skill-roadmaps/2026-08-18/pair-defects.md`, D-4 section, the "Rejected and rescoped"
+- [S1] the maintainer's private defect record for the wrap/continue pair, 2026-08-18, D-4 section, the "Rejected and rescoped"
   table (the timing-constraint correction), and the D-1 section (cited for the text-contradicts-text
   precedent in Requirement 3). Maintainer-local, class A (primary design source).
 - [S2] `skills/plab-wrap-session/SKILL.md`, Evidence Gathering, the Outstanding Issues bullet (line
@@ -225,7 +225,7 @@ from Requirement 2's filter having no lower bound to apply]
   records at time of writing, confirming the field names (`ts`, `machine`, `harness`, `session_id`,
   `reason`, `repo`, `branch`, `head`, `dirty`, `untracked`, `stashes`, `last_tag`, `transcript`,
   `commits_today`) and the presence of null-`session_id` records.
-- [S5] `_local/skill-roadmaps/2026-08-16/wrap-session.md`, the W-1 (capture-lite hook) section: the
+- [S5] the maintainer's private plab-wrap-session evolution roadmap, 2026-08-16, the W-1 (capture-lite hook) section: the
   hook's design constraint (`SessionEnd` timing) and its stated purpose ("converts an unknown into a
   floor"). Maintainer-local, class A, verified by direct read.
 

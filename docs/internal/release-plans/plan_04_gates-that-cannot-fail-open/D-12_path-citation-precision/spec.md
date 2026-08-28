@@ -5,7 +5,7 @@ type: spec
 status: fulfilled
 created: 2026-08-23
 updated: 2026-08-24
-linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
+linked-effort: the maintainer's private defect record for the wrap/continue pair, 2026-08-18
 linked-plan: implementation-plan.md
 ac-count: 6
 source-count: 4
@@ -133,7 +133,7 @@ still flagged as missing. [S1][S2]
 ## Behavior / Examples
 
 Worked examples, drawn from citations that actually appear in the 2026-08-23 10:27 wrap log
-(`_local/_session-logs/2026-08-23_10-27_claude_doc-version-parity-and-guide-222.md`, maintainer-local),
+(the session log of 2026-08-23 10:27, maintainer-local),
 illustrating the shape of the defect and the fix rather than reproducing that wrap's exact flagged list.
 
 **Example 1: genuine finding, preserved.**
@@ -183,13 +183,13 @@ never considered. [S1]
 
 ## Sources & Evidence
 
-- **[S1]** `_local/skill-roadmaps/2026-08-18/pair-defects.md`, "D-12. The path-existence gate treats bare
+- **[S1]** the maintainer's private defect record for the wrap/continue pair, 2026-08-18, "D-12. The path-existence gate treats bare
   filenames as repo-relative paths" (lines 211-222). Maintainer-local, gitignored. Credibility A: primary
   planning artifact, evidence drawn directly from an actual wrap run and independently reviewed by a
   second model per the document's own methodology note.
 - **[S2]** `skills/plab-wrap-session/SKILL.md:194`, the current gate bullet text ("Every file path and
   link named in the log exists"). Credibility A: shipped skill file, verified by direct read.
-- **[S3]** `_local/_session-logs/2026-08-23_10-27_claude_doc-version-parity-and-guide-222.md`, lines 52,
+- **[S3]** the session log of 2026-08-23 10:27, lines 52,
   97, and 119. Maintainer-local, gitignored. Credibility A: the actual session log this effort's evidence
   is drawn from, verified by direct read; the specific citations quoted in Behavior/Examples were
   confirmed to exist at those line numbers and their real repo locations were confirmed with `find`.

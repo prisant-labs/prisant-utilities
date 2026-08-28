@@ -5,7 +5,7 @@ type: spec
 status: fulfilled
 created: 2026-08-23
 updated: 2026-08-24
-linked-effort: _local/skill-roadmaps/2026-08-18/pair-defects.md
+linked-effort: the maintainer's private defect record for the wrap/continue pair, 2026-08-18
 linked-plan: implementation-plan.md
 ac-count: 7
 source-count: 5
@@ -227,11 +227,11 @@ string escapes. [S4]
 
 ## Sources & Evidence
 
-- **[S1]** `_local/skill-roadmaps/2026-08-18/pair-defects.md`, "D-11. The Log Self-Check gates are
+- **[S1]** the maintainer's private defect record for the wrap/continue pair, 2026-08-18, "D-11. The Log Self-Check gates are
   two-state and can fail open" (lines 187-209). Maintainer-local, gitignored. Credibility A: primary
   planning artifact; the three recorded failures are each independently dated and one (the dash-hook
   blocking this very entry's prose) was observed live during the document's own authoring.
-- **[S2]** `_local/migration/2026-08-14/pii-gate.py`. Maintainer-local, gitignored (not shipped in this
+- **[S2]** the maintainer's canary-verified PII gate script. Maintainer-local, gitignored (not shipped in this
   plugin; it is a different repo's migration tool the maintainer wrote). Credibility A: verified by
   direct read. Specific anchors checked: exit-code contract in the module docstring (lines 30-35: 0
   clean, 1 dirty, 2 broken, "NEVER interpret [2] as clean"); `self_test()` function (lines 206-227),

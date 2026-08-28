@@ -5,7 +5,7 @@ type: spec
 status: draft
 created: 2026-08-23
 updated: 2026-08-23
-linked-effort: _local/skill-roadmaps/2026-08-16/wrap-session.md
+linked-effort: the maintainer's private plab-wrap-session evolution roadmap, 2026-08-16
 linked-plan: implementation-plan.md
 ac-count: 8
 source-count: 9
@@ -150,9 +150,9 @@ The "Coverage" line is mandatory per AC-5 regardless of how the counts above it 
 
 ## Sources & Evidence
 
-- [S1] `_local/skill-roadmaps/2026-08-16/wrap-session.md` (maintainer-local, gitignored; exists on disk). Sections W-04 (the roadmap's own heading reads "W-4", lines 76-85), W-05 (the roadmap's own heading reads "W-5", lines 89-95), "Current state" harness-scope precedent (line 15), "What not to do" (lines 113-117). Credibility: A, first-party maintainer-authored roadmap.
+- [S1] the maintainer's private plab-wrap-session evolution roadmap, 2026-08-16 (maintainer-local, gitignored; exists on disk). Sections W-04 (the roadmap's own heading reads "W-4", lines 76-85), W-05 (the roadmap's own heading reads "W-5", lines 89-95), "Current state" harness-scope precedent (line 15), "What not to do" (lines 113-117). Credibility: A, first-party maintainer-authored roadmap.
 - [S2] `skills/plab-continue-session/references/log-discovery.md` (lines 15-44). The corpus pooling, allowlist, and sort rules this effort extends from N=1 to N=many. Credibility: A, verified current shipped file.
-- [S3] `_local/skill-roadmaps/2026-08-18/pair-defects.md` (maintainer-local, gitignored; exists on disk). D-05, same-arc superseding logs (lines 101-111, the "removed at write time instead of demanding dedup logic at read time forever" line is 109); D-07, the Waiting-on blocker contract's blocked-since marker and carry-forward (lines 129-144); D-04, capture-lite consumers and the ordering constraint (lines 83-97). Credibility: A, first-party maintainer-authored addendum, verified.
+- [S3] the maintainer's private defect record for the wrap/continue pair, 2026-08-18 (maintainer-local, gitignored; exists on disk). D-05, same-arc superseding logs (lines 101-111, the "removed at write time instead of demanding dedup logic at read time forever" line is 109); D-07, the Waiting-on blocker contract's blocked-since marker and carry-forward (lines 129-144); D-04, capture-lite consumers and the ordering constraint (lines 83-97). Credibility: A, first-party maintainer-authored addendum, verified.
 - [S4] `docs/internal/release-plans/plan_07_aggregation/plan.md`, Open Questions / Decisions, D1 "Where the shared aggregation layer lives" (lines 109-140). The resolved, maintainer-accepted decision that the aggregation layer lives inside `plab-wrap-session` rather than a third shared plugin-root location, with its reasoning. Credibility: A, first-party, this release's own planning artifact, verified current file.
 - [S5] `AGENTS.md` (design frame lines 15-18). The token-economy and single-user design frame this effort is judged against. Credibility: A, verified current file.
 - [S6] `skills/plab-wrap-session/SKILL.md`. Organize Mode section (lines 82-106, "runs instead of a wrap" is line 84) as the direct precedent for a non-wrap operation. Credibility: A, verified current file.
