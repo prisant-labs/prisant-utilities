@@ -5,6 +5,22 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-08-27
+
+### Changed
+
+- **`plab-spec` (1.3.0) and `plab-release-plan` (1.5.0) no longer carry `disable-model-invocation`.** Both are now auto-discoverable. Their descriptions carry explicit trigger phrases and explicit do-NOT-fire clauses in place of the binary gate, which is the mechanism that took `plab-continue-session` from over-triggering to firing correctly. A description can distinguish a request from a passing mention; a boolean cannot.
+
+  The flag had a measured cost: an approved invocation was refused twice in one session, and because neither skill had ever run in this repository, the misfire risk the flag guarded against was never actually observed. `plab-spec` 1.2.1's stated rationale also did not survive inspection: it cited superpowers owning the spec-writing triggers, but the installed superpowers plugin ships seventeen skills and none of them is a spec skill.
+
+  **`plab-init-project` keeps its flag.** It writes into a repository root and its triggers ("init", "set up") are genuinely ambiguous.
+
+  Typing `/plab-spec` or `/plab-release-plan` still works and is still the precise way to invoke either. No skill body, subcommand, gate, or contract changed. Always-on description cost rises by roughly 385 tokens per session, the price of two descriptions that were previously not loaded.
+
+- **Release-plan folders are named by sequence and theme, not by version** (`plab-release-plan` 1.5.0). `plan_v0.5.0/plan_v0.5.0.md` becomes `plan_05_reconcile-at-resume/plan.md`; the version moves to a `target-version:` frontmatter field beside a new immutable `sequence:`. A version in a path is a prediction semver is free to invalidate: two unplanned minors in eight releases each forced a folder rename plus a cascade of rewrites, 358 references then 140. Under the new scheme both are a one-line edit. The CLI is unchanged: `--create vX.Y.Z --theme "..."` still takes a version and now derives the folder from it, and every subcommand still resolves `vX.Y.Z` by reading `target-version:`. Two new refusals guard the invariant: `--create` refuses a version another plan already claims, and resolution refuses a version matching more than one folder.
+
+- **The no-hard-wrap rule now covers every document class, not just session logs** (`AGENTS.md`). Measured: a one-word edit inside a 75-column hard-wrapped paragraph produces a 4-line diff against 1 for either one-paragraph-per-line or one-sentence-per-line, because the reflow cascades, and any grep for a phrase crossing the wrap boundary returns nothing. Fixed-width wrapping loses on the only argument made for it. `docs/status-skills.md` is unwrapped to match.
+
 ## [0.4.3] - 2026-08-26
 
 ### Changed

@@ -1,15 +1,10 @@
 # Skill Status
 
-The current configuration of every skill in `prisant-utilities`, as declared in the
-repository. One row per skill, plus the setup each one needs and where its output lands.
+The current configuration of every skill in `prisant-utilities`, as declared in the repository. One row per skill, plus the setup each one needs and where its output lands.
 
-**Plugin version:** 0.4.3
-**Skills:** 8 (5 auto-discoverable, 3 explicit-invocation only)
-**Verified against:** `library.json`, `manifest.generated.json`, and each `skills/*/SKILL.md`
-**As of:** 2026-08-26
+**Plugin version:** 0.5.0 **Skills:** 8 (7 auto-discoverable, 1 explicit-invocation only) **Verified against:** `library.json`, `manifest.generated.json`, and each `skills/*/SKILL.md` **As of:** 2026-08-27
 
-> This file describes what the repository declares, not what is installed on any given
-> machine. To check a local install, read `~/.claude/plugins/installed_plugins.json`.
+> This file describes what the repository declares, not what is installed on any given machine. To check a local install, read `~/.claude/plugins/installed_plugins.json`.
 
 ---
 
@@ -21,14 +16,12 @@ repository. One row per skill, plus the setup each one needs and where its outpu
 | `plab-continue-session` | 1.4.0 | Auto + explicit | `[--log <path>]` | Nothing. Displays context only |
 | `plab-guide` | 2.2.2 | Auto + explicit | `<topic-or-repo-url> [--type repo-url\|tool\|concept] [--out <dir>] [--force]` | `_output/plab-guide/` |
 | `plab-init-project` | 1.3.0 | **Explicit only** | `[--profile minimal\|standard\|public] [--type ...] [--agents ...] [--dry-run]` | The target repository root |
-| `plab-release-plan` | 1.3.0 | **Explicit only** | `--create \| --promote \| --demote \| --update \| --gate` | `docs/internal/release-plans/plan_vX.Y.Z/` |
-| `plab-spec` | 1.2.1 | **Explicit only** | `--effort <id> [--target-release vX.Y.Z] [--revise] [--dry-run]` | `docs/internal/release-plans/_unassigned/` by default |
+| `plab-release-plan` | 1.5.0 | Auto + explicit | `--create \| --promote \| --demote \| --update \| --gate` | `docs/internal/release-plans/plan_NN_<slug>/` |
+| `plab-spec` | 1.3.0 | Auto + explicit | `--effort <id> [--target-release vX.Y.Z] [--revise] [--dry-run]` | `docs/internal/release-plans/_unassigned/` by default |
 | `plab-strategy-brief` | 1.1.1 | Auto + explicit | `[paste raw thinking]` | `_output/plab-strategy-brief/` |
 | `plab-wrap-session` | 1.6.1 | Auto + explicit | `[mode: quick\|final\|deep\|blocked] [--organize]` | `_local/_session-logs/` (gitignored) |
 
-**Explicit only** means the skill carries `disable-model-invocation: true`. It never fires
-on its own and is absent from the auto-loaded skill listing. It runs when you type its
-name and only then.
+**Explicit only** means the skill carries `disable-model-invocation: true`. It never fires on its own and is absent from the auto-loaded skill listing. It runs when you type its name and only then. **Only `plab-init-project` carries it now.** `plab-spec` and `plab-release-plan` carried it through 1.2.1 and 1.3.0 respectively; both are now auto-discoverable, using explicit do-NOT-fire clauses in their descriptions instead of the binary flag.
 
 ---
 
@@ -36,8 +29,7 @@ name and only then.
 
 ### `plab-wrap-session` 1.6.1
 
-The most-used skill in the plugin. Writes a structured session log and hands off to
-`plab-continue-session`.
+The most-used skill in the plugin. Writes a structured session log and hands off to `plab-continue-session`.
 
 | Property | Value |
 |---|---|
@@ -49,11 +41,7 @@ The most-used skill in the plugin. Writes a structured session log and hands off
 | References | 4 files |
 | Paired with | `plab-continue-session`. A session-log format change in one requires a matching change in the other |
 
-Runs a pre-wrap hygiene sweep across five checks (remote divergence, working tree,
-release state, documentation drift, session-log store) under per-action confirmation, and
-a Log Self-Check gate before writing. Two of those gates are canary-proven and report
-three states: `clean`, `findings`, `broken`, where `broken` blocks exactly as `findings`
-does.
+Runs a pre-wrap hygiene sweep across five checks (remote divergence, working tree, release state, documentation drift, session-log store) under per-action confirmation, and a Log Self-Check gate before writing. Two of those gates are canary-proven and report three states: `clean`, `findings`, `broken`, where `broken` blocks exactly as `findings` does.
 
 ### `plab-continue-session` 1.4.0
 
@@ -68,8 +56,7 @@ Reads the newest session log and replays its recorded handoff.
 | References | 3 files |
 | Discovery paths | `_local/_session-logs/` (current, including `YYYY-MM/` folders), `_agent-context/session-log/` (legacy), `AGENTS/session-log/` (legacy) |
 
-Deliberately does **not** fire on status questions ("where are we", "what's next"). Those
-get answered directly. Never auto-executes a continuation prompt without confirmation.
+Deliberately does **not** fire on status questions ("where are we", "what's next"). Those get answered directly. Never auto-executes a continuation prompt without confirmation.
 
 ### `plab-ai-review` 1.2.1
 
@@ -85,8 +72,7 @@ Structured peer review of a document by a second model.
 | References | 5 files, 1 example |
 | Reviewers named | `codex`, `gpt`, `gemini` |
 
-Known gap: `argument-hint` advertises only `--respond`, so a reader of the hint alone
-would not learn `--close` exists. The description documents all three.
+Known gap: `argument-hint` advertises only `--respond`, so a reader of the hint alone would not learn `--close` exists. The description documents all three.
 
 ### `plab-guide` 2.2.2
 
@@ -102,9 +88,7 @@ Generates a paired guide bundle from a topic, tool name, or GitHub URL.
 | References | 9 files, 1 asset |
 | Shared deps | `lib/render-mermaid.py` and `references/diagrams.md` at plugin root |
 
-PDF rendering spends **zero LLM tokens**; the script invokes a local browser binary. The
-renderer steps `--fit-scale` down from 1.00 to 0.85 until content fits, failing only if it
-still overflows at minimum scale.
+PDF rendering spends **zero LLM tokens**; the script invokes a local browser binary. The renderer steps `--fit-scale` down from 1.00 to 0.85 until content fits, failing only if it still overflows at minimum scale.
 
 ### `plab-strategy-brief` 1.1.1
 
@@ -118,42 +102,37 @@ Turns raw, unstructured thinking into a decision-ready analysis document.
 | Setup required | Nothing |
 | References | 4 files |
 
-Explicitly not for summarizing already-structured documents, editing polished prose, or
-pure research queries with no raw thinking supplied.
+Explicitly not for summarizing already-structured documents, editing polished prose, or pure research queries with no raw thinking supplied.
 
-### `plab-spec` 1.2.1, explicit only
+### `plab-spec` 1.3.0
 
 Writes a feature specification optimized for agent execution.
 
 | Property | Value |
 |---|---|
-| Invocation | `disable-model-invocation: true`. Type `/plab-spec`; it never fires on its own |
+| Invocation | **Auto-discoverable as of 1.3.0.** Fires on an explicit request to write a spec. Do-NOT-fire clause covers passing mentions of "spec", questions about an existing spec, and requests to implement one |
 | Default output | `docs/internal/release-plans/_unassigned/<effort>/spec.md` |
-| With `--target-release` | Writes straight into `plan_vX.Y.Z/` |
+| With `--target-release` | Writes straight into `plan_NN_<slug>/` |
 | Scripts | None |
 | Setup required | Nothing. Creates its folders |
 | References | 6 files |
 
-Produces frontmatter, an agent-updated Task Summary block, and numbered acceptance
-criteria with source citations. Defines **what** to build. `/superpowers:writing-plans`
-defines how; `/plab-strategy-brief` explores why.
+Produces frontmatter, an agent-updated Task Summary block, and numbered acceptance criteria with source citations. Defines **what** to build. `/superpowers:writing-plans` defines how; `/plab-strategy-brief` explores why.
 
-### `plab-release-plan` 1.3.0, explicit only
+### `plab-release-plan` 1.5.0
 
 Manages a version-scoped release plan folder.
 
 | Property | Value |
 |---|---|
-| Invocation | `disable-model-invocation: true` |
+| Invocation | **Auto-discoverable as of 1.4.0.** Fires on release scoping, promotion, and readiness checks. Do-NOT-fire clause covers general planning talk, changelog requests, and questions about what shipped |
 | Subcommands | `--create`, `--promote`, `--demote`, `--update`, `--gate` |
-| Output | `docs/internal/release-plans/plan_vX.Y.Z/` |
+| Output | `docs/internal/release-plans/plan_NN_<slug>/plan.md`. **Folders are named by sequence and theme, not version**; the version lives in `target-version:` frontmatter |
 | Scripts | None |
 | Setup required | A `release-checklist.yaml` is optional; project rows merge with built-in defaults, and the built-in wins on collision |
 | References | 6 files |
 
-Auto-generates the aggregation table from folder contents and enforces hygiene gates plus
-a doc-update checklist that gates the tag. **Refuses to invent or modify acceptance
-criteria**; those live in specs, and the release plan only aggregates.
+Auto-generates the aggregation table from folder contents and enforces hygiene gates plus a doc-update checklist that gates the tag. **Refuses to invent or modify acceptance criteria**; those live in specs, and the release plan only aggregates.
 
 ### `plab-init-project` 1.3.0, explicit only
 
@@ -171,8 +150,7 @@ Scaffolds agentic development infrastructure into a repository.
 | Dry run | `--dry-run` |
 | References | 4 files |
 
-Pairs with `plab-wrap-session` and `plab-continue-session`, which write and read the
-session logs it scaffolds.
+Pairs with `plab-wrap-session` and `plab-continue-session`, which write and read the session logs it scaffolds.
 
 ---
 
@@ -201,14 +179,10 @@ Used by skills rather than duplicated inside them:
 | License | MIT, on the plugin and every skill |
 | Dash rule | No em-dashes or en-dashes anywhere. Enforced in CI and by a local PreToolUse hook |
 
-Every skill carries a `HISTORY.md` and a usage README at `docs/skills/<name>/README.md`.
-All eight usage READMEs currently state the same version as their skill.
+Every skill carries a `HISTORY.md` and a usage README at `docs/skills/<name>/README.md`. All eight usage READMEs currently state the same version as their skill.
 
 ---
 
 ## Regenerating this file
 
-Every value above is derived from `library.json`, `manifest.generated.json`, and the
-frontmatter of each `skills/*/SKILL.md`. Nothing here is authored judgment, so nothing
-here should be hand-maintained: when a skill version, argument hint, or dormancy flag
-changes, this file is stale until regenerated from those sources.
+Every value above is derived from `library.json`, `manifest.generated.json`, and the frontmatter of each `skills/*/SKILL.md`. Nothing here is authored judgment, so nothing here should be hand-maintained: when a skill version, argument hint, or dormancy flag changes, this file is stale until regenerated from those sources.

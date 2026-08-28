@@ -52,7 +52,7 @@ extensions = read release-checklist.yaml; default to empty if file missing or em
 
 checklist = defaults + extensions     # extensions appended after defaults
 
-write checklist to plan_vX.Y.Z.md's Doc-Update Checklist section
+write checklist to plan.md's Doc-Update Checklist section
 ```
 
 ## Per-release tweaks

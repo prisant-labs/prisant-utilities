@@ -56,9 +56,11 @@ Or symlink into a project:
 ln -s /path/to/prisant-utilities/skills/plab-spec .claude/skills/plab-spec
 ```
 
-### Invocation is manual only
+### Invocation
 
-This skill ships with `disable-model-invocation: true`. It never fires on its own, no matter how the request is phrased. Type `/plab-spec` to run it.
+**Auto-discoverable as of 1.3.0.** Through 1.2.1 this skill shipped with `disable-model-invocation: true` and ran only when typed. That flag is gone. It now fires on an explicit request to write a spec or turn requirements into acceptance criteria, and its description carries a do-NOT-fire clause covering the three ways the word "spec" appears without being a request: a passing mention, a question about an existing spec, and a request to implement one.
+
+Typing `/plab-spec` still works and is still the precise way to run it.
 
 That is deliberate: `superpowers` owns the default spec-writing triggers, and two skills competing for "write a spec" would fire unpredictably.
 

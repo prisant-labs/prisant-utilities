@@ -9,15 +9,15 @@ Per AC-2 of the spec (non-functional requirements): a promote or demote either c
 **A successful promote of S-07:**
 
 1. The folder `release-plans/_unassigned/S-07_<slug>/` no longer exists.
-2. The folder `release-plans/plan_vX.Y.Z/S-07_<slug>/` exists with all the original contents (`spec.md`, `implementation-plan.md` if it was present, `supporting/` if it was present).
-3. `release-plans/plan_vX.Y.Z/S-07_<slug>/spec.md` frontmatter has `target-release: vX.Y.Z` and `linked-release: docs/internal/release-plans/plan_vX.Y.Z/plan_vX.Y.Z.md`.
+2. The folder `release-plans/plan_NN_<slug>/S-07_<slug>/` exists with all the original contents (`spec.md`, `implementation-plan.md` if it was present, `supporting/` if it was present).
+3. `release-plans/plan_NN_<slug>/S-07_<slug>/spec.md` frontmatter has `target-release: vX.Y.Z` and `linked-release: docs/internal/release-plans/plan_NN_<slug>/plan.md`.
 4. If `implementation-plan.md` exists in the folder, its `linked-release` is set to the same path.
-5. The release plan's `plan_vX.Y.Z.md` frontmatter `includes:` list contains the effort id.
+5. The release plan's `plan.md` frontmatter `includes:` list contains the effort id.
 
 **A failed promote of S-07** (e.g., disk write error mid-way):
 
 1. `release-plans/_unassigned/S-07_<slug>/` still exists with original contents.
-2. `release-plans/plan_vX.Y.Z/S-07_<slug>/` does NOT exist (or is rolled back to non-existence).
+2. `release-plans/plan_NN_<slug>/S-07_<slug>/` does NOT exist (or is rolled back to non-existence).
 3. The spec's frontmatter is unchanged.
 4. The release plan's `includes:` is unchanged.
 
@@ -30,7 +30,7 @@ Per AC-2 of the spec (non-functional requirements): a promote or demote either c
 3. Move folder: src -> dst
 4. Update dst/spec.md frontmatter
 5. Update dst/implementation-plan.md frontmatter (if exists)
-6. Update plan_vX.Y.Z.md includes: list
+6. Update plan.md includes: list
 7. Run --update to refresh aggregation
 
 # If any step 3-7 fails:
@@ -48,26 +48,26 @@ The "atomic move" guarantee is achieved by treating the folder as the unit; inte
 | File | Field | Before | After |
 |------|-------|--------|-------|
 | `<S-07_slug>/spec.md` | `target-release` | (none or `null`) | `vX.Y.Z` |
-| `<S-07_slug>/spec.md` | `linked-release` | `null` | `docs/internal/release-plans/plan_vX.Y.Z/plan_vX.Y.Z.md` |
+| `<S-07_slug>/spec.md` | `linked-release` | `null` | `docs/internal/release-plans/plan_NN_<slug>/plan.md` |
 | `<S-07_slug>/spec.md` | `updated` | (some date) | today's date |
-| `<S-07_slug>/implementation-plan.md` (if exists) | `linked-release` | `null` | `docs/internal/release-plans/plan_vX.Y.Z/plan_vX.Y.Z.md` |
+| `<S-07_slug>/implementation-plan.md` (if exists) | `linked-release` | `null` | `docs/internal/release-plans/plan_NN_<slug>/plan.md` |
 | `<S-07_slug>/implementation-plan.md` (if exists) | `updated` | (some date) | today's date |
-| `plan_vX.Y.Z.md` | `includes` | `[...]` | `[..., S-07]` (sorted) |
-| `plan_vX.Y.Z.md` | `status` | `draft` | `in-progress` (if was `draft` and this is the first promote) |
-| `plan_vX.Y.Z.md` | `updated` | (some date) | today's date |
+| `plan.md` | `includes` | `[...]` | `[..., S-07]` (sorted) |
+| `plan.md` | `status` | `draft` | `in-progress` (if was `draft` and this is the first promote) |
+| `plan.md` | `updated` | (some date) | today's date |
 
 ### On demote `--from vX.Y.Z [--to _unassigned] S-07`:
 
 | File | Field | Before | After |
 |------|-------|--------|-------|
 | `<S-07_slug>/spec.md` | `target-release` | `vX.Y.Z` | `null` |
-| `<S-07_slug>/spec.md` | `linked-release` | `docs/internal/release-plans/plan_vX.Y.Z/plan_vX.Y.Z.md` | `null` |
+| `<S-07_slug>/spec.md` | `linked-release` | `docs/internal/release-plans/plan_NN_<slug>/plan.md` | `null` |
 | `<S-07_slug>/spec.md` | `updated` | (some date) | today's date |
 | `<S-07_slug>/implementation-plan.md` (if exists) | `linked-release` | (path) | `null` |
 | `<S-07_slug>/implementation-plan.md` (if exists) | `updated` | (some date) | today's date |
-| `plan_vX.Y.Z.md` | `includes` | `[..., S-07]` | `[...]` (S-07 removed) |
-| `plan_vX.Y.Z.md` | `status` | `in-progress` | `draft` (if `includes` becomes empty after the demote; otherwise unchanged) |
-| `plan_vX.Y.Z.md` | `updated` | (some date) | today's date |
+| `plan.md` | `includes` | `[..., S-07]` | `[...]` (S-07 removed) |
+| `plan.md` | `status` | `in-progress` | `draft` (if `includes` becomes empty after the demote; otherwise unchanged) |
+| `plan.md` | `updated` | (some date) | today's date |
 
 ## Failure modes
 
@@ -77,7 +77,7 @@ The "atomic move" guarantee is achieved by treating the folder as the unit; inte
 | Destination already exists | `Test-Path dst` before moving | Refuse; report id collision; ask user to investigate |
 | Disk write error mid-move | OS exception | Roll back: restore source folder if dest partially created; report I/O error with paths |
 | Spec frontmatter unparseable | YAML parse failure | Refuse; report the unparseable file path; don't silently skip |
-| `plan_vX.Y.Z.md` does not exist | `Test-Path plan` after `--create` requirement | Refuse `--promote` / `--demote`; instruct to run `--create` first |
+| `plan.md` does not exist | `Test-Path plan` after `--create` requirement | Refuse `--promote` / `--demote`; instruct to run `--create` first |
 | `--to vX.Y.Z` references a non-existent release | Same | Same: refuse, instruct to `--create` |
 | Effort id in promote list not in `_unassigned/` | Folder scan | Refuse the whole batch; report which id is missing |
 | Effort id in demote list not in source release | Folder scan | Same |
