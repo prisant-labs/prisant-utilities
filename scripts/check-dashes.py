@@ -9,7 +9,7 @@ EXIT-CODE CONTRACT
   2  BROKEN   ripgrep is missing, the canary failed, or ripgrep itself errored
 
 NEVER INTERPRET 2 AS CLEAN. See
-`docs/internal/release-plans/plan_v0.4.0/CI-01_ci-bootstrap/spec.md`.
+`docs/internal/release-plans/plan_04_gates-that-cannot-fail-open/CI-01_ci-bootstrap/spec.md`.
 
 WHY RIPGREP, NOT PERL AND NOT A SHELL-ESCAPED PATTERN
 -----------------------------------------------------

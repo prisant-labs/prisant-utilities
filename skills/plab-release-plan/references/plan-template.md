@@ -1,11 +1,12 @@
 # Plan Template
 
-Full structural contract for `plan_vX.Y.Z.md` inside `release-plans/plan_vX.Y.Z/`.
+Full structural contract for `plan.md` inside `release-plans/plan_NN_<slug>/`.
 
 ```markdown
 ---
-version: vX.Y.Z
-title: "Release plan: vX.Y.Z"
+sequence: NN
+target-version: vX.Y.Z
+title: "Release plan NN: <theme>"
 type: release-plan
 status: draft                    # draft -> in-progress -> released
 created: YYYY-MM-DD
@@ -17,7 +18,7 @@ plan-count: 0                    # computed by --update
 checklist-complete: false        # computed by --update
 ---
 
-# Release Plan: vX.Y.Z
+# Release Plan NN: <theme>
 
 ## Theme
 
@@ -116,7 +117,7 @@ Release-level open questions and decisions (scope cuts, slips, blockers, deferra
 
 ## Template notes
 
-- **Folder structure:** the .md sits at `release-plans/plan_vX.Y.Z/plan_vX.Y.Z.md`. Per-effort subfolders are peers (siblings to the .md inside the folder).
+- **Folder structure:** the .md sits at `release-plans/plan_NN_<slug>/plan.md`. Per-effort subfolders are peers (siblings to the .md inside the folder).
 - **Aggregation section is generated.** `--update` rewrites this section's table from the folder walk. Don't author the rows.
 - **Hygiene gates section is partially generated.** The gate descriptions are static (template above); the `Status` column is updated by `--gate` (read-only) and by `--update` (incidental).
 - **Doc-update checklist defaults are baked in** but the `release-checklist.yaml` adds project-specific rows on top. Per-release tweaks happen by hand-editing the table after `--create`.

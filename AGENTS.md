@@ -25,10 +25,9 @@ Conventions an agent should follow in this repo:
 
 - Every skill name carries the `plab-` prefix and matches its directory name exactly.
 - Skills load shared utilities from the plugin root: `references/` for authoring guidance, `lib/` for executable helpers.
-- Generated artifacts go to `_output/<skill-name>/`, which is gitignored. The three planning skills are the
-  exception: `plab-spec` and `plab-release-plan` write into `docs/internal/release-plans/`, and
-  `plab-init-project` writes into the repository it scaffolds.
+- Generated artifacts go to `_output/<skill-name>/`, which is gitignored. The three planning skills are the exception: `plab-spec` and `plab-release-plan` write into `docs/internal/release-plans/`, and `plab-init-project` writes into the repository it scaffolds.
 - Never write em-dashes (U+2014) or en-dashes (U+2013). Use " - " or restructure.
+- **Do not hard-wrap prose to a fixed width, in any document.** One paragraph is one line, however long. Where a file is genuinely reviewed line by line, break at sentence boundaries instead of at a column. Tables, code blocks, frontmatter, and ASCII diagrams keep their natural line structure; this rule is about prose. Measured 2026-08-27: a one-word edit inside a 75-column hard-wrapped paragraph produces a 4-line diff, against 1 line for either one-paragraph-per-line or one-sentence-per-line, because the reflow cascades. Fixed-width wrapping therefore loses on the only argument made for it, and additionally makes any grep for a phrase crossing the wrap boundary return nothing. This generalizes the session-log rule that `plab-wrap-session` has carried since v0.4.1; that rule was scoped to one file type, which is why the convention leaked back in elsewhere.
 
 ## Skills
 

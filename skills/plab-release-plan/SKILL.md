@@ -11,13 +11,13 @@ description: "Create and manage a version-scoped release plan folder: scaffold i
 argument-hint: "--create vX.Y.Z [--theme <text>] | --promote --from _unassigned --to vX.Y.Z S-NN ... | --demote --from vX.Y.Z [--to _unassigned] S-NN | --update vX.Y.Z | --gate vX.Y.Z"
 license: MIT
 metadata:
-  version: "1.4.0"
+  version: "1.5.0"
   updated: 2026-08-27
 ---
 
 # Release Plan
 
-Aggregate every spec and implementation plan in scope of a release into one self-contained folder. Own the `_unassigned/` -> `plan_vX.Y.Z/` promotion ceremony. Gate the tag on hygiene checks + doc-update checklist.
+Aggregate every spec and implementation plan in scope of a release into one self-contained folder. Own the `_unassigned/` -> `plan_NN_<slug>/` promotion ceremony. Gate the tag on hygiene checks + doc-update checklist.
 
 ## Subcommand Selection
 
@@ -43,8 +43,8 @@ Aggregate every spec and implementation plan in scope of a release into one self
 
 | Input | Required | Notes |
 |-------|----------|-------|
-| `vX.Y.Z` | Yes | Semver release version. The folder `plan_vX.Y.Z/` is created at `docs/internal/release-plans/`; the plan document at `plan_vX.Y.Z/plan_vX.Y.Z.md` |
-| `--theme <text>` | No | One-line release theme for the plan document header |
+| `vX.Y.Z` | Yes | Semver release version. Stored as `target-version:` in frontmatter. **It does not name the folder** (see Folder Naming below) |
+| `--theme <text>` | Yes in practice | One-line release theme. The folder slug is derived from it, so `--create` without a theme must ask for one rather than inventing it |
 | `--target-date <YYYY-MM-DD>` | No | Optional target ship date for frontmatter |
 
 ### `--promote --from _unassigned --to vX.Y.Z S-NN ...`
@@ -69,13 +69,28 @@ Aggregate every spec and implementation plan in scope of a release into one self
 |-------|----------|-------|
 | `vX.Y.Z` | Yes | Release to refresh or check |
 
+## Folder Naming
+
+**A release folder is named by sequence and theme, never by version:
+`plan_NN_<slug>/`, containing `plan.md`.**
+
+| Part | Derivation |
+|---|---|
+| `NN` | Next unused two-digit sequence: scan `docs/internal/release-plans/` for `plan_(\d\d)_`, take max + 1, zero-padded. Gaps are legal and are never backfilled |
+| `<slug>` | `--theme`, kebab-cased, lowercase, punctuation stripped |
+| Version | Lives in `target-version:` frontmatter only |
+
+**Why, stated once so it is not re-litigated.** A version in a path is a prediction, and semver is free to invalidate it: any unplanned minor release consumes the number a later plan had reserved. That happened twice in eight releases in this repository, and each time it forced a folder rename plus a cascade of path rewrites (358 references the first time, 140 the second). Naming by sequence makes the version a one-line frontmatter edit instead. This is the same reasoning `_unassigned/` already embodies: when a fact is not yet known, do not encode it in a path.
+
+**Resolving a version argument to a folder.** `--promote --to`, `--demote --from`, `--update`, and `--gate` all still take `vX.Y.Z`, because that is how a maintainer thinks about a release. Resolve it by reading `target-version:` from each `plan_*/plan.md` and matching. A sequence (`05`) or a folder name (`plan_05_reconcile-at-resume`) is also accepted. If a version matches zero folders, refuse and list what exists. **If it matches more than one, refuse**: two plans claiming one version is a real defect and must not be silently disambiguated.
+
 ## Output
 
 Per subcommand:
 
 | Subcommand | Writes | Reads |
 |-----------|--------|-------|
-| `--create` | `plan_vX.Y.Z/` folder + `plan_vX.Y.Z.md` | release-checklist.yaml (if present, for checklist extension) |
+| `--create` | `plan_NN_<slug>/` folder + `plan.md` | release-checklist.yaml (if present, for checklist extension) |
 | `--promote` | Moves effort folders; updates spec frontmatter; refreshes plan's aggregation + dynamic fields | Each effort's `spec.md` (for frontmatter update) |
 | `--demote` | Moves effort folders back; clears spec frontmatter fields; refreshes plan | Same |
 | `--update` | Aggregation table + dynamic frontmatter (`spec-count`, `plan-count`, `checklist-complete`) | Every effort folder in the release |
@@ -85,23 +100,26 @@ Per subcommand:
 
 ### `--create vX.Y.Z`
 
-1. Verify `plan_vX.Y.Z/plan_vX.Y.Z.md` does not already exist. If it does, refuse without `--update`.
-2. Create `docs/internal/release-plans/plan_vX.Y.Z/` if missing.
-3. Write `plan_vX.Y.Z.md` inside it (template at `references/plan-template.md`):
-   - Frontmatter per `references/frontmatter-schema.md`
+1. Require `--theme`. Without it the folder slug cannot be derived; ask rather than inventing one.
+2. Derive `NN` (max existing sequence + 1) and `<slug>` (kebab-cased theme) per Folder Naming above.
+3. Verify no existing `plan_*/plan.md` already carries this `target-version:`. If one does, refuse and name it: two plans claiming one version is the defect this naming scheme exists to prevent.
+4. Verify `plan_NN_<slug>/plan.md` does not already exist. If it does, refuse without `--update`.
+5. Create `docs/internal/release-plans/plan_NN_<slug>/` if missing.
+6. Write `plan.md` inside it (template at `references/plan-template.md`):
+   - Frontmatter per `references/frontmatter-schema.md`, including `sequence: NN` and `target-version: vX.Y.Z`
    - Release theme line (from `--theme` or `"<release version> release"`)
    - Empty aggregation table (no efforts yet)
    - Hygiene gates section with default gates listed (all marked N/A while folder is empty)
    - Doc-update checklist with built-in defaults + any items from `docs/internal/release-plans/release-checklist.yaml` `add:` list (see `references/checklist-extension.md`)
-4. Report: created path, checklist item count, "next: run `--promote`".
+7. Report: created path, derived sequence and slug, target version, checklist item count, "next: run `--promote`".
 
 ### `--promote --from _unassigned --to vX.Y.Z S-NN ...`
 
 1. Verify each effort id resolves to a folder in `_unassigned/`. Refuse if any are missing.
-2. Verify `plan_vX.Y.Z/` exists. Refuse if not (instruct to run `--create` first).
+2. Verify `plan_NN_<slug>/` exists. Refuse if not (instruct to run `--create` first).
 3. For each effort:
-   - Move `release-plans/_unassigned/<id>_<slug>/` -> `release-plans/plan_vX.Y.Z/<id>_<slug>/` (whole folder, atomic per `references/promote-demote.md`)
-   - Read the moved `spec.md` frontmatter; set `target-release: vX.Y.Z` and `linked-release: docs/internal/release-plans/plan_vX.Y.Z/plan_vX.Y.Z.md`
+   - Move `release-plans/_unassigned/<id>_<slug>/` -> `release-plans/plan_NN_<slug>/<id>_<slug>/` (whole folder, atomic per `references/promote-demote.md`)
+   - Read the moved `spec.md` frontmatter; set `target-release: vX.Y.Z` and `linked-release: docs/internal/release-plans/plan_NN_<slug>/plan.md`
    - If the folder contains `implementation-plan.md`, update its `linked-release` field to match
 4. Run `--update vX.Y.Z` to refresh the aggregation table and dynamic frontmatter fields.
 5. Report: per-effort moves, frontmatter updates, current aggregation state.
@@ -110,9 +128,9 @@ Per D1 (spec section 9): promote ALLOWS specs with `status: draft`; the hygiene 
 
 ### `--demote --from vX.Y.Z [--to _unassigned] S-NN`
 
-1. Verify each effort id resolves to a folder in `plan_vX.Y.Z/`. Refuse if missing.
+1. Verify each effort id resolves to a folder in `plan_NN_<slug>/`. Refuse if missing.
 2. For each effort:
-   - Move `release-plans/plan_vX.Y.Z/<id>_<slug>/` -> `release-plans/_unassigned/<id>_<slug>/`
+   - Move `release-plans/plan_NN_<slug>/<id>_<slug>/` -> `release-plans/_unassigned/<id>_<slug>/`
    - Clear the spec's `target-release` (set to null) and `linked-release` (set to null)
    - If `implementation-plan.md` exists, clear its `linked-release` too
 3. Run `--update vX.Y.Z` to refresh the (now-shrunk) aggregation.
@@ -122,8 +140,8 @@ Per D2: `--to` defaults to `_unassigned` when omitted. Direct release-to-release
 
 ### `--update vX.Y.Z`
 
-1. Read `plan_vX.Y.Z/plan_vX.Y.Z.md`.
-2. Walk `plan_vX.Y.Z/` for per-effort subfolders matching `<id>_<slug>/`. For each: read `spec.md` frontmatter (status, ac-count, title); if `implementation-plan.md` exists, read its frontmatter (status, ac-coverage, phase-count).
+1. Read `plan_NN_<slug>/plan.md`.
+2. Walk `plan_NN_<slug>/` for per-effort subfolders matching `<id>_<slug>/`. For each: read `spec.md` frontmatter (status, ac-count, title); if `implementation-plan.md` exists, read its frontmatter (status, ac-coverage, phase-count).
 3. Regenerate the aggregation table (columns: `id`, `title`, `spec-status`, `plan-status`, `AC-coverage`, `has-plan?`).
 4. Update dynamic frontmatter fields: `spec-count`, `plan-count`, `checklist-complete` (computed from the checklist's checkbox state).
 5. Leave all other sections (theme, decisions, doc-update checklist text, hygiene gates section) untouched.
@@ -147,11 +165,11 @@ Output: structured report; no file modification. An empty release is never READY
 3. **Aggregation is generated, not authored.** `--update` regenerates the table; never hand-edit aggregation rows. The skill is the only writer of that section.
 4. **Status flows up from evidence.** Never auto-set `status: released`. The skill reports readiness; the human acts on it.
 5. **Checklist is a gate, not a reminder.** `--gate` reports unchecked items as FAIL. Tag time requires every item checked.
-6. **Folder is self-contained.** `plan_vX.Y.Z.md` lives INSIDE `plan_vX.Y.Z/`, not as a sibling. The release folder is the unit of release-time freeze.
+6. **Folder is self-contained.** `plan.md` lives INSIDE `plan_NN_<slug>/`, not as a sibling. The release folder is the unit of release-time freeze.
 
 ## Pairings
 
-- **`/plab-spec`** writes `spec.md` into `_unassigned/<id>_<slug>/` (or directly into `plan_vX.Y.Z/<id>_<slug>/` if `--target-release` is passed).
+- **`/plab-spec`** writes `spec.md` into `_unassigned/<id>_<slug>/` (or directly into `plan_NN_<slug>/<id>_<slug>/` if `--target-release` is passed).
 - **`/superpowers:writing-plans`** writes `implementation-plan.md` into the same per-effort folder as its spec.
 - **`/plab-release-plan --promote`** moves committed efforts from `_unassigned/` into the release. The promotion is the explicit commitment to ship.
 - **`/plab-release-plan --gate`** is the pre-tag sanity check.
@@ -160,7 +178,7 @@ Output: structured report; no file modification. An empty release is never READY
 
 | File | Purpose | Load when |
 |------|---------|-----------|
-| `references/plan-template.md` | Full output template for `plan_vX.Y.Z.md` (frontmatter + theme + aggregation + checklist + gates) | `--create` |
+| `references/plan-template.md` | Full output template for `plan.md` (frontmatter + theme + aggregation + checklist + gates) | `--create` |
 | `references/frontmatter-schema.md` | `type: release-plan` frontmatter fields, types, validation | `--create`, `--update` |
 | `references/aggregation-table.md` | The aggregation table format and what to read from each effort folder | `--update`, `--gate` |
 | `references/hygiene-gates.md` | The five default hygiene gates (a)-(e); how each is computed | `--gate` |

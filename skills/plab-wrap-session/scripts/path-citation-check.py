@@ -9,12 +9,12 @@ EXIT-CODE CONTRACT
   2  BROKEN   the detector could not prove itself, or the log could not be read
 
 NEVER INTERPRET 2 AS CLEAN. See the sibling `dash-check.py` docstring and
-`docs/internal/release-plans/plan_v0.4.0/D-11_three-state-gate-canaries/spec.md`.
+`docs/internal/release-plans/plan_04_gates-that-cannot-fail-open/D-11_three-state-gate-canaries/spec.md`.
 
 THE SUBJECT-MATCHING RULE
 -------------------------
 Only citations that assert a location are evaluated. The base rule comes from
-`docs/internal/release-plans/plan_v0.4.0/D-12_path-citation-precision/spec.md`:
+`docs/internal/release-plans/plan_04_gates-that-cannot-fail-open/D-12_path-citation-precision/spec.md`:
 
   (a) contains a path separator      -> must exist, flagged when missing
   (b) backtick-wrapped, no separator -> resolved against the repo root;

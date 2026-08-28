@@ -14,7 +14,7 @@ one week: a sweep written as a shell escape that expanded to a literal string,
 a replacement sweep in Perl that read undecoded bytes and could never match,
 and a path-existence gate that produced six false positives out of seven flags.
 All three reported success while being structurally incapable of detecting
-anything. See `docs/internal/release-plans/plan_v0.4.0/D-11_three-state-gate-canaries/spec.md`.
+anything. See `docs/internal/release-plans/plan_04_gates-that-cannot-fail-open/D-11_three-state-gate-canaries/spec.md`.
 
 WHY THE CANARY CORPUS IS BUILT WITH chr()
 -----------------------------------------

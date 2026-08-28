@@ -12,7 +12,7 @@ Gates (a) through (e) are about the **efforts** in the release: are their specs 
 
 **Computation.**
 ```
-for folder in plan_vX.Y.Z/<id>_<slug>/:
+for folder in plan_NN_<slug>/<id>_<slug>/:
     spec = read folder/spec.md
     if spec.frontmatter.status in (draft, superseded):
         FAIL with reason "S-07 spec status is draft (must be committed or fulfilled)"
@@ -28,7 +28,7 @@ for folder in plan_vX.Y.Z/<id>_<slug>/:
 
 **Computation.**
 ```
-for folder in plan_vX.Y.Z/<id>_<slug>/:
+for folder in plan_NN_<slug>/<id>_<slug>/:
     if not exists(folder/implementation-plan.md):
         if not (effort_id in gate-waivers with gate=b):
             FAIL with reason "S-07 has no implementation-plan.md (and not waived)"
@@ -44,7 +44,7 @@ for folder in plan_vX.Y.Z/<id>_<slug>/:
 
 **Computation.**
 ```
-for folder in plan_vX.Y.Z/<id>_<slug>/:
+for folder in plan_NN_<slug>/<id>_<slug>/:
     plan = read folder/implementation-plan.md (skip if absent; gate (b) handles that)
     if plan.frontmatter.ac-coverage != complete:
         FAIL with reason "S-07 implementation-plan ac-coverage is partial (gaps: AC-4, AC-8)"
@@ -60,7 +60,7 @@ If the plan has waived AC (rare; would be documented in the plan's body), the sp
 
 **Computation.**
 ```
-for folder in plan_vX.Y.Z/<id>_<slug>/:
+for folder in plan_NN_<slug>/<id>_<slug>/:
     plan = read folder/implementation-plan.md (skip if absent)
     parse the completion-status table (markdown table with columns: Phase, Goal, Fulfills AC, Owner, Status)
     if any row.Status != Done:
@@ -77,7 +77,7 @@ The completion-status table is the source of truth; the plan's frontmatter `stat
 
 **Computation.**
 ```
-for folder in plan_vX.Y.Z/<id>_<slug>/:
+for folder in plan_NN_<slug>/<id>_<slug>/:
     spec_mtime = mtime(folder/spec.md)
     plan_path = folder/implementation-plan.md
     if exists(plan_path):

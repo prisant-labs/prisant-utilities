@@ -6,7 +6,8 @@ The release plan's YAML frontmatter is the machine-readable contract that downst
 
 | Field | Type | Description | Example |
 |-------|------|-------------|---------|
-| `version` | string | Semver release version with `v` prefix | `v1.4.0` |
+| `sequence` | string | Two-digit release sequence, matches the folder name. Immutable once created | `05` |
+| `target-version` | string | Semver version this release is currently expected to ship as, with `v` prefix. **A prediction, not an identity**: edit it freely when the number changes, and never rename the folder to match | `v1.4.0` |
 | `title` | string | Convention: `"Release plan: vX.Y.Z"`. Quote it (colon). | `"Release plan: v1.4.0"` |
 | `type` | const | Always `release-plan` | `release-plan` |
 | `status` | enum | `draft`, `in-progress`, `released` | `draft` |
@@ -48,7 +49,9 @@ draft -> in-progress -> released
 
 ## Validation rules
 
-- `version` matches `^v\d+\.\d+\.\d+$` (semver with `v` prefix)
+- `sequence` matches `^\d{2}$` and equals the `NN` in the containing folder name
+- `target-version` matches `^v\d+\.\d+\.\d+$` (semver with `v` prefix)
+- No two release plans carry the same `target-version`
 - `type` is always `release-plan`
 - `status` must be one of the enum values
 - `spec-count` must equal the actual number of effort folders containing `spec.md`
@@ -61,7 +64,8 @@ draft -> in-progress -> released
 
 ```yaml
 ---
-version: v1.4.0
+sequence: 05
+target-version: v1.4.0
 title: "Release plan: v1.4.0"
 type: release-plan
 status: in-progress

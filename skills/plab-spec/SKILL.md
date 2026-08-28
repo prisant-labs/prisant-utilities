@@ -52,7 +52,7 @@ Use the todo tool to track these phases. Mark each as complete before proceeding
 | Input | Required | Default | Notes |
 |-------|----------|---------|-------|
 | `--effort <id-or-path>` | Yes | - | Effort id (e.g., `S-04`) or path to effort brief. Spec attaches to this effort |
-| `--target-release <vX.Y.Z>` | No | - | If set, write into `release-plans/plan_vX.Y.Z/<id>_<slug>/`; otherwise write into `release-plans/_unassigned/<id>_<slug>/`. The whole folder moves between the two via `/plab-release-plan --promote` |
+| `--target-release <vX.Y.Z>` | No | - | If set, write into `release-plans/plan_NN_<slug>/<id>_<slug>/`; otherwise write into `release-plans/_unassigned/<id>_<slug>/`. The whole folder moves between the two via `/plab-release-plan --promote` |
 | `--slug <text>` | No | derived from effort title | Slug for the per-effort folder name; auto-kebab-cased from the effort title if omitted |
 | `--from-brief <path>` | No | - | Seed AC + scope from an existing strategy-brief's Recommendation section |
 | `--out <path>` | No | (computed - see Output Contract) | Override the computed output path |
@@ -65,10 +65,10 @@ If `--effort` is missing or doesn't resolve, ask the user. Don't invent an effor
 
 A single markdown file `spec.md` inside a per-effort folder. Path depends on `--target-release`:
 
-- **`--target-release vX.Y.Z` passed:** `docs/internal/release-plans/plan_vX.Y.Z/<id>_<slug>/spec.md`
+- **`--target-release vX.Y.Z` passed:** `docs/internal/release-plans/plan_NN_<slug>/<id>_<slug>/spec.md`
 - **`--target-release` omitted (default):** `docs/internal/release-plans/_unassigned/<id>_<slug>/spec.md`
 
-The whole per-effort folder is the unit of release scoping (see `docs/internal/planning-artifact-model.md` D1). Move it between `_unassigned/` and `plan_vX.Y.Z/` via `/plab-release-plan --promote` / `--demote`.
+The whole per-effort folder is the unit of release scoping (see `docs/internal/planning-artifact-model.md` D1). Move it between `_unassigned/` and `plan_NN_<slug>/` via `/plab-release-plan --promote` / `--demote`.
 
 > **Legacy v1.0.0 path:** spec used to write to `docs/internal/efforts/<id>/<id>_spec.md`. Specs written by v1.0.0 are not migrated automatically; v1.1.0 only governs new specs. The legacy path is documented in `docs/internal/planning-artifact-model.md` D1 implementation notes.
 
@@ -105,7 +105,7 @@ Every section is mandatory. Empty sections include a one-line "N/A - <reason>" r
 
 1. Resolve `--effort` to an effort id and brief path. If unresolved: ask user.
 2. Read the effort brief; extract title, type, status. Derive slug from the title (kebab-cased) unless `--slug` is passed.
-3. Determine output path: if `--target-release vX.Y.Z` is set, target `release-plans/plan_vX.Y.Z/<id>_<slug>/spec.md`; otherwise target `release-plans/_unassigned/<id>_<slug>/spec.md`. If the release folder doesn't exist yet, prompt the user before creating it (a release plan should usually be scaffolded by `/plab-release-plan --create` first).
+3. Determine output path: if `--target-release vX.Y.Z` is set, target `release-plans/plan_NN_<slug>/<id>_<slug>/spec.md`; otherwise target `release-plans/_unassigned/<id>_<slug>/spec.md`. If the release folder doesn't exist yet, prompt the user before creating it (a release plan should usually be scaffolded by `/plab-release-plan --create` first).
 4. Size check: estimate AC count from the brief.
    - **AC ≤ 1**: confirm spec is warranted; offer inline-in-effort instead.
    - **AC > 10 OR spans multiple actor types**: warn - likely should be split into multiple specs. Ask user before proceeding.

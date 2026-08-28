@@ -120,6 +120,6 @@ project-root/
 - `DESIGN.md` follows the Google Stitch format. Optional - delete if project has no UI surface.
 - Project type additions (src/, tests/, etc.) layer on top - see `project-types.md`.
 - **Decisions location:** `docs/internal/decisions/` - NOT `docs/decisions/` and NOT per-agent `DECISIONS.md`. The seeded `README.md` there explains the contract to any agent.
-- **Release plans:** `docs/internal/release-plans/` follows the planning-artifact-model. Specs and implementation plans live inside per-effort folders at `release-plans/{plan_vX.Y.Z,_unassigned}/<id>_<slug>/`. The `_unassigned/` subdir is created at init time as the default home for pre-release work.
+- **Release plans:** `docs/internal/release-plans/` follows the planning-artifact-model. Specs and implementation plans live inside per-effort folders at `release-plans/{plan_NN_<slug>,_unassigned}/<id>_<slug>/`. The `_unassigned/` subdir is created at init time as the default home for pre-release work.
 - **`_local/`:** Always created, always gitignored. Use for per-machine scratch (notes, drafts, experimental outputs, init-project's own dry-run and onboarding reports, session logs at `_local/_session-logs/`).
 - **No per-agent subfolders** (v1.1.x had `AGENTS/<agent>/CONTEXT.md` and `AGENTS/<agent>/TODO.md` per agent). v1.2.0 dropped these because per-agent context duplicates what `AGENTS.md` + `CLAUDE.md` already cover.

@@ -10,7 +10,7 @@ instead. Nothing here has shipped; this is the plan.
 
 | Question | Read |
 |---|---|
-| What is coming next, and why? | `plan_v0.4.0/plan_v0.4.0.md`, then each later release plan in order |
+| What is coming next, and why? | `plan_04_gates-that-cannot-fail-open/plan.md`, then each later release plan in order |
 | What exactly will change, and how will we know it worked? | The `spec.md` inside any effort folder |
 | How will it actually get built? | The `implementation-plan.md` beside that spec |
 | Can this release be tagged yet? | The Hygiene Gates table in the release plan |
@@ -22,13 +22,13 @@ instead. Nothing here has shipped; this is the plan.
 docs/internal/release-plans/
     README.md                      this file
     release-checklist.yaml         project-specific doc-update rows, merged with the built-in defaults
-    plan_v0.4.0/
-        plan_v0.4.0.md             the release plan: theme, aggregation, gates, checklist, decisions
+    plan_04_gates-that-cannot-fail-open/
+        plan.md             the release plan: theme, aggregation, gates, checklist, decisions
         D-07_waiting-on-blocker-contract/
             spec.md                WHAT will change, and the acceptance criteria that define done
             implementation-plan.md HOW it gets built, in phases, with verification per phase
         ...one folder per effort in the release
-    plan_v0.5.0/
+    plan_05_reconcile-at-resume/
     ...
 ```
 
@@ -40,7 +40,7 @@ together, so scope changes never separate a contract from the work that fulfills
 
 They answer different questions and must not absorb each other.
 
-- **Release plan** (`plan_vX.Y.Z.md`) aggregates. It says what is in scope, whether the release can
+- **Release plan** (`plan.md`) aggregates. It says what is in scope, whether the release can
   ship, and what documentation the tag depends on. It never contains acceptance criteria: those live
   in specs, and duplicating them here would create two versions that drift.
 - **Spec** (`spec.md`) is the contract. Purpose, scope, non-goals, requirements, and numbered
