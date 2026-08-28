@@ -2,7 +2,32 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
+| 1.4.0 | 2026-08-27 | unreleased | changed | Removed `disable-model-invocation`. The skill is auto-discoverable; a do-NOT-fire clause in the description replaces the binary gate. |
 | 1.3.0 | 2026-08-24 | v0.3.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.3.0; prior history remains there. |
+
+
+## 1.4.0 - 2026-08-27
+
+**`disable-model-invocation` removed. This is a behavior change.**
+
+The flag was set because "plan the release" is a common phrase. That remains true, and it is now
+handled in the description rather than by a gate: explicit triggers ("create the release plan",
+"promote these efforts into v0.5.0", "can we tag yet", "check release readiness") paired with an
+explicit do-NOT-fire clause for general planning talk, release-notes or changelog requests, and
+questions about what already shipped. Those three are the realistic false positives, and naming them
+is something a boolean cannot do.
+
+**Why now.** The flag was refusing approved invocations. It also meant the skill had never run in
+this repository, so its own hygiene gates and doc-update checklist have never been exercised against
+a real release, which is a worse state than an occasional misfire.
+
+**What did not change.** `/plab-release-plan` with a subcommand still works. The five subcommands,
+the six hygiene gates, the generated aggregation table, and the refusal to invent or modify
+acceptance criteria are untouched.
+
+**Note on `--gate`.** It is read-only and reports readiness. A misfire on `--gate` costs a report
+nobody asked for. A misfire on `--create` or `--promote` would move folders, so those remain the ones
+worth watching if the description turns out to be too broad.
 
 ## 1.3.0 - 2026-08-24
 

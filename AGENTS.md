@@ -6,7 +6,9 @@ Agent navigation entrypoint for the `prisant-utilities` plugin.
 
 Eight general-purpose agent skills for the work around the work: scaffolding a repository for agent-assisted development, closing and resuming coding sessions, turning raw thinking into a decision-ready brief, producing guide bundles, getting a second model to review a document, and carrying a feature from written specification through to a taggable release plan.
 
-Three of the eight ship with `disable-model-invocation: true` and run only when invoked by name: `plab-spec`, `plab-release-plan`, and `plab-init-project`. They are deliberate, low-frequency tools whose trigger phrases ("spec", "init", "plan the release") are too common in ordinary conversation to be safe auto-matches.
+One of the eight ships with `disable-model-invocation: true` and runs only when invoked by name: `plab-init-project`. It scaffolds files into a repository root, its trigger phrases ("init", "initialize", "set up") are among the most common words in ordinary conversation, and it is run once per repository rather than routinely.
+
+`plab-spec` and `plab-release-plan` carried the same flag through v0.4.3 and no longer do. Their descriptions now carry explicit do-NOT-fire clauses instead, which is the mechanism that took `plab-continue-session` from over-triggering to correct: a narrowed description is a better instrument than a binary gate, because it can distinguish a request from a mention.
 
 ## Design frame
 
@@ -74,7 +76,7 @@ Generate and synthesise structured peer reviews across models. Three modes: `--r
 
 Create a feature specification: the contract between intent and implementation. Writes a `spec.md` into a per-effort folder under `docs/internal/release-plans/`, carrying frontmatter, an agent-updated Task Summary block, numbered acceptance criteria each cited to a source, and links to the related effort and plan. Lands in `_unassigned/` by default, or straight into a release folder with `--target-release vX.Y.Z`. Defines WHAT to build; `/superpowers:writing-plans` defines HOW and `/plab-strategy-brief` explores WHY. Refuses to write implementation steps.
 
-**Invocation:** manual only (`disable-model-invocation: true`). `/plab-spec` and nothing else.
+**Invocation:** auto-discoverable as of 1.3.0. Fires on an explicit request to write a spec or turn requirements into acceptance criteria. Its description carries a do-NOT-fire clause for passing mentions of the word "spec", questions about an existing spec, and requests to implement one.
 
 ---
 
@@ -82,7 +84,7 @@ Create a feature specification: the contract between intent and implementation. 
 
 Aggregate every spec and implementation plan in scope of a release into one self-contained folder, and gate the tag on hygiene checks plus a doc-update checklist. Five subcommands: `--create` scaffolds the release folder and plan document, `--promote` and `--demote` move whole per-effort folders between `_unassigned/` and a release, `--update` regenerates the aggregation table from disk, `--gate` reports readiness read-only. The aggregation table is generated, never hand-edited. Refuses to add or modify acceptance criteria; those live in specs.
 
-**Invocation:** manual only (`disable-model-invocation: true`). `/plab-release-plan` with a subcommand.
+**Invocation:** auto-discoverable as of 1.4.0. Fires on release scoping, promoting or demoting efforts, and release-readiness checks. Its description carries a do-NOT-fire clause for general planning talk, release-notes or changelog requests, and questions about what already shipped.
 
 ---
 

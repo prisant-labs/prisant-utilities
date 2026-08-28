@@ -5,6 +5,31 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- **`plab-spec` (1.3.0) and `plab-release-plan` (1.4.0) no longer carry `disable-model-invocation`.**
+  Both are now auto-discoverable. Their descriptions carry explicit trigger phrases and explicit
+  do-NOT-fire clauses in place of the binary gate, which is the mechanism that took
+  `plab-continue-session` from over-triggering to firing correctly. A description can distinguish a
+  request from a passing mention; a boolean cannot.
+
+  The flag had a measured cost: an approved invocation was refused twice in one session, and because
+  neither skill had ever run in this repository, the misfire risk the flag guarded against was never
+  actually observed. `plab-spec` 1.2.1's stated rationale also did not survive inspection: it cited
+  superpowers owning the spec-writing triggers, but the installed superpowers plugin ships seventeen
+  skills and none of them is a spec skill.
+
+  **`plab-init-project` keeps its flag.** It writes into a repository root and its triggers ("init",
+  "set up") are genuinely ambiguous.
+
+  Typing `/plab-spec` or `/plab-release-plan` still works and is still the precise way to invoke
+  either. No skill body, subcommand, gate, or contract changed.
+
+  Always-on description cost rises by roughly 380 tokens per session, the price of two descriptions
+  that were previously not loaded.
+
 ## [0.4.3] - 2026-08-26
 
 ### Changed

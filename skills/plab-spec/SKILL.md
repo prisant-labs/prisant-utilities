@@ -1,19 +1,19 @@
 ---
 name: plab-spec
-description: "Create a feature specification document optimized for agent execution. Produces a
-  spec.md inside a per-effort folder under docs/internal/release-plans/, carrying frontmatter, an
-  agent-updated Task Summary block at the top, numbered acceptance criteria with source citations,
-  and links to the related effort and plan. Writes into _unassigned/ by default; pass
-  --target-release vX.Y.Z to write straight into a release folder. Use when the problem space is
-  already explored and the requirements need a durable home that survives rewrites of the plan
-  beneath them. Explicit invocation only: run /plab-spec; it does not fire on its own. Defines WHAT
-  to build; /superpowers:writing-plans defines HOW and /plab-strategy-brief explores WHY."
+description: "Write a feature specification with numbered, source-cited acceptance criteria into a
+  per-effort folder under docs/internal/release-plans/. Produces a spec.md carrying frontmatter, an
+  agent-updated Task Summary block, and links to the related effort and plan. Writes into
+  _unassigned/ by default; pass --target-release vX.Y.Z to write straight into a release folder.
+  Use when the problem space is already explored and the requirements need a durable home that
+  survives rewrites of the plan beneath them: 'write the spec', 'spec this effort', 'turn this into
+  acceptance criteria'. Do NOT fire on a passing mention of the word spec, on questions about an
+  existing spec, or on a request to implement one. Defines WHAT to build; /superpowers:writing-plans
+  defines HOW and /plab-strategy-brief explores WHY."
 argument-hint: "--effort <id-or-path> [--from-brief <path>] [--target-release vX.Y.Z] [--slug <slug>] [--out <path>] [--revise] [--dry-run]"
-disable-model-invocation: true
 license: MIT
 metadata:
-  version: "1.2.1"
-  updated: 2026-08-24
+  version: "1.3.0"
+  updated: 2026-08-27
 ---
 
 # Create Spec

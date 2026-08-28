@@ -54,9 +54,11 @@ Or symlink into a project:
 ln -s /path/to/prisant-utilities/skills/plab-release-plan .claude/skills/plab-release-plan
 ```
 
-### Invocation is manual only
+### Invocation
 
-This skill ships with `disable-model-invocation: true`. It never fires on its own. Type `/plab-release-plan` followed by a subcommand.
+**Auto-discoverable as of 1.4.0.** Through 1.3.0 this skill shipped with `disable-model-invocation: true` and ran only when typed. That flag is gone. It now fires on release scoping, promoting or demoting efforts, and release-readiness checks, and its description carries a do-NOT-fire clause for general planning talk, release-notes or changelog requests, and questions about what already shipped.
+
+Typing `/plab-release-plan` with a subcommand still works and is still the precise way to run it.
 
 Cutting a release is a deliberate act performed on a handful of days. A skill that reshapes release folders should not be reachable by an ambiguous phrase match mid-conversation.
 

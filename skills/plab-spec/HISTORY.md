@@ -2,7 +2,43 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
+| 1.3.0 | 2026-08-27 | unreleased | changed | Removed `disable-model-invocation`. The skill is auto-discoverable; a do-NOT-fire clause in the description replaces the binary gate. |
 | 1.2.1 | 2026-08-24 | v0.3.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.2.1; prior history remains there. |
+
+
+## 1.3.0 - 2026-08-27
+
+**`disable-model-invocation` removed. This is a behavior change and it reverses a decision made at
+1.2.1.**
+
+The 1.2.1 entry below justified the flag on the grounds that "superpowers owns the default
+spec-writing triggers on the maintainer's machine, and a second skill competing for the same phrases
+would fire unpredictably." **That justification does not survive inspection.** The installed
+superpowers plugin ships seventeen skills and none of them is a spec skill; "Spec" is a phase inside
+`brainstorming`, not a separate trigger surface. The real overlap is with `brainstorming` alone, and
+it is narrower than the original reasoning assumed.
+
+**What replaces the flag.** The description now carries explicit trigger phrases ("write the spec",
+"spec this effort", "turn this into acceptance criteria") and an explicit do-NOT-fire clause naming
+the three ways the word "spec" appears without being a request: a passing mention, a question about
+an existing spec, and a request to implement one. This is the instrument that took
+`plab-continue-session` from over-triggering to firing correctly, and it is strictly more
+expressive than a boolean, because it can distinguish a request from a mention where a flag cannot.
+
+**Why the change was made.** The flag has a measured cost. On 2026-08-27 an agent was asked to run
+this skill, the action was approved by the maintainer, and the invocation was still refused, twice
+in one session. A guard that blocks an approved action is paying a real price to prevent a
+hypothetical one. The skill had also never run in this repository, so the misfire risk the flag
+guarded against was never observed.
+
+**What did not change.** Typing `/plab-spec` still works and is still the precise way to invoke it.
+The skill body, the eleven mandatory sections, the frontmatter contract, and the refusal to invent
+acceptance criteria are all untouched. `plab-init-project` keeps its flag: it writes into a
+repository root and its triggers ("init", "set up") are genuinely ambiguous.
+
+**The honest risk.** This is a bet that a narrowed description fires correctly, and it is not yet
+tested. If `plab-spec` starts firing on conversation about specs rather than requests to write one,
+narrow the description further; do not restore the flag without first trying that.
 
 ## 1.2.1 - 2026-08-24
 

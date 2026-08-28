@@ -1,19 +1,18 @@
 ---
 name: plab-release-plan
-description: "Manage a version-scoped release plan. Creates the release folder with the plan
-  document inside; promotes per-effort folders (spec + implementation plan + supporting) from
-  _unassigned/ into the release; auto-generates an aggregation table from the folder contents;
-  enforces hygiene gates and a doc-update checklist that gates the tag. Use when scoping a release,
-  moving efforts in or out of one, or checking whether a version can be tagged yet. Explicit
-  invocation only: run /plab-release-plan with one of five subcommands - --create, --promote,
-  --demote, --update, --gate; it does not fire on its own. Refuses to invent or modify acceptance
-  criteria - AC live in specs written by /plab-spec; the release plan only aggregates."
+description: "Create and manage a version-scoped release plan folder: scaffold it, promote or demote
+  whole effort folders between _unassigned/ and a release, regenerate the aggregation table from
+  disk, and report whether a version can be tagged yet against hygiene gates and a doc-update
+  checklist. Use when scoping a release, moving efforts in or out of one, or checking release
+  readiness: 'create the release plan', 'promote these efforts into v0.5.0', 'can we tag yet',
+  'check release readiness'. Do NOT fire on general planning talk, on requests for release notes or
+  a changelog, or on questions about what already shipped. Refuses to invent or modify acceptance
+  criteria - those live in specs written by /plab-spec; the release plan only aggregates."
 argument-hint: "--create vX.Y.Z [--theme <text>] | --promote --from _unassigned --to vX.Y.Z S-NN ... | --demote --from vX.Y.Z [--to _unassigned] S-NN | --update vX.Y.Z | --gate vX.Y.Z"
-disable-model-invocation: true
 license: MIT
 metadata:
-  version: "1.3.0"
-  updated: 2026-08-24
+  version: "1.4.0"
+  updated: 2026-08-27
 ---
 
 # Release Plan
