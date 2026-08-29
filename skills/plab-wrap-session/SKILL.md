@@ -12,8 +12,8 @@ description: "Document and close agentic coding sessions with structured session
 argument-hint: "[mode: quick|final|deep|blocked] [--organize]"
 license: MIT
 metadata:
-  version: "1.6.1"
-  updated: 2026-08-25
+  version: "1.6.2"
+  updated: 2026-08-28
 ---
 
 # Wrap Session

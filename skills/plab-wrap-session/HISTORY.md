@@ -2,11 +2,24 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
+| 1.6.2 | 2026-08-28 | v0.5.2 | fixed | Path-citation gate: three false-positive classes removed, a line-anchor shape brought into scope, and the proof corpus grown from 11 entries to 40. |
 | 1.6.1 | 2026-08-25 | v0.4.1 | fixed | Session-log body prose is not hard-wrapped. CI pin moved to the toolkit release that fixed the Action. |
 | 1.6.0 | 2026-08-25 | v0.4.0 | fixed | Detector gates that could not fail open, plus the log-format and hygiene fixes batched with them. |
 | 1.5.0 | 2026-08-18 | v0.2.0 | added | `--organize` files old logs into `YYYY-MM/` folders. Hygiene sweep gained Check 5. |
 | 1.4.1 | 2026-08-18 | v0.1.2 | fixed | Dropped the "what did we do" trigger. Added `type:` to the frontmatter block and `machine:` to the Quick and Blocked templates. |
 | 1.4.0 | 2026-08-14 | v0.1.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.4.0; prior history remains there. |
+
+## 1.6.2 - 2026-08-28
+
+**Fixed: three false-positive classes in the path-citation gate.** The gate fired on things that make no claim about where a file lives, and a gate that cries wolf trains you to skim its output, which is how a real finding gets missed. All three were confirmed by reproduction before being fixed, not taken on report.
+
+A leading dot was stripped from bare tokens, so `.github/workflows/gate.yml` was evaluated as `github/workflows/gate.yml` and could never resolve. The backticked form of the same path was unaffected, which is what localized the bug. A trailing possessive survived the punctuation strip, because the `s` in `check-dashes.py's` blocked the apostrophe from coming off. And a version-numbered branch name such as `fix/v0.4.3-marketplace-rename` read as a path claim, because the check for "does this basename have a file extension" was a test for a dot, and a version number supplies one. The dot-free branch names in the same list always passed, which is the control that proves the fix had to target the version shape specifically rather than anything containing a slash.
+
+**Fixed: line-anchored citations are in scope again.** The narrowing above initially removed `path/file.md:42` from checking altogether, because `md:42` is not extension-shaped. That was a regression: a citation to a file that does not exist stopped being reported. A trailing `:42` or `:42-50` anchor is now stripped before the path-claim decision and before resolution, which is strictly better than either earlier behavior: the missing file is caught again, and `AGENTS.md:42` on a file that does exist no longer produces a false positive the way it used to. A possessive stacked on an anchor is handled by running both strips to a fixed point.
+
+**The proof corpus grew from 11 entries to 40**, from 1 canary and 10 anti-canaries to 12 and 28. Every rule the fixes introduced is paired with a canary proving the citation is still in scope and an anti-canary proving the false positive is gone. That pairing is the point: an anti-canary alone can be satisfied by accidentally excluding a whole shape from checking, which is precisely how the line-anchor blind spot was created in the first place. Each new canary was verified to fail when the rule it guards is removed.
+
+Read against a real session log, the gate now reports 9 findings where it reported 13, and all 9 are genuine.
 
 ## 1.6.1 - 2026-08-25
 

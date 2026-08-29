@@ -73,3 +73,42 @@ jobs:
 
       - name: Run the dash check
         run: python3 scripts/check-dashes.py
+
+  document-gates:
+    name: "Document lifecycle (schema, cross-file, index freshness)"
+    runs-on: ubuntu-latest
+    steps:
+      # fetch-depth: 0 is load-bearing, not a default worth trimming. The
+      # cross-file gate's released-but-unfulfilled invariant compares each
+      # spec's target-release against `git tag -l`. A default checkout fetches
+      # NO tags, so that invariant would have nothing to compare against and
+      # would pass vacuously on every run while looking healthy. The gate now
+      # refuses to run at all against an empty tag list, so a shallow checkout
+      # here fails loudly rather than silently certifying a tree it never
+      # checked. Adversarial review found exactly this, with the maintainer's
+      # own historical defect seeded and the gate still reporting CLEAN.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      # Each step runs even when an earlier one fails, so one pull request
+      # surfaces every document problem at once instead of one per push. Any
+      # failing step still fails the job. Exit 1 means findings to fix; exit 2
+      # means the detector could not prove itself and its silence means nothing.
+      - name: Frontmatter conforms to the committed JSON Schemas
+        id: frontmatter
+        run: python3 scripts/frontmatter-check.py
+
+      - name: Cross-file lifecycle invariants
+        id: lifecycle
+        if: always()
+        run: python3 scripts/doc-lifecycle-check.py
+
+      - name: The generated cross-release index is current
+        id: index
+        if: always()
+        run: python3 scripts/gen-release-index.py --check
