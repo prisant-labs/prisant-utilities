@@ -2,7 +2,7 @@
 
 The current configuration of every skill in `prisant-utilities`, as declared in the repository. One row per skill, plus the setup each one needs and where its output lands.
 
-**Plugin version:** 0.5.1 **Skills:** 8 (7 auto-discoverable, 1 explicit-invocation only) **Verified against:** `library.json`, `manifest.generated.json`, and each `skills/*/SKILL.md` **As of:** 2026-08-27
+**Plugin version:** 0.5.2 **Skills:** 8 (7 auto-discoverable, 1 explicit-invocation only) **Verified against:** `library.json`, `manifest.generated.json`, and each `skills/*/SKILL.md` **As of:** 2026-08-28
 
 > This file describes what the repository declares, not what is installed on any given machine. To check a local install, read `~/.claude/plugins/installed_plugins.json`.
 
@@ -17,9 +17,9 @@ The current configuration of every skill in `prisant-utilities`, as declared in 
 | `plab-guide` | 2.2.2 | Auto + explicit | `<topic-or-repo-url> [--type repo-url\|tool\|concept] [--out <dir>] [--force]` | `_output/plab-guide/` |
 | `plab-init-project` | 1.3.0 | **Explicit only** | `[--profile minimal\|standard\|public] [--type ...] [--agents ...] [--dry-run]` | The target repository root |
 | `plab-release-plan` | 1.5.0 | Auto + explicit | `--create \| --promote \| --demote \| --update \| --gate` | `docs/internal/release-plans/plan_NN_<slug>/` |
-| `plab-spec` | 1.3.1 | Auto + explicit | `--effort <id> [--target-release vX.Y.Z] [--revise] [--dry-run]` | `docs/internal/release-plans/_unassigned/` by default |
+| `plab-spec` | 1.3.2 | Auto + explicit | `--effort <id> [--target-release vX.Y.Z] [--revise] [--dry-run]` | `docs/internal/release-plans/_unassigned/` by default |
 | `plab-strategy-brief` | 1.1.1 | Auto + explicit | `[paste raw thinking]` | `_output/plab-strategy-brief/` |
-| `plab-wrap-session` | 1.6.1 | Auto + explicit | `[mode: quick\|final\|deep\|blocked] [--organize]` | `_local/_session-logs/` (gitignored) |
+| `plab-wrap-session` | 1.6.2 | Auto + explicit | `[mode: quick\|final\|deep\|blocked] [--organize]` | `_local/_session-logs/` (gitignored) |
 
 **Explicit only** means the skill carries `disable-model-invocation: true`. It never fires on its own and is absent from the auto-loaded skill listing. It runs when you type its name and only then. **Only `plab-init-project` carries it now.** `plab-spec` and `plab-release-plan` carried it through 1.2.1 and 1.3.0 respectively; both are now auto-discoverable, using explicit do-NOT-fire clauses in their descriptions instead of the binary flag.
 
@@ -27,7 +27,7 @@ The current configuration of every skill in `prisant-utilities`, as declared in 
 
 ## Per-skill detail
 
-### `plab-wrap-session` 1.6.1
+### `plab-wrap-session` 1.6.2
 
 The most-used skill in the plugin. Writes a structured session log and hands off to `plab-continue-session`.
 
@@ -104,7 +104,7 @@ Turns raw, unstructured thinking into a decision-ready analysis document.
 
 Explicitly not for summarizing already-structured documents, editing polished prose, or pure research queries with no raw thinking supplied.
 
-### `plab-spec` 1.3.1
+### `plab-spec` 1.3.2
 
 Writes a feature specification optimized for agent execution.
 

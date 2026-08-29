@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "required": [
+    "id",
+    "title",
+    "type",
+    "status",
+    "created",
+    "updated",
+    "linked-effort",
+    "ac-count"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Z]{1,2}-\\d{2,4}$"
+    },
+    "title": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["spec"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "committed", "fulfilled", "superseded"]
+    },
+    "created": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "updated": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "linked-effort": {
+      "type": "string"
+    },
+    "linked-plan": {
+      "type": ["string", "null"]
+    },
+    "linked-release": {
+      "type": ["string", "null"]
+    },
+    "ac-count": {
+      "type": "integer"
+    },
+    "source-count": {
+      "type": "integer"
+    },
+    "requires-human-review": {
+      "type": "boolean"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["P1", "P2", "P3"]
+    },
+    "target-release": {
+      "type": ["string", "null"],
+      "pattern": "^v\\d+\\.\\d+\\.\\d+$"
+    },
+    "gh-issue": {
+      "type": "integer"
+    },
+    "spec-dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "linked-strategy-brief": {
+      "type": "string"
+    },
+    "superseded-by": {
+      "type": "string"
+    },
+    "supersedes": {
+      "type": "string"
+    }
+  }
+}

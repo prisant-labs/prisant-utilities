@@ -6,10 +6,17 @@ EXIT-CODE CONTRACT
 ------------------
   0  CLEAN    self-test passed AND every in-scope citation resolves
   1  FINDINGS self-test passed AND at least one in-scope citation is missing
-  2  BROKEN   the detector could not prove itself, or the log could not be read
+  2  BROKEN   the detector could not prove itself, or the log could not be
+              read, or anything else unanticipated went wrong
 
 NEVER INTERPRET 2 AS CLEAN. See the sibling `dash-check.py` docstring and
 `docs/internal/release-plans/plan_04_gates-that-cannot-fail-open/D-11_three-state-gate-canaries/spec.md`.
+
+Exit 1 means, and only means, that the detector ran to completion and proved
+a real problem. Any exception this module did not anticipate is caught at
+the top level (see the `__main__` guard at the bottom of this file) and
+reported as BROKEN with exit 2, never allowed to fall through to Python's
+default uncaught-exception exit status.
 
 THE SUBJECT-MATCHING RULE
 -------------------------
@@ -23,6 +30,14 @@ Only citations that assert a location are evaluated. The base rule comes from
 
 Branch (b) can never produce a finding by design. Naming a file is not the
 same as claiming where it lives.
+
+A citation is normalized before branch (a)/(b)/(c) is decided and before
+resolution is attempted: a trailing line anchor (`:42`, `:42-50`) is
+stripped, a leading elision of three or more dots is stripped, surrounding
+sentence punctuation is stripped, and a trailing possessive (`'s` or the
+typographic right single quote plus `s`) is stripped. What is being decided
+is always "what file does this text name", not "what does this text look
+like verbatim in the log".
 
 WHY BRANCH (a) NEEDED NARROWING AGAIN (spec Revision 2, 2026-08-25)
 -------------------------------------------------------------------
@@ -46,6 +61,122 @@ rate than the gate it replaces.
 with no per-citation judgment. See D-12 spec Revisions for the superseded
 criterion and the maintainer decision authorising this.
 
+WHY THE MATCHER NEEDED THREE MORE FIXES (BUG-2, 2026-08-28)
+-------------------------------------------------------------
+Three false positives survived the D-12 narrowing, each caught by running
+this gate against a real session log and reading every flag by hand:
+
+  1. Leading dot stripped. `tok.strip(STRIP_CHARS)` strips from both ends,
+     and STRIP_CHARS contains ".". A bare citation to a dotfile directory
+     such as `.github/workflows/gate.yml` had its leading dot removed before
+     resolution was even attempted, so a real path was flagged as missing.
+     A leading dot is load-bearing (dotfiles, dotdirs); a trailing dot is
+     almost always sentence punctuation. The fix strips those two ends with
+     different character sets instead of one shared one.
+
+  2. Version-numbered branch names read as file paths. The extension test
+     was "does the basename contain a dot", which a version number also
+     satisfies: `fix/v0.4.3-marketplace-rename` has a dot-bearing basename
+     with no file extension anywhere in it. The fix adds a second, narrower
+     positive test (does the text after the final dot look like a short
+     alphanumeric extension) and a shape-based negative test for a
+     version-number basename, so a real extension still qualifies while a
+     branch name that merely contains dots does not.
+
+  3. Possessives not stripped. STRIP_CHARS strips a trailing apostrophe, but
+     the plain "s" that follows a possessive is not punctuation, so it
+     blocked the strip and `scripts/check-dashes.py's` never resolved. The
+     fix strips a trailing `'s` (ASCII or the typographic right single
+     quote) as its own step before the general punctuation strip runs.
+
+WHY THE MATCHER NEEDED REPAIR AGAIN THE SAME DAY (defects A through F,
+2026-08-28, second pass)
+-----------------------------------------------------------------------
+The BUG-2 fixes above were themselves reviewed against a real session log
+and found to have introduced one regression and left several rules with no
+canary coverage at all, meaning any of them could be silently deleted or
+weakened while the self-test still printed PASS.
+
+  A. Regression. BUG-2 fix 2's extension test rejected anything after the
+     final dot that was not a short alphanumeric run, which also rejects a
+     line-number anchor: `path/file.md:42` has "md:42" after the final dot,
+     not "md", so it silently left the D-12 rule's scope and a genuinely
+     missing citation of that exact shape stopped being flagged. The fix is
+     `strip_line_anchor()`: a trailing `:N` or `:N-M` is removed from the
+     citation before the path-claim decision and before resolution, so
+     `file.md:42` and `file.md:42-50` both reduce to `file.md`. A line
+     anchor requires a digit immediately after the colon; a Windows drive
+     letter's colon is always followed by `\\` or `/`, so the two shapes
+     cannot be confused by this rule.
+
+  B. The extension test from BUG-2 fix 2 had no canary that would fail if
+     the test were deleted or neutered: every existing MUST_NOT_MATCH
+     canary that exercised it had a fallback reason to be excluded (no
+     separator, a real extension) even with the test gone. New MUST_NOT_MATCH
+     canaries below use a genuinely missing path whose trailing dot-segment
+     is extension-shaped only if the test is doing its job (too long, or
+     containing a character the test rejects), so removing the test flips
+     them from correctly-ignored to incorrectly-flagged.
+
+  C. The typographic right single quote half of the possessive fix, and the
+     ordering that lets a possessive still be found under trailing sentence
+     punctuation (`SKILL.md's,`), had no canary in either direction.
+
+  D. The version-number exclusion only recognised a hyphenated qualifier
+     made of letters and digits (`-rc1`, `-codeql-v4`). A release-candidate
+     qualifier that instead uses a dot (`v0.5.1-rc.2`) or is glued on
+     without a hyphen (`v0.5.1rc1`) fell through to the extension test,
+     which read the digit after the final dot as a one-character extension
+     and produced exactly the false positive BUG-2 fix 2 was meant to kill.
+     The version-shape regex now accepts both qualifier forms.
+
+  E. A leading elision of three or more dots (`...skills/plab-guide/SKILL.md`,
+     a reader's convention for "some path above here") was not being
+     stripped, so the literal three-dot directory it named was checked for
+     existence and never found. `./` and `../` are real relative-path
+     prefixes and must never be touched; only a run of three or more
+     leading dots is elision. `strip_ellipsis_prefix()` implements exactly
+     that boundary and only that boundary.
+
+  F. A non-UTF-8 byte, or a byte sequence a UTF-8 decoder rejects, in the
+     log crashed with an uncaught UnicodeDecodeError, which Python turns
+     into exit code 1, indistinguishable from FINDINGS. The general rule
+     applies: unanticipated exceptions must exit 2, never 1. The log is
+     now opened with the utf-8-sig codec (so a UTF-8 byte-order mark scans
+     cleanly instead of attaching itself to the first token) and both the
+     open and the read are wrapped to catch UnicodeDecodeError alongside
+     OSError; the top-level `__main__` guard is the backstop for anything
+     still unanticipated.
+
+Each fix, old and new, is mechanical and each has a paired canary and
+anti-canary below: one proving the false positive is gone or never existed,
+one proving the citation shape is still evaluated and would be flagged if it
+were genuinely missing. An anti-canary alone can be satisfied by silently
+excluding a whole citation shape from checking, which is a blind spot, not a
+fix, which is why every rule in this file has both.
+
+CITATION SHAPES: WHAT IS IN SCOPE AND WHAT IS DELIBERATELY OUT
+----------------------------------------------------------------
+In scope, and therefore flagged when the named file does not exist: a
+citation carrying a path separator, or ending in `/` or `\\`, once normalized
+(sentence punctuation trimmed, a trailing possessive removed, a trailing
+line anchor removed, a leading three-or-more-dot elision removed), whose
+basename either ends in `/` or `\\` (a directory claim) or has a final
+dot-segment that looks like a real file extension: one to ten alphanumeric
+characters, no hyphens, no embedded dots.
+
+Out of scope, and therefore never flagged even when nothing resolves: a URI
+with a scheme (`https://...`), a Windows absolute path (`C:\\...`), a glob
+(`docs/skills/*/README.md`), a template placeholder (`_inbox/<skill>.md`), a
+one-segment slash command (`/plab-wrap-session`), a basename shaped like a
+version number with an optional hyphenated-and-or-dotted or glued-on
+qualifier (`v0.4.3`, `v0.4.2-codeql-v4`, `v0.5.1-rc.2`, `v0.5.1rc1`), a
+basename whose final dot-segment does not look like a real extension (too
+long, contains a hyphen, or otherwise fails the extension shape test), and
+any token that never carried a path separator to begin with (backtick-
+wrapped or not: prose that merely names a bare filename never enters branch
+(a); a bare filename with a separator prefix does).
+
 --repo-root IS THE PROJECT BEING WRAPPED
 ----------------------------------------
 Not this skill's installed location. Same contract as `organize-logs.py`'s
@@ -67,16 +198,57 @@ BACKTICK_SPAN = re.compile(r"`([^`\n]+)`")
 URI_SCHEME = re.compile(r"^[a-zA-Z][a-zA-Z0-9+.]*://")
 WINDOWS_ABS = re.compile(r"^[A-Za-z]:[\\/]")
 STRIP_CHARS = ".,;:!?()[]{}\"'<>"
+# Leading punctuation is stripped with everything except ".": a leading dot
+# is load-bearing on a dotfile or dotdir citation (.github/, .gitignore).
+LEADING_STRIP_CHARS = STRIP_CHARS.replace(".", "")
+# A trailing possessive is not part of the path. STRIP_CHARS alone cannot
+# remove it because the "s" after the apostrophe is not itself punctuation,
+# so it is stripped as its own step, ASCII apostrophe or typographic quote.
+POSSESSIVE_SUFFIX = re.compile("(?:'s|" + chr(0x2019) + "s)$")
+# A short alphanumeric tail after the final dot is what a real file
+# extension looks like: .yml, .md, .py, .gitignore. No hyphens, no digits
+# strung together with more dots after it.
+FILE_EXTENSION = re.compile(r"^[A-Za-z0-9]{1,10}$")
+# An optional leading "v", two or more dot-separated digit groups, and then
+# either a hyphenated qualifier (itself optionally dotted: -rc, -codeql-v4,
+# -rc.2) or a qualifier glued straight on with no hyphen (rc1). This is what
+# a version number or a release-candidate-style build tag looks like, not
+# what a file extension looks like, even though both contain dots in a
+# basename.
+VERSION_NUMBER = re.compile(
+    r"^v?\d+(\.\d+){1,}"
+    r"(?:(?:-[A-Za-z0-9]+(?:\.[A-Za-z0-9]+)*)*|[A-Za-z]+\d*)$"
+)
+# A trailing line or line-range anchor, e.g. ":42" or ":42-50", stripped
+# from a citation before the path-claim decision and before resolution. A
+# Windows drive letter's colon is always followed by "\" or "/", never a
+# digit, so this can never mistake a drive prefix for a line anchor.
+LINE_ANCHOR = re.compile(r":\d+(-\d+)?$")
+# A leading run of three or more dots is an elision convention ("some path
+# above here"), not a real relative-path prefix. "." and ".." are real
+# prefixes and must never match this.
+ELLIPSIS_PREFIX = re.compile(r"^\.{3,}")
 
 
 def has_separator(cite):
     return "/" in cite or "\\" in cite
 
 
+def strip_line_anchor(cite):
+    """Remove a trailing ':N' or ':N-M' line anchor from a citation."""
+    return LINE_ANCHOR.sub("", cite)
+
+
+def strip_ellipsis_prefix(cite):
+    """Remove a leading elision of three or more dots from a citation."""
+    return ELLIPSIS_PREFIX.sub("", cite)
+
+
 def is_path_claim(cite):
     """Does this citation assert where a file lives? Returns (bool, reason).
 
-    Every branch is mechanical. Nothing here inspects meaning.
+    `cite` is assumed already normalized (line anchor and ellipsis prefix
+    stripped). Every branch here is mechanical. Nothing inspects meaning.
     """
     if URI_SCHEME.match(cite):
         return False, "uri scheme"
@@ -95,24 +267,66 @@ def is_path_claim(cite):
     base = os.path.basename(cite.rstrip("/\\").replace("\\", "/"))
     if "." not in base:
         return False, "no file extension"
+    if VERSION_NUMBER.match(base):
+        return False, "version number, not a file extension"
+    ext = base.rsplit(".", 1)[1]
+    if not FILE_EXTENSION.match(ext):
+        return False, "trailing dot-segment does not look like a file extension"
     return True, "path claim"
+
+
+def clean_token(tok):
+    """Strip the punctuation a bare word picks up from surrounding prose.
+
+    Order matters. Trailing sentence punctuation comes off first (a period,
+    a comma, a closing paren). Only then is a trailing line anchor checked,
+    because `made-up.md:42,` has a real sentence comma after the digits
+    that would otherwise block LINE_ANCHOR's end anchor. Only then is a
+    trailing possessive checked, because `check-dashes.py's.` has a real
+    sentence period after the "s" that would otherwise block
+    POSSESSIVE_SUFFIX's end anchor. Leading punctuation comes off next, and
+    never a leading dot: `(.github/foo.yml)` must lose the parenthesis and
+    keep the dot that makes it a dotdir path. A leading three-or-more-dot
+    elision comes off last, after any wrapping punctuation around it has
+    already been stripped.
+    """
+    c = tok.rstrip(STRIP_CHARS)
+    c = strip_line_anchor(c)
+    c = POSSESSIVE_SUFFIX.sub("", c)
+    # A possessive can sit on top of a line anchor: `made-up.md:42's` reaches
+    # the first anchor strip with the "s" still blocking LINE_ANCHOR's end
+    # anchor, so the anchor survives into the extension test and the whole
+    # citation drops out of scope. One more pass after the possessive comes
+    # off closes that, and the strips are idempotent so a second pass is free
+    # for every other shape.
+    c = strip_line_anchor(c)
+    c = c.lstrip(LEADING_STRIP_CHARS)
+    c = strip_ellipsis_prefix(c)
+    return c
 
 
 def extract_citations(text):
     """Return [(citation, was_backtick_wrapped), ...] for one log's text.
 
     Bare tokens are only candidates when they carry a separator; a bare word
-    with an extension and no separator is branch (c) and never enters the set.
+    with an extension and no separator is branch (c) and never enters the
+    set. Backtick-wrapped spans skip the prose-punctuation stripping (the
+    author deliberately delimited the span) but still get the same line-
+    anchor and ellipsis-prefix normalization as a bare token, since those
+    are about what file the text names, not about surrounding prose.
     """
     cites = []
     for m in BACKTICK_SPAN.finditer(text):
         c = m.group(1).strip()
-        if c:
-            cites.append((c, True))
+        if not c:
+            continue
+        c = strip_line_anchor(c)
+        c = strip_ellipsis_prefix(c)
+        cites.append((c, True))
     # Blank out backtick spans so a wrapped citation is not counted twice.
     outside = BACKTICK_SPAN.sub(" ", text)
     for tok in outside.split():
-        c = tok.strip(STRIP_CHARS)
+        c = clean_token(tok)
         if c and has_separator(c):
             cites.append((c, False))
     return cites
@@ -134,6 +348,47 @@ def findings_for(text, root):
 # self_test() builds, never against --repo-root.
 MUST_MATCH = [
     "the file `missing/canary-target.md` was updated this session",
+    # BUG-2 defect 1 (leading dot stripped): a bare dotted path that is
+    # genuinely missing must still be flagged, not silently excluded.
+    "bare dotted path, missing: .github/workflows/missing-canary.yml is not tracked",
+    # BUG-2 defect 2 (version numbers read as extensions): a real,
+    # genuinely-missing filename that happens to embed a version number
+    # must stay in scope, proving the version exclusion is shape-based
+    # and not "any dot near a digit gets a pass".
+    "versioned filename, missing: docs/CHANGELOG-v0.4.3.md tracks releases",
+    # BUG-2 defect 3 (possessives not stripped): a possessive citing a path
+    # that genuinely does not exist must still be flagged.
+    "possessive on a missing path: real/missing-possessive.py's docstring is unwritten",
+    # Defect A (line-anchor regression): the exact shape that stopped being
+    # flagged this morning. If strip_line_anchor() is removed, the leftover
+    # "md:42" fails the extension test and this citation silently drops out
+    # of scope instead of being flagged, so this is the canary that proves
+    # the regression is closed.
+    "line-anchored missing path: docs/internal/made-up.md:42 is cited here",
+    # Defect A, range form: "file.md:42-50" must reduce the same way.
+    "line-anchored range on a missing path: docs/internal/other-made-up.md:42-50 is cited here",
+    # A possessive stacked on a line anchor. Found by adversarial review as a
+    # narrowing against the pre-fix gate: the trailing "s" blocked the anchor
+    # strip, the anchor then failed the extension test, and the citation left
+    # scope entirely. Both strips now run to a fixed point.
+    "possessive on an anchored missing path: docs/internal/made-up.md:42's header was rewritten",
+    # Defect C (curly possessive): the typographic right single quote half
+    # of the possessive fix, on a citation that genuinely does not exist.
+    "curly possessive on a missing path: real/missing-possessive-curly.py" + chr(0x2019) + "s docstring is unwritten",
+    # Defect C (possessive followed by punctuation): a possessive citation
+    # trailed by a comma, genuinely missing, proving the rstrip-before-
+    # possessive ordering is what makes this resolve at all, not an
+    # accident of no punctuation being present in the corpus.
+    "comma after possessive on a missing path: missing/comma-possessive.md's, docstring is unwritten",
+    # Defect E: "./" and "../" are real relative-path prefixes, never
+    # elision, so a genuinely missing target behind either one must still
+    # be flagged, proving ELLIPSIS_PREFIX's {3,} bound was not loosened to
+    # also eat one or two leading dots.
+    "single-dot prefix, missing: ./missing/dotslash-canary.md was never written",
+    "double-dot prefix, missing: ../missing/dotdotslash-canary.md was never written",
+    # Defect E: an ellipsis-elided citation to a target that genuinely does
+    # not exist, even after the elision is stripped, must still be flagged.
+    "elided path, missing: ...missing/ellipsis-canary.md was never added",
 ]
 
 MUST_NOT_MATCH = [
@@ -147,6 +402,59 @@ MUST_NOT_MATCH = [
     "swept `docs/skills/*/README.md` for stale version lines",
     "the intake path is `_local/roadmaps/_inbox/<skill>.md` per convention",
     r"read C:\Users\someone\notes\scratch.md on the other machine",
+    # BUG-2 defect 1 anti-canary: the leading dot must survive so this
+    # existing dotdir path resolves instead of being flagged as missing.
+    "bare token with a leading dot: .github/workflows/gate.yml exists",
+    # BUG-2 defect 2 anti-canaries: a version-numbered branch name is not a
+    # path claim, bare or with a trailing hyphenated remainder, or on its own.
+    "version branch: fix/v0.4.3-marketplace-rename was merged",
+    "version branch with two remainders: fix/v0.4.2-codeql-v4 landed",
+    "bare version number: fix/v0.4.3 shipped",
+    # Control for defect 2: a dot-free basename was never a claim and must
+    # keep behaving that way after the extension test gets narrower.
+    "dot-free control: docs/wrap-continue-release-plans was the topic",
+    # BUG-2 defect 3 anti-canary: the possessive suffix must come off so
+    # this existing file resolves instead of being flagged as missing.
+    "possessive on a real path: real/possessive-target.py's docstring explains the canary",
+    # Defect A anti-canaries: a line anchor on a citation to a real file
+    # must not block resolution, bare digit or a hyphenated range.
+    "line-anchored real path: real/canary-target.md:42 is the anchor",
+    "line-anchored range on a real path: real/canary-target.md:42-50 is the anchor",
+    # Defect A: a Windows drive-letter path followed by what looks like a
+    # line anchor must still be excluded as a Windows absolute path once
+    # the anchor is stripped, never mistaken for anything else.
+    r"windows drive with anchor: C:\Users\someone\notes\scratch.md:42 was referenced",
+    # Defect B: a trailing dot-segment that fails the extension shape test
+    # (a hyphen inside it) must stay out of scope even though the target
+    # does not exist. If FILE_EXTENSION is removed or neutered this
+    # citation starts being treated as a claim and gets flagged, failing
+    # this canary.
+    "malformed extension: notes/handoff.docx-final was attached",
+    # Defect B: a trailing dot-segment that fails the extension shape test
+    # (too long) must stay out of scope for the same reason, exercising the
+    # length bound rather than the character-class bound.
+    "long extension: notes/archive.longextensionname was attached",
+    # Defect C anti-canary: the curly possessive suffix must come off so
+    # this existing file resolves instead of being flagged as missing.
+    "curly possessive on a real path: real/possessive-target.py" + chr(0x2019) + "s docstring explains the canary",
+    # Defect C anti-canary: a possessive followed by a trailing comma, on a
+    # citation to a file that exists, must resolve.
+    "comma after possessive on a real path: real/SKILL.md's, guidance stands",
+    # Defect D: a release-candidate qualifier joined with a dot, and one
+    # glued on with no hyphen at all, are both version shapes, not file
+    # extensions, and must not be flagged.
+    "release candidate, dotted qualifier: release/v0.5.1-rc.2 is in progress",
+    "release candidate, glued qualifier: release/v0.5.1rc1 is in progress",
+    # Defect E anti-canaries: "./" and "../" are real prefixes, so a target
+    # that genuinely exists behind either one must resolve, proving the
+    # ellipsis rule does not over-strip and turn a real prefix into a
+    # broken one.
+    "single-dot prefix, real: ./real/canary-target.md is the anchor",
+    "double-dot prefix, real: ../shared/up-target.md is the anchor",
+    # Defect E anti-canary: the original false positive, an ellipsis-elided
+    # citation to a target that genuinely exists once the elision is
+    # stripped.
+    "elided path, real: ...skills/plab-guide/SKILL.md documents the workflow",
 ]
 
 
@@ -154,16 +462,55 @@ def self_test():
     """Prove the matcher works before trusting a clean result."""
     failures = []
     with tempfile.TemporaryDirectory() as fixture:
-        target = os.path.join(fixture, "real", "canary-target.md")
-        os.makedirs(os.path.dirname(target), exist_ok=True)
-        with open(target, "w", encoding="utf-8") as fh:
-            fh.write("fixture canary target\n")
+        # The fixture root citations resolve against sits one level below
+        # the tempdir. That leaves a sibling directory available so a
+        # genuine "../" prefix (Defect E) has something real to climb to,
+        # proving it survives normalization rather than getting eaten by
+        # the elision rule that strips three-or-more leading dots.
+        root = os.path.join(fixture, "proj")
+
+        def write_fixture(rel_path, content):
+            path = os.path.join(root, rel_path)
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            with open(path, "w", encoding="utf-8") as fh:
+                fh.write(content)
+
+        write_fixture(
+            os.path.join("real", "canary-target.md"),
+            "fixture canary target\n")
+        # BUG-2 defect 1 fixture: a dotted directory, so a bare citation
+        # that keeps its leading dot has something real to resolve against.
+        write_fixture(
+            os.path.join(".github", "workflows", "gate.yml"),
+            "fixture dotdir canary target\n")
+        # BUG-2 defect 3 fixture: a real file for the possessive anti-canary
+        # to resolve against once the trailing "'s" is stripped.
+        write_fixture(
+            os.path.join("real", "possessive-target.py"),
+            "fixture possessive canary target\n")
+        # Defect C fixture: a real file for the comma-after-possessive
+        # anti-canary.
+        write_fixture(
+            os.path.join("real", "SKILL.md"),
+            "fixture comma-possessive canary target\n")
+        # Defect E fixture: the real target an ellipsis-elided citation
+        # names once the leading "..." is stripped.
+        write_fixture(
+            os.path.join("skills", "plab-guide", "SKILL.md"),
+            "fixture ellipsis canary target\n")
+
+        # Defect E fixture: a target reachable only through a genuine ".."
+        # prefix, one level above root.
+        shared_dir = os.path.join(fixture, "shared")
+        os.makedirs(shared_dir, exist_ok=True)
+        with open(os.path.join(shared_dir, "up-target.md"), "w", encoding="utf-8") as fh:
+            fh.write("fixture parent-dir canary target\n")
 
         for s in MUST_MATCH:
-            if not findings_for(s, fixture):
+            if not findings_for(s, root):
                 failures.append("  should have been flagged but was not: %r" % s)
         for s in MUST_NOT_MATCH:
-            got = findings_for(s, fixture)
+            got = findings_for(s, root)
             if got:
                 failures.append(
                     "  should NOT have been flagged but was: %r -> %r" % (s, got))
@@ -204,10 +551,13 @@ def main():
         sys.exit(2)
 
     try:
-        with open(args.log_path, encoding="utf-8") as fh:
+        # utf-8-sig so a UTF-8 byte-order mark is consumed instead of being
+        # left attached to the first token on line 1.
+        with open(args.log_path, encoding="utf-8-sig") as fh:
             lines = fh.readlines()
-    except OSError as exc:
-        print("BROKEN: could not read %s: %s" % (args.log_path, exc),
+    except (OSError, UnicodeDecodeError) as exc:
+        print("BROKEN: could not read %s as UTF-8: %s: %s"
+              % (args.log_path, type(exc).__name__, exc),
               file=sys.stderr)
         sys.exit(2)
 
@@ -230,4 +580,17 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SystemExit:
+        # main()'s own sys.exit() calls carry the real exit-code contract;
+        # let them pass through untouched.
+        raise
+    except Exception as exc:
+        # The general rule: no unexpected exception may ever surface as
+        # exit 1, which this exit-code contract reserves for "the detector
+        # ran and found a real problem". Anything this module did not
+        # anticipate is BROKEN, not FINDINGS.
+        print("BROKEN: unexpected %s: %s" % (type(exc).__name__, exc),
+              file=sys.stderr)
+        sys.exit(2)

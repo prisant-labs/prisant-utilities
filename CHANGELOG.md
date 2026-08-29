@@ -5,6 +5,32 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.2] - 2026-08-28
+
+### Added
+
+- **Document lifecycle gates, the half nothing checked before.** Three deterministic checks now run in CI, cost nothing per run, and report `clean`, `findings`, or `broken` rather than passing quietly when they cannot do their job.
+
+  `scripts/frontmatter-check.py` validates every spec, implementation plan, and release plan against a committed JSON Schema. The schemas live in `docs/internal/schemas/` and are plain draft 2020-12 documents, so they are the durable artifact: any conforming validator can read them, and the Python checker is replaceable without touching them.
+
+  `scripts/doc-lifecycle-check.py` covers the eight invariants a per-file schema fundamentally cannot see, because they need two or more files or the git state: supersession symmetry, target-version and sequence uniqueness, a spec still unfinished for a version that already shipped, link resolution, folder-to-id agreement, release-plan counts, and acceptance-criteria counts.
+
+  `scripts/gen-release-index.py` generates `docs/internal/release-plans/INDEX.md`, the first view of every effort across every release. It is derived from frontmatter and never authored, and CI fails if the committed copy is stale.
+
+- **An effort-series legend** in `docs/internal/release-plans/README.md`. Six series letters had been in use with nothing anywhere saying what any of them meant, which is the most likely thing "the folder is hard to navigate" actually referred to. A new letter must be registered there before use; the index generator refuses to emit a blank legend cell.
+
+### Fixed
+
+- `plab-wrap-session` 1.6.2: three false-positive classes in the path-citation gate, plus line-anchored citations such as `file.md:42`, which are now stripped to the underlying path before resolution. The proof corpus grew from 11 entries to 40. Against a real session log the gate reports 9 findings where it reported 13, and all 9 are genuine.
+
+### Changed
+
+- `plab-spec` 1.3.2: supersession is documented as symmetric. A superseded spec carries `superseded-by`, the replacing spec carries `supersedes` pointing back, and the new cross-file gate enforces the pair. Documentation only; no skill behavior changes.
+
+### Notes
+
+Every gate added here was built, then attacked by independent reviewers, then repaired. That pass found a blocker worth naming: the released-but-unfulfilled check was silently vacuous whenever `git tag -l` returned nothing, which is exactly what a default `actions/checkout` produces. It would have passed in CI forever while looking healthy locally. The check now refuses to run against an empty tag list unless `--allow-no-tags` is passed, and the CI job fetches full history for the same reason.
+
 ## [0.5.1] - 2026-08-28
 
 ### Fixed

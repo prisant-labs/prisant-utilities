@@ -27,6 +27,8 @@ The spec's YAML frontmatter is its machine-readable contract with downstream rea
 | `spec-dependencies` | list of strings | Other spec ids this depends on. | `[S-02, S-07]` |
 | `target-release` | string | Target release version, if known. | `v1.2.0` |
 | `priority` | enum | `P1`, `P2`, `P3`. Inherits from effort if absent. | `P2` |
+| `superseded-by` | string | Effort id of the spec that replaces this one. Required when `status` is `superseded`. | `D-12` |
+| `supersedes` | string | Effort id of the spec this one replaces. **Write both halves.** The superseded spec carries `superseded-by`, and the replacing spec carries `supersedes` pointing back. | `D-11` |
 
 ## Status Lifecycle
 
@@ -40,7 +42,7 @@ draft → committed → fulfilled
 | `draft` | Just written or actively being revised. | Skill on creation |
 | `committed` | Reviewed and frozen. AC are now contract. | Human review |
 | `fulfilled` | All AC verified as met. | Closing the effort |
-| `superseded` | Replaced by a newer spec or no longer applicable. Add `superseded-by:` field with id. | Manual |
+| `superseded` | Replaced by a newer spec or no longer applicable. Add `superseded-by:` with the replacing id, and add `supersedes:` on that replacing spec pointing back. | Manual |
 
 The skill creates specs in `draft`. Promotion to `committed` is a human (or human-confirmed) action - never automatic.
 
@@ -53,6 +55,7 @@ The skill creates specs in `draft`. Promotion to `committed` is a human (or huma
 - `source-count` (if present) must equal the number of `[S<n>]` entries listed in Sources & Evidence
 - If `requires-human-review: true`, body MUST contain at least one `[model-inference]` marker
 - All `linked-*` paths must exist on disk at write time, OR be explicit `null`
+- **Supersession is symmetric.** If a spec declares `superseded-by: X`, the spec with id `X` must exist and must declare `supersedes:` pointing back, and the converse. A one-directional supersession is the defect this rule exists to catch: it hides the relationship from whichever end you happen to open first. `scripts/doc-lifecycle-check.py` enforces this across files, which is something a per-file schema cannot do.
 
 ## Full Example
 

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "required": [
+    "id",
+    "title",
+    "type",
+    "status",
+    "created",
+    "updated",
+    "linked-spec",
+    "linked-release",
+    "ac-coverage",
+    "phase-count"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Z]{1,2}-\\d{2,4}$"
+    },
+    "title": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["implementation-plan"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "in-progress", "complete"]
+    },
+    "created": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "updated": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "linked-spec": {
+      "type": "string"
+    },
+    "linked-release": {
+      "type": ["string", "null"]
+    },
+    "ac-coverage": {
+      "type": "string",
+      "enum": ["complete", "partial"]
+    },
+    "phase-count": {
+      "type": "integer"
+    },
+    "superseded-by": {
+      "type": "string"
+    },
+    "supersedes": {
+      "type": "string"
+    }
+  }
+}
