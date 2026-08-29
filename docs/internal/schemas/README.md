@@ -1,0 +1,26 @@
+# Frontmatter schemas
+
+These three files describe the YAML frontmatter of the three document types under `docs/internal/release-plans/`: `spec.schema.json` for `spec.md`, `implementation-plan.schema.json` for `implementation-plan.md`, and `release-plan.schema.json` for a release folder's `plan.md`.
+
+## Why plain JSON Schema
+
+Each file is standard JSON Schema (draft 2020-12), not a repo-specific format. That is a deliberate choice, not an accident of implementation. `scripts/frontmatter-check.py` reads these same files with a small hand-rolled validator, but nothing about them is tied to that script: a Node-based tool such as `remark-lint-frontmatter-schema` could point at the identical files and get the identical contract, with no rewriting. If the frontmatter rules ever need to move to a different toolchain, these three files travel unchanged; only the thing that reads them changes.
+
+## The supported keyword subset
+
+`scripts/frontmatter-check.py` does not implement general JSON Schema. It implements exactly the keywords these three schemas use: `required`, `type` (values `string`, `integer`, `boolean`, `array`, `null`, or a JSON array combining any of those - e.g. `["string", "null"]` for a nullable field), `enum`, `pattern`, `additionalProperties: false`, `properties`, and `items` (carrying only `type`). `$schema` is read and ignored as metadata.
+
+If a schema file in this directory is ever edited to add a keyword outside that list (`minLength`, `format`, `oneOf`, `const`, and so on), the validator does not skip it and does not silently accept the file. It refuses to run at all and exits 2 (BROKEN). A validator that quietly ignores a keyword it does not understand would validate less than the schema claims to require while reporting success, which is the exact failure this checker exists to prevent. Widen `scripts/frontmatter-check.py`'s validator first, deliberately, before adding a keyword here that needs it.
+
+Two keywords a full JSON Schema vocabulary offers are deliberately absent from these files even though the validator could be made to support them:
+
+- **`const` is never used.** A single-value `enum` (for example `"enum": ["spec"]` on the `type` field) says the same thing and stays inside the supported keyword list above.
+- **The schema root carries no `"type": "object"`.** `object` is not one of the supported `type` values. Each frontmatter block is already known to be a mapping by construction (it comes from a parsed YAML frontmatter block), so the root schema states `required`, `additionalProperties`, and `properties` directly without asserting a type the validator does not implement.
+
+## What is required per type
+
+`spec.schema.json`'s required list matches exactly what `skills/plab-spec/references/frontmatter-schema.md` documents as required for a spec: `id`, `title`, `type`, `status`, `created`, `updated`, `linked-effort`, `ac-count`. Every other field that reference mentions - `linked-plan`, `linked-release`, `source-count`, `requires-human-review`, `priority`, `target-release`, `gh-issue`, `spec-dependencies`, `linked-strategy-brief`, `superseded-by` - is optional: `spec.schema.json` still enforces its shape when the field is present, but its absence is not a finding. This matters in practice because a spec sitting in `docs/internal/release-plans/_unassigned/` (see `skills/plab-spec/SKILL.md`) genuinely has no release folder and no target version yet - `linked-plan`, `linked-release`, and `target-release` are `null` until those facts exist, not missing by mistake.
+
+`linked-plan`, `linked-release` (on both `spec.schema.json` and `implementation-plan.schema.json`), and `target-release` are typed `["string", "null"]` rather than plain `"string"` for the same reason: this repository writes literal `null` into all three before the linked artifact exists, and `/plab-release-plan --demote` (see `skills/plab-release-plan/references/promote-demote.md`) clears `target-release` and `linked-release` back to `null` when an effort leaves a release. A schema that only accepted `"string"` there would flag every one of those legitimate `null` values as a type violation.
+
+A markdown file with no frontmatter at all is not a violation of these schemas. `scripts/frontmatter-check.py` skips such files (for example `docs/internal/release-plans/README.md`) rather than flagging them; a schema describes the shape of frontmatter that is present, not a requirement that frontmatter exist.

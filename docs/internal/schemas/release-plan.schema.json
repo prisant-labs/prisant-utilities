@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "required": [
+    "title",
+    "type",
+    "status",
+    "created",
+    "updated",
+    "sequence",
+    "target-version",
+    "theme",
+    "includes",
+    "spec-count",
+    "plan-count",
+    "checklist-complete"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["release-plan"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "in-progress", "complete"]
+    },
+    "created": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "updated": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "sequence": {
+      "type": "string",
+      "pattern": "^\\d{2}$"
+    },
+    "target-version": {
+      "type": "string",
+      "pattern": "^v\\d+\\.\\d+\\.\\d+$"
+    },
+    "theme": {
+      "type": "string"
+    },
+    "includes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "spec-count": {
+      "type": "integer"
+    },
+    "plan-count": {
+      "type": "integer"
+    },
+    "checklist-complete": {
+      "type": "boolean"
+    },
+    "superseded-by": {
+      "type": "string"
+    },
+    "supersedes": {
+      "type": "string"
+    }
+  }
+}
