@@ -73,10 +73,28 @@ a human and an agent both read is the cheaper contract until something needs to 
 
 ## Effort IDs
 
-Effort IDs are zero-padded (`D-07`, `W-02`, `C-05`) to satisfy the schema, while the source roadmaps
-that define them use unpadded forms (`D-7`, `W-2`, `C-5`). Each spec states its own mapping. Always
-pair an ID with a short handle in prose, for example "D-07 (the Waiting-on blocker contract)", since
-a bare ID forces the reader to go hunting for what it refers to.
+An effort ID is a series letter, a number, and a slug: `D-07_waiting-on-blocker-contract`. The series letter says which roadmap the effort came from, and it is the part that used to be undocumented.
+
+### The series legend
+
+| Series | Meaning | Where it shows up |
+|---|---|---|
+| `D-` | Defect in the wrap and continue pair | `plan_04_gates-that-cannot-fail-open`, `plan_06_derived-facts` |
+| `W-` | Wrap-session roadmap item | `plan_06_derived-facts`, `plan_07_aggregation`, `plan_08_escape-and-measure` |
+| `C-` | Continue-session roadmap item | `plan_05_reconcile-at-resume`, `plan_07_aggregation`, `plan_08_escape-and-measure` |
+| `CI-` | Continuous integration | `plan_04_gates-that-cannot-fail-open` |
+| `A-` | ai-review roadmap item | Proposed, none scheduled yet |
+| `H-` | Hygiene, repo-wide rather than tied to one skill | Proposed, none scheduled yet |
+
+Six series existed before this table did, and nothing anywhere said what any of the letters meant. That is the most likely thing the folder being called hard to navigate actually referred to: not the file count, which is small, but six opaque prefixes with no key. `INDEX.md` in this folder is generated and reproduces this legend beside every effort, so the two cannot drift apart by hand.
+
+A new series letter is a real addition to the vocabulary. Add it here first, or the index generator will refuse to run rather than emit a blank cell for it.
+
+### Padding and handles
+
+Effort IDs are zero-padded (`D-07`, `W-02`, `C-05`) to satisfy the schema, while the source roadmaps that define them use unpadded forms (`D-7`, `W-2`, `C-5`). Each spec states its own mapping.
+
+Always pair an ID with a short handle in prose, for example "D-07 (the Waiting-on blocker contract)", since a bare ID forces the reader to go hunting for what it refers to.
 
 The source documents that define these efforts are maintainer-local and gitignored, under
 the maintainer's private roadmap set. Each spec's `linked-effort` frontmatter names the exact file. If you are

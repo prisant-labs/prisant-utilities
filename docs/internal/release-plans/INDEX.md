@@ -1,0 +1,67 @@
+# Release Plan Index
+
+Generated file. Regenerate with `python scripts/gen-release-index.py` from the repository root. Hand edits will be overwritten on the next regeneration.
+
+**Releases:** 5 **Efforts:** 16 (0 unassigned) **Source:** every `plan.md` and `spec.md` under `docs/internal/release-plans/`, including `_unassigned/`, plus each effort's `implementation-plan.md` where present
+
+---
+
+## Series Legend
+
+Every effort id's letter prefix names which series it belongs to. An id whose letter is not listed here is a generator bug, not a rendering gap: the generator refuses to run rather than leave the meaning blank.
+
+| Letter | Meaning |
+|---|---|
+| D | defect in the wrap and continue pair |
+| W | wrap-session roadmap item |
+| C | continue-session roadmap item |
+| CI | continuous integration |
+| A | ai-review roadmap item |
+| H | hygiene and repo-wide |
+
+---
+
+## Summary by Release
+
+| Release | Target Version | Theme | Efforts | Spec Statuses | Implementation Plan Statuses |
+|---|---|---|---|---|---|
+| [plan_04_gates-that-cannot-fail-open](plan_04_gates-that-cannot-fail-open/plan.md) | v0.4.0 | Gates that cannot fail open | 8 | fulfilled: 8 | complete: 8 |
+| [plan_05_reconcile-at-resume](plan_05_reconcile-at-resume/plan.md) | v0.6.0 | Reconcile at resume | 2 | draft: 2 | draft: 2 |
+| [plan_06_derived-facts](plan_06_derived-facts/plan.md) | v0.7.0 | Derived facts | 2 | draft: 2 | draft: 2 |
+| [plan_07_aggregation](plan_07_aggregation/plan.md) | v0.8.0 | Aggregation | 2 | draft: 2 | draft: 2 |
+| [plan_08_escape-and-measure](plan_08_escape-and-measure/plan.md) | v0.9.0 | Escape and measure | 2 | draft: 2 | draft: 2 |
+| **Total (assigned to a release)** | | | **16** | draft: 8, fulfilled: 8 | complete: 8, draft: 8 |
+
+---
+
+## Unassigned Efforts
+
+Specs written before being assigned to a release: the documented default home `/plab-spec` writes into when `--target-release` is omitted (`docs/internal/release-plans/_unassigned/`). These carry no target version until `/plab-release-plan --promote` moves the whole effort folder into a release. `_unassigned/` does not exist on disk until the first spec is written there; its absence is normal, not an error.
+
+None currently.
+
+---
+
+## All Efforts
+
+One row per effort, grouped by release in sequence order (see the Release column), with unassigned efforts listed last.
+
+| Effort | Handle | Series | Spec Status | Implementation Plan Status | Release | Target Version | Priority | Human Review Required |
+|---|---|---|---|---|---|---|---|---|
+| [CI-01](plan_04_gates-that-cannot-fail-open/CI-01_ci-bootstrap/spec.md) | ci bootstrap | CI (continuous integration) | fulfilled | complete | [plan_04_gates-that-cannot-fail-open](plan_04_gates-that-cannot-fail-open/plan.md) | v0.4.0 | P1 | No |
+| [D-03](plan_04_gates-that-cannot-fail-open/D-03_bidirectional-drift-check/spec.md) | bidirectional drift check | D (defect in the wrap and continue pair) | fulfilled | complete | [plan_04_gates-that-cannot-fail-open](plan_04_gates-that-cannot-fail-open/plan.md) | v0.4.0 | P1 | Yes |
+| [D-04](plan_04_gates-that-cannot-fail-open/D-04_capture-lite-consumers/spec.md) | capture lite consumers | D (defect in the wrap and continue pair) | fulfilled | complete | [plan_04_gates-that-cannot-fail-open](plan_04_gates-that-cannot-fail-open/plan.md) | v0.4.0 | P2 | Yes |
+| [D-05](plan_04_gates-that-cannot-fail-open/D-05_superseding-logs/spec.md) | superseding logs | D (defect in the wrap and continue pair) | fulfilled | complete | [plan_04_gates-that-cannot-fail-open](plan_04_gates-that-cannot-fail-open/plan.md) | v0.4.0 | P2 | Yes |
+| [D-06](plan_04_gates-that-cannot-fail-open/D-06_resumed-from-semantics/spec.md) | resumed from semantics | D (defect in the wrap and continue pair) | fulfilled | complete | [plan_04_gates-that-cannot-fail-open](plan_04_gates-that-cannot-fail-open/plan.md) | v0.4.0 | P3 | No |
+| [D-07](plan_04_gates-that-cannot-fail-open/D-07_waiting-on-blocker-contract/spec.md) | waiting on blocker contract | D (defect in the wrap and continue pair) | fulfilled | complete | [plan_04_gates-that-cannot-fail-open](plan_04_gates-that-cannot-fail-open/plan.md) | v0.4.0 | P1 | Yes |
+| [D-11](plan_04_gates-that-cannot-fail-open/D-11_three-state-gate-canaries/spec.md) | three state gate canaries | D (defect in the wrap and continue pair) | fulfilled | complete | [plan_04_gates-that-cannot-fail-open](plan_04_gates-that-cannot-fail-open/plan.md) | v0.4.0 | P1 | Yes |
+| [D-12](plan_04_gates-that-cannot-fail-open/D-12_path-citation-precision/spec.md) | path citation precision | D (defect in the wrap and continue pair) | fulfilled | complete | [plan_04_gates-that-cannot-fail-open](plan_04_gates-that-cannot-fail-open/plan.md) | v0.4.0 | P2 | Yes |
+| [C-02](plan_05_reconcile-at-resume/C-02_reconcile-at-resume/spec.md) | reconcile at resume | C (continue-session roadmap item) | draft | draft | [plan_05_reconcile-at-resume](plan_05_reconcile-at-resume/plan.md) | v0.6.0 | P1 | Yes |
+| [C-03](plan_05_reconcile-at-resume/C-03_cold-repo-degradation/spec.md) | cold repo degradation | C (continue-session roadmap item) | draft | draft | [plan_05_reconcile-at-resume](plan_05_reconcile-at-resume/plan.md) | v0.6.0 | P2 | Yes |
+| [D-10](plan_06_derived-facts/D-10_log-format-contract/spec.md) | log format contract | D (defect in the wrap and continue pair) | draft | draft | [plan_06_derived-facts](plan_06_derived-facts/plan.md) | v0.7.0 | P2 | No |
+| [W-02](plan_06_derived-facts/W-02_derived-log-facts/spec.md) | derived log facts | W (wrap-session roadmap item) | draft | draft | [plan_06_derived-facts](plan_06_derived-facts/plan.md) | v0.7.0 | P1 | No |
+| [C-05](plan_07_aggregation/C-05_arc-resume/spec.md) | arc resume | C (continue-session roadmap item) | draft | draft | [plan_07_aggregation](plan_07_aggregation/plan.md) | v0.8.0 | P2 | No |
+| [W-04](plan_07_aggregation/W-04_digest-mode/spec.md) | digest mode | W (wrap-session roadmap item) | draft | draft | [plan_07_aggregation](plan_07_aggregation/plan.md) | v0.8.0 | P2 | Yes |
+| [C-04](plan_08_escape-and-measure/C-04_consumption-disposition/spec.md) | consumption disposition | C (continue-session roadmap item) | draft | draft | [plan_08_escape-and-measure](plan_08_escape-and-measure/plan.md) | v0.9.0 | P2 | No |
+| [W-03](plan_08_escape-and-measure/W-03_waiting-on-escapes-gitignore/spec.md) | waiting on escapes gitignore | W (wrap-session roadmap item) | draft | draft | [plan_08_escape-and-measure](plan_08_escape-and-measure/plan.md) | v0.9.0 | P2 | Yes |
+
