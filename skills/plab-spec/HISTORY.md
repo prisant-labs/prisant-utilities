@@ -2,11 +2,20 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
+| 1.3.2 | 2026-08-28 | v0.5.2 | changed | Supersession is documented as symmetric: `superseded-by` and `supersedes` are both written, and a cross-file gate enforces the pair. |
 | 1.3.1 | 2026-08-28 | v0.5.1 | changed | `linked-effort` documented as a string, not a path. A tracked artifact must not cite an untracked one. |
 | 1.3.0 | 2026-08-27 | unreleased | changed | Removed `disable-model-invocation`. The skill is auto-discoverable; a do-NOT-fire clause in the description replaces the binary gate. |
 | 1.2.1 | 2026-08-24 | v0.3.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.2.1; prior history remains there. |
 
 
+
+## 1.3.2 - 2026-08-28
+
+**Documentation only. No behavior change.**
+
+**Supersession is symmetric, and the second half of the pair is now named.** The schema documented `superseded-by` and nothing else, so a supersession could be declared from one end only. That is exactly the defect a manual review of this repository found on 2026-08-25: a relationship declared in one direction, invisible from whichever end you happened to open first. The optional-fields table now carries `supersedes` alongside `superseded-by`, and the validation rules state that both halves are written and that `scripts/doc-lifecycle-check.py` enforces the pair across files, which is something a per-file schema fundamentally cannot do.
+
+Recorded because it shaped the change: requiring the back-pointer without permitting it would have made the workflow impossible. Adversarial review caught that the two new gates, each correct alone, jointly rejected every possible shape of a supersession, since one demanded a field the other forbade. The JSON Schemas under `docs/internal/schemas/` now permit both fields on all three document types, and this reference is what they agree with.
 
 ## 1.3.1 - 2026-08-28
 
