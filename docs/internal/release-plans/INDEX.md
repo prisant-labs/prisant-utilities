@@ -2,7 +2,7 @@
 
 Generated file. Regenerate with `python scripts/gen-release-index.py` from the repository root. Hand edits will be overwritten on the next regeneration.
 
-**Releases:** 5 **Efforts:** 16 (0 unassigned) **Source:** every `plan.md` and `spec.md` under `docs/internal/release-plans/`, including `_unassigned/`, plus each effort's `implementation-plan.md` where present
+**Releases:** 5 **Efforts:** 17 (1 unassigned) **Source:** every `plan.md` and `spec.md` under `docs/internal/release-plans/`, including `_unassigned/`, plus each effort's `implementation-plan.md` where present
 
 ---
 
@@ -38,7 +38,9 @@ Every effort id's letter prefix names which series it belongs to. An id whose le
 
 Specs written before being assigned to a release: the documented default home `/plab-spec` writes into when `--target-release` is omitted (`docs/internal/release-plans/_unassigned/`). These carry no target version until `/plab-release-plan --promote` moves the whole effort folder into a release. `_unassigned/` does not exist on disk until the first spec is written there; its absence is normal, not an error.
 
-None currently.
+| Effort | Handle | Series | Spec Status | Implementation Plan Status | Priority | Human Review Required |
+|---|---|---|---|---|---|---|
+| [A-02](_unassigned/A-02_programmatic-review-dispatch/spec.md) | programmatic review dispatch | A (ai-review roadmap item) | draft | (no implementation plan yet) | P1 | No |
 
 ---
 
@@ -64,4 +66,5 @@ One row per effort, grouped by release in sequence order (see the Release column
 | [W-04](plan_07_aggregation/W-04_digest-mode/spec.md) | digest mode | W (wrap-session roadmap item) | draft | draft | [plan_07_aggregation](plan_07_aggregation/plan.md) | v0.8.0 | P2 | Yes |
 | [C-04](plan_08_escape-and-measure/C-04_consumption-disposition/spec.md) | consumption disposition | C (continue-session roadmap item) | draft | draft | [plan_08_escape-and-measure](plan_08_escape-and-measure/plan.md) | v0.9.0 | P2 | No |
 | [W-03](plan_08_escape-and-measure/W-03_waiting-on-escapes-gitignore/spec.md) | waiting on escapes gitignore | W (wrap-session roadmap item) | draft | draft | [plan_08_escape-and-measure](plan_08_escape-and-measure/plan.md) | v0.9.0 | P2 | Yes |
+| [A-02](_unassigned/A-02_programmatic-review-dispatch/spec.md) | programmatic review dispatch | A (ai-review roadmap item) | draft | (no implementation plan yet) | `_unassigned/` | - | P1 | No |
 
