@@ -2,8 +2,9 @@
 _local/
 _LOCAL/
 
-# Generated skill outputs
-_output/
+# Generated skill outputs. The glob covers named variants such as
+# _output-jp-library/, which the bare _output/ pattern missed.
+_output*/
 
 # Python
 __pycache__/

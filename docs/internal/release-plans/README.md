@@ -4,13 +4,15 @@ This folder holds the planned work for this plugin, one folder per release, with
 and implementation plan for every effort inside the release that will ship it.
 
 If you are looking for what is currently released, read `CHANGELOG.md` at the repository root
-instead. Nothing here has shipped; this is the plan.
+instead. Folders here carry their own status: a release plan reads `complete` once it has shipped,
+and the specs inside it read `fulfilled`. `INDEX.md` beside this file is generated and lists every
+effort with its current status.
 
 ## Start here
 
 | Question | Read |
 |---|---|
-| What is coming next, and why? | `plan_04_gates-that-cannot-fail-open/plan.md`, then each later release plan in order |
+| What is coming next, and why? | `INDEX.md`, then the first release plan not yet marked `complete` |
 | What exactly will change, and how will we know it worked? | The `spec.md` inside any effort folder |
 | How will it actually get built? | The `implementation-plan.md` beside that spec |
 | Can this release be tagged yet? | The Hygiene Gates table in the release plan |
