@@ -90,3 +90,4 @@ A rollback section that says "revert the commit" has not been written. The reaso
 - [ ] `python scripts/doc-lifecycle-check.py` exits 0
 - [ ] `python scripts/gen-release-index.py --check` exits 0, or the index has been regenerated
 - [ ] `python scripts/check-dashes.py` exits 0
+- [ ] If the effort changed any skill: its `metadata.version` and `updated` are bumped, `library.json` matches, a `HISTORY.md` entry exists for that exact version, the usage README's `**Version:**` line matches, and the manifests have been regenerated. This is what the bidirectional drift check compares, and it is the gate most likely to bite an executor who changed skill content without the bookkeeping.
