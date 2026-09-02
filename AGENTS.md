@@ -29,6 +29,19 @@ Conventions an agent should follow in this repo:
 - Never write em-dashes (U+2014) or en-dashes (U+2013). Use " - " or restructure.
 - **Do not hard-wrap prose to a fixed width, in any document.** One paragraph is one line, however long. Where a file is genuinely reviewed line by line, break at sentence boundaries instead of at a column. Tables, code blocks, frontmatter, and ASCII diagrams keep their natural line structure; this rule is about prose. Measured 2026-08-27: a one-word edit inside a 75-column hard-wrapped paragraph produces a 4-line diff, against 1 line for either one-paragraph-per-line or one-sentence-per-line, because the reflow cascades. Fixed-width wrapping therefore loses on the only argument made for it, and additionally makes any grep for a phrase crossing the wrap boundary return nothing. This generalizes the session-log rule that `plab-wrap-session` has carried since v0.4.1; that rule was scoped to one file type, which is why the convention leaked back in elsewhere.
 
+## Engineering discipline
+
+The working rules for any agent making changes here. They are self-contained: they were distilled from the `superpowers` discipline skills when that plugin was disabled on 2026-09-01 as a reversible experiment, and they are the rules whether or not it is enabled.
+
+- **No building before agreement.** For anything larger than a trivial fix, state what is being built and why, and get explicit agreement first. Plan mode covers the light case for code. `/plab-strategy-brief` covers the case where the thinking itself deserves a durable document, and `/plab-spec` the case where the requirements need a contract that survives rewrites of the plan beneath them.
+- **No fix without a named cause.** Reproduce the problem, state a hypothesis, test the hypothesis, then fix. A patch that works for unexplained reasons is a finding, not a fix.
+- **Every change carries its proof.** Where code has tests, the failing test comes first. Where the artifact is a document, a gate, or a detector, the canary comes first, and it must be proven to fail when the rule it guards is removed. A gate that cannot fail is not a gate. A change with no way to show it worked is not done.
+- **Never claim done without running the verification and quoting its output.** Failing tests are reported as failing, with the output.
+- **Review feedback is verified before it is applied.** Check each claim against the code, and push back with evidence when it is wrong. Agreement without verification is worthless, and a reviewer who is wrong is more expensive to obey than to answer.
+- **Work happens on a branch.** Merge via pull request when CI is green. Never commit to `main` directly.
+
+The HOW stage of the pipeline carries a template rather than a skill: `docs/internal/release-plans/implementation-plan-template.md`, distilled from the sixteen implementation plans already tracked in that tree. Those sixteen were written with no plan-authoring skill involved and shipped through every hygiene gate, which is why this stage is served by a template and an exemplar corpus instead of machinery.
+
 ## Skills
 
 ### plab-wrap-session
