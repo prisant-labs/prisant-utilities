@@ -83,7 +83,7 @@ for folder in plan_NN_<slug>/<id>_<slug>/:
     if exists(plan_path):
         plan_mtime = mtime(plan_path)
         if spec_mtime > plan_mtime:
-            FAIL with reason "S-07 spec was edited 2026-05-30 after plan was last edited 2026-05-28; re-run /superpowers:writing-plans --revise"
+            FAIL with reason "S-07 spec was edited 2026-05-30 after plan was last edited 2026-05-28; revise implementation-plan.md against the spec"
 ```
 
 Skip the check when there's no implementation plan (gate (b) handles that case).

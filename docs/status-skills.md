@@ -117,7 +117,7 @@ Writes a feature specification optimized for agent execution.
 | Setup required | Nothing. Creates its folders |
 | References | 6 files |
 
-Produces frontmatter, an agent-updated Task Summary block, and numbered acceptance criteria with source citations. Defines **what** to build. `/superpowers:writing-plans` defines how; `/plab-strategy-brief` explores why.
+Produces frontmatter, an agent-updated Task Summary block, and numbered acceptance criteria with source citations. Defines **what** to build. The implementation-plan template in `docs/internal/release-plans/` defines how; `/plab-strategy-brief` explores why.
 
 ### `plab-release-plan` 1.5.0
 

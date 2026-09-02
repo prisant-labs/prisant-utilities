@@ -7,13 +7,13 @@ description: "Write a feature specification with numbered, source-cited acceptan
   Use when the problem space is already explored and the requirements need a durable home that
   survives rewrites of the plan beneath them: 'write the spec', 'spec this effort', 'turn this into
   acceptance criteria'. Do NOT fire on a passing mention of the word spec, on questions about an
-  existing spec, or on a request to implement one. Defines WHAT to build; /superpowers:writing-plans
-  defines HOW and /plab-strategy-brief explores WHY."
+  existing spec, or on a request to implement one. Defines WHAT to build; the implementation-plan
+  template under docs/internal/release-plans/ defines HOW and /plab-strategy-brief explores WHY."
 argument-hint: "--effort <id-or-path> [--from-brief <path>] [--target-release vX.Y.Z] [--slug <slug>] [--out <path>] [--revise] [--dry-run]"
 license: MIT
 metadata:
-  version: "1.3.2"
-  updated: 2026-08-28
+  version: "1.3.3"
+  updated: 2026-09-01
 ---
 
 # Create Spec
@@ -42,7 +42,7 @@ Use the todo tool to track these phases. Mark each as complete before proceeding
 ## When NOT to Use This Skill
 
 - The problem space hasn't been explored yet → use `/plab-strategy-brief` first
-- You're writing implementation steps → that's `/superpowers:writing-plans`
+- You're writing implementation steps → that's `docs/internal/release-plans/implementation-plan-template.md`
 - Bundling completed features for a tagged release → that's `/plab-release-plan`
 - The feature is one sentence and one AC → write it inline in the effort brief or backlog row
 - The skill being requested is itself a skill → use `/skill-creator`

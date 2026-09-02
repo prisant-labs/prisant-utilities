@@ -57,7 +57,7 @@ Immediately after the H1 title and the frontmatter. Before any other content. Al
 |-------|-----------|------|
 | `Status` | `/plab-spec`, then any agent on transition | Phase 6 of skill (creates as `draft`); review process promotes |
 | `Last updated` | Whichever agent makes the most recent change | Every edit |
-| `Linked plan` | `/superpowers:writing-plans` when plan ships | At plan creation |
+| `Linked plan` | the implementation plan's path when it ships | At plan creation |
 | `Open questions` | Any agent revising the spec | When count changes |
 | `Revisions` | Any agent appending to Revisions section | When a revision is logged |
 | AC Fulfillment list | Whichever agent verifies an AC | When AC verified - typically at PR merge or test pass |

@@ -2,11 +2,22 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
+| 1.5.1 | 2026-09-01 | unreleased | fixed | Removed every pointer to `/superpowers:writing-plans`, including the stale-plan gate's failure message. The skill names no external plugin. |
 | 1.5.0 | 2026-08-27 | v0.5.0 | changed | Release folders are named by sequence and theme, not by version. The version moves to `target-version:` frontmatter. |
 | 1.4.0 | 2026-08-27 | unreleased | changed | Removed `disable-model-invocation`. The skill is auto-discoverable; a do-NOT-fire clause in the description replaces the binary gate. |
 | 1.3.0 | 2026-08-24 | v0.3.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.3.0; prior history remains there. |
 
 
+
+## 1.5.1 - 2026-09-01
+
+**Documentation only. No behavior change.** The skill no longer depends on a plugin it does not ship with.
+
+**Every reference to `/superpowers:writing-plans` is gone.** Two sat in `SKILL.md`, in the when-not-to-use list and in the pipeline description. The third is the one that mattered most: `references/hygiene-gates.md` used it inside the **failure message** of the stale-plan gate, so a maintainer whose spec had drifted ahead of its plan was told to run a command that, on any machine without that plugin, does not exist. A gate whose remediation instruction cannot be followed has not really fired.
+
+All three now name `docs/internal/release-plans/implementation-plan-template.md`, which lives in this repository and is derived from the sixteen implementation plans already tracked here.
+
+See `plab-spec` 1.3.3 for the sweep that found these: fourteen live pointers across nine files, all to the same external skill, and no other external plugin referenced anywhere in the library.
 
 ## 1.5.0 - 2026-08-27
 

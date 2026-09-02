@@ -86,7 +86,7 @@ Generate and synthesise structured peer reviews across models. Three modes: `--r
 
 ### plab-spec
 
-Create a feature specification: the contract between intent and implementation. Writes a `spec.md` into a per-effort folder under `docs/internal/release-plans/`, carrying frontmatter, an agent-updated Task Summary block, numbered acceptance criteria each cited to a source, and links to the related effort and plan. Lands in `_unassigned/` by default, or straight into a release folder with `--target-release vX.Y.Z`. Defines WHAT to build; `/superpowers:writing-plans` defines HOW and `/plab-strategy-brief` explores WHY. Refuses to write implementation steps.
+Create a feature specification: the contract between intent and implementation. Writes a `spec.md` into a per-effort folder under `docs/internal/release-plans/`, carrying frontmatter, an agent-updated Task Summary block, numbered acceptance criteria each cited to a source, and links to the related effort and plan. Lands in `_unassigned/` by default, or straight into a release folder with `--target-release vX.Y.Z`. Defines WHAT to build; the implementation-plan template under `docs/internal/release-plans/` defines HOW and `/plab-strategy-brief` explores WHY. Refuses to write implementation steps.
 
 **Invocation:** auto-discoverable as of 1.3.0. Fires on an explicit request to write a spec or turn requirements into acceptance criteria. Its description carries a do-NOT-fire clause for passing mentions of the word "spec", questions about an existing spec, and requests to implement one.
 
