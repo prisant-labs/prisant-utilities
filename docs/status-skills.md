@@ -2,7 +2,7 @@
 
 The current configuration of every skill in `prisant-utilities`, as declared in the repository. One row per skill, plus the setup each one needs and where its output lands.
 
-**Plugin version:** 0.5.2 **Skills:** 8 (7 auto-discoverable, 1 explicit-invocation only) **Verified against:** `library.json`, `manifest.generated.json`, and each `skills/*/SKILL.md` **As of:** 2026-08-28
+**Plugin version:** 0.5.3 **Skills:** 8 (7 auto-discoverable, 1 explicit-invocation only) **Verified against:** `library.json`, `manifest.generated.json`, and each `skills/*/SKILL.md` **As of:** 2026-09-01
 
 > This file describes what the repository declares, not what is installed on any given machine. To check a local install, read `~/.claude/plugins/installed_plugins.json`.
 
@@ -16,8 +16,8 @@ The current configuration of every skill in `prisant-utilities`, as declared in 
 | `plab-continue-session` | 1.4.0 | Auto + explicit | `[--log <path>]` | Nothing. Displays context only |
 | `plab-guide` | 2.2.2 | Auto + explicit | `<topic-or-repo-url> [--type repo-url\|tool\|concept] [--out <dir>] [--force]` | `_output/plab-guide/` |
 | `plab-init-project` | 1.3.0 | **Explicit only** | `[--profile minimal\|standard\|public] [--type ...] [--agents ...] [--dry-run]` | The target repository root |
-| `plab-release-plan` | 1.5.0 | Auto + explicit | `--create \| --promote \| --demote \| --update \| --gate` | `docs/internal/release-plans/plan_NN_<slug>/` |
-| `plab-spec` | 1.3.2 | Auto + explicit | `--effort <id> [--target-release vX.Y.Z] [--revise] [--dry-run]` | `docs/internal/release-plans/_unassigned/` by default |
+| `plab-release-plan` | 1.5.1 | Auto + explicit | `--create \| --promote \| --demote \| --update \| --gate` | `docs/internal/release-plans/plan_NN_<slug>/` |
+| `plab-spec` | 1.3.3 | Auto + explicit | `--effort <id> [--target-release vX.Y.Z] [--revise] [--dry-run]` | `docs/internal/release-plans/_unassigned/` by default |
 | `plab-strategy-brief` | 1.1.1 | Auto + explicit | `[paste raw thinking]` | `_output/plab-strategy-brief/` |
 | `plab-wrap-session` | 1.6.2 | Auto + explicit | `[mode: quick\|final\|deep\|blocked] [--organize]` | `_local/_session-logs/` (gitignored) |
 
@@ -104,7 +104,7 @@ Turns raw, unstructured thinking into a decision-ready analysis document.
 
 Explicitly not for summarizing already-structured documents, editing polished prose, or pure research queries with no raw thinking supplied.
 
-### `plab-spec` 1.3.2
+### `plab-spec` 1.3.3
 
 Writes a feature specification optimized for agent execution.
 
@@ -119,7 +119,7 @@ Writes a feature specification optimized for agent execution.
 
 Produces frontmatter, an agent-updated Task Summary block, and numbered acceptance criteria with source citations. Defines **what** to build. The implementation-plan template in `docs/internal/release-plans/` defines how; `/plab-strategy-brief` explores why.
 
-### `plab-release-plan` 1.5.0
+### `plab-release-plan` 1.5.1
 
 Manages a version-scoped release plan folder.
 
