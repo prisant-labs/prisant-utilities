@@ -2,13 +2,13 @@
 id: A-02
 title: "Programmatic review dispatch for plab-ai-review"
 type: spec
-status: draft
+status: committed
 created: 2026-08-29
-updated: 2026-08-29
+updated: 2026-09-01
 linked-effort: "the maintainer's private ai-review growth roadmap, entry A-2 (make the handoff programmatic), written 2026-08-16, which names this the single largest improvement available in the portfolio"
 linked-plan: null
 linked-release: null
-ac-count: 8
+ac-count: 9
 source-count: 5
 requires-human-review: false
 priority: P1
@@ -18,11 +18,11 @@ priority: P1
 
 ## Task Summary
 
-**Status:** draft
-**Last updated:** 2026-08-29 by plab-spec
+**Status:** committed
+**Last updated:** 2026-09-01 by claude, applying the maintainer's D1, D2 and D3 decisions
 **Linked plan:** not yet planned
-**Open questions:** 3
-**Revisions:** 0
+**Open questions:** 0
+**Revisions:** 1
 
 ### Acceptance Criteria Fulfillment
 
@@ -34,6 +34,7 @@ priority: P1
 - [ ] **AC-6** - A dispatched review produces the same document shape as a manual one, so `--respond` works on it unchanged
 - [ ] **AC-7** - Dispatch metadata is recorded in the document for attribution
 - [ ] **AC-8** - `argument-hint` documents `--close`, which exists today but is undocumented
+- [ ] **AC-9** - A pending job identifier survives the session that submitted it, so a review started before a break is collectable after it
 
 ### Currently In Progress
 
@@ -63,7 +64,7 @@ This effort removes the manual transport while keeping it available. The reviewe
 - **Replacing the manual path.** The copy-paste flow is what makes this skill portable to any model with a chat window and no CLI, and it stays the default [S2].
 - **Multi-reviewer or disagreement surfacing.** That is a separate roadmap item and only becomes practical once dispatch exists; bundling it here would widen the first exercise of this pipeline into two features [S2].
 - **Reusing the runtime's `review` or `adversarial-review` subcommands.** Both are scoped to a code diff, taking `--base <ref>` and `--scope working-tree|branch`, and this skill reviews documents rather than diffs [S3].
-- **Changing the review document format, the section presets, or the severity framework.** Dispatch changes how the document is filled, not what it contains.
+- **Changing the review document's body format, the section presets, or the severity framework.** Dispatch changes how the document is filled, not what its sections are. This carve-out is deliberate and narrow, and was added when D2 was decided: dispatch adds exactly one frontmatter field, carrying the pending job identifier, because a handle that does not survive the session defeats the asynchronous submission requirement 3 is built on. No section, preset or severity level changes.
 - **Changing `--respond` or `--close` behavior** beyond the `argument-hint` correction.
 
 ## Users / Actors
@@ -83,6 +84,8 @@ This effort removes the manual transport while keeping it available. The reviewe
 5. The dispatched path produces a document identical in shape to the manual path, so `--respond` operates on it without knowing which path produced it [S1].
 6. Attribution is preserved. All content is already required to be attributed with role, model name, and date [S1]; dispatch must record the same facts rather than leaving machine-produced findings unlabelled.
 7. `--close` is documented in `argument-hint`. It is an implemented mode that the hint omits, so a reader of the hint cannot discover it [S1, S2].
+8. The pending job identifier is written into the review document's frontmatter. The runtime returns an identifier and offers `status` and `result` against it [S3], and that identifier is the only handle on a job that may outlive the session which started it [D2].
+9. Dispatch requests `high` effort and names no model. The runtime accepts `--effort` and `--model` independently [S3], so effort can be set without pinning a model. Effort is a model-independent setting that does not age; a model identifier written into a skill file is an unversioned reference to something retired on another party's schedule, and no document gate in this repository covers skill files [D3].
 
 ## Acceptance Criteria
 
@@ -124,6 +127,14 @@ AC-7: The review document records which reviewer produced the findings and when,
       the attribution form the skill already requires for all model content. [S1]
 
 AC-8: `argument-hint` lists `--close` alongside `--respond`. [S1, S2]
+
+AC-9: A job identifier written by a dispatched submission survives the end of the
+      session that submitted it, so a review started before a break is collectable
+      after it without the maintainer having recorded anything by hand. [S3]
+  Given: a dispatch submitted in one session, and that session then ended
+  When:  the skill is invoked in a later session to collect that review
+  Then:  the identifier is recovered from the review document itself, the findings
+         are written back, and at no point is the maintainer asked to supply the id
 ```
 
 ## Behavior / Examples
@@ -151,6 +162,7 @@ The distinction that matters: a document with empty placeholders and a reported 
 | Date | Author | Type | Description |
 |------|--------|------|-------------|
 | 2026-08-29 | plab-spec | added | Initial draft created |
+| 2026-09-01 | claude | amended | D1, D2 and D3 resolved by the maintainer. The Non-Goal on document format narrowed to the body, so it no longer contradicts the single frontmatter field D2 requires. AC-9 added, because AC-4 alone was satisfied by an in-session-only identifier and so did not test the session-boundary property D2 exists to deliver. Requirements 8 and 9 added for the identifier's persistence and the effort setting. Status promoted from draft to committed. |
 
 ## Sources & Evidence
 
@@ -174,11 +186,11 @@ The distinction that matters: a document with empty placeholders and a reported 
 
 | ID | Title | Resolution | Status | Updated |
 |----|-------|------------|--------|---------|
-| D1 | Dispatch opt-in shape | (none) | Open | (none) |
-| D2 | Where the pending job identifier lives | (none) | Open | (none) |
-| D3 | Reviewer model and effort selection | (none) | Open | (none) |
+| D1 | Dispatch opt-in shape | Option A: a per-invocation flag; the manual path stays the default | Decided | 2026-09-01 |
+| D2 | Where the pending job identifier lives | Option A: the review document's frontmatter, with the Non-Goal narrowed and AC-9 added | Decided | 2026-09-01 |
+| D3 | Reviewer model and effort selection | Option B at `high`: pass `--effort high`, pin no model | Decided | 2026-09-01 |
 
-### D1: Dispatch opt-in shape (Open)
+### D1: Dispatch opt-in shape (Decided)
 
 **Summary.** Is dispatch a flag on each invocation, or a configured default with an opt-out?
 
@@ -195,14 +207,14 @@ The distinction that matters: a document with empty placeholders and a reported 
 
 ---
 
-> **Maintainer decision:** _(pending)_
+> **Maintainer decision:** Option A, a per-invocation flag.
 >
-> * **Status:** Open
-> * **Choice:** (none)
-> * **Reasoning:** (none)
-> * **Decided by / date:** (none)
+> * **Status:** Decided
+> * **Choice:** Option A. Dispatch is requested per invocation; absent the flag the skill behaves exactly as it does today.
+> * **Reasoning:** Accepted the recommendation after review. A-02 is the first effort to run through this pipeline end to end, and a default that varies by machine would put a second unknown into any failure: a review that did not dispatch could mean the feature is broken or merely that the runtime is absent here, with nothing distinguishing the two. One typed flag buys a command that means the same thing on every machine. Option B stays available and gets cheaper to adopt once dispatch has been used in anger, at which point the behaviour it would default to is already understood.
+> * **Decided by / date:** JP / 2026-09-01
 
-### D2: Where the pending job identifier lives (Open)
+### D2: Where the pending job identifier lives (Decided)
 
 **Summary.** Between submitting a background review and collecting it, the job identifier has to survive somewhere.
 
@@ -219,14 +231,14 @@ The distinction that matters: a document with empty placeholders and a reported 
 
 ---
 
-> **Maintainer decision:** _(pending)_
+> **Maintainer decision:** Option A, the review document's frontmatter, with both consequences resolved here rather than deferred.
 >
-> * **Status:** Open
-> * **Choice:** (none)
-> * **Reasoning:** (none)
-> * **Decided by / date:** (none)
+> * **Status:** Decided
+> * **Choice:** Option A. The pending job identifier is written into the review document's frontmatter.
+> * **Reasoning:** Accepted the recommendation: a handle that does not survive the session is the failure mode this portfolio has already engineered out elsewhere, and it is the one property that makes requirement 3's asynchronous submission worth having. Two consequences were surfaced during the review of this spec and directed to be fixed in the spec rather than left to the implementation plan. First, the Non-Goals forbade changing the review document format, which this decision contradicts; that Non-Goal is now narrowed to the body, with the single frontmatter field named as a deliberate carve-out. Second, no criterion tested the property this decision exists to deliver: AC-4 requires only that collection happen in a separate step, which an in-session-only identifier satisfies completely, so AC-9 was added to test survival across a session boundary. Adding a criterion is a spec action, not a plan action.
+> * **Decided by / date:** JP / 2026-09-01
 
-### D3: Reviewer model and effort selection (Open)
+### D3: Reviewer model and effort selection (Decided)
 
 **Summary.** Should the skill pin a model and effort for review dispatch, or leave both unset?
 
@@ -243,9 +255,9 @@ The distinction that matters: a document with empty placeholders and a reported 
 
 ---
 
-> **Maintainer decision:** _(pending)_
+> **Maintainer decision:** Option B at `high`.
 >
-> * **Status:** Open
-> * **Choice:** (none)
-> * **Reasoning:** (none)
-> * **Decided by / date:** (none)
+> * **Status:** Decided
+> * **Choice:** Option B. Dispatch passes `--effort high` and names no model.
+> * **Reasoning:** The recommendation's hedge, "if it can be expressed without pinning a model", was verified on 2026-09-01 against codex-companion 1.0.6 and Codex CLI 0.144.5: `--effort` accepts `none|minimal|low|medium|high|xhigh` independently of `--model`, so the split is expressible and the hedge resolves. Effort is a dial that means the same thing regardless of which model sits behind it, whereas a model identifier is an unversioned reference to something retired on another party's schedule, and skill files are not covered by this repository's document gates, so such a reference would rot unobserved. `xhigh` was considered and declined: review is adversarial work and the routing rule does reserve the strongest tier for it, but every review would then cost more and take longer, which pushes against the one thing this effort exists to achieve, namely making reviews cheap enough to actually run.
+> * **Decided by / date:** JP / 2026-09-01
