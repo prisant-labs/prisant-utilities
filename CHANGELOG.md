@@ -5,6 +5,24 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- **The library no longer references a plugin it does not ship with.** `plab-spec` (1.3.3) and `plab-release-plan` (1.5.1) both pointed at `/superpowers:writing-plans` for the implementation-plan stage, on the assumption that a separate plugin would be installed. A sweep found fourteen live pointers across nine files: both skills' descriptions and when-not-to-use lists, `plab-spec`'s task-summary reference, `plab-release-plan`'s stale-plan gate **failure message**, `AGENTS.md`, the root `README.md`, both usage READMEs, `docs/status-skills.md`, and the generated manifest.
+
+  All now name `docs/internal/release-plans/implementation-plan-template.md`, which is in this repository. The failure-message instance was the worst of them: a gate that fires and then instructs the reader to run a command that does not exist has not really fired.
+
+  The same sweep confirmed `/superpowers:writing-plans` was the **only** external plugin referenced anywhere in the library, so this closes the category rather than one instance of it. The standing rule it establishes: a skill here names no skill it does not ship beside.
+
+- **A retracted rationale removed from `docs/skills/plab-spec/README.md`.** It still claimed `superpowers` owns the default spec-writing triggers, a justification `skills/plab-spec/HISTORY.md` recorded as not surviving inspection when 1.3.0 removed the flag it was defending. The sentence also sat directly beneath a paragraph explaining that the flag was gone.
+
+### Added
+
+- **`docs/internal/release-plans/implementation-plan-template.md`.** The shape all sixteen tracked implementation plans already share, written down: `Completion Status`, numbered phases, `CI and Documentation Coverage`, `Rollback`. Derived by counting sections across the sixteen rather than by preference. Its frontmatter block is fenced so the schema gate skips the template rather than validating it as a document.
+
+- **An `Engineering discipline` section in `AGENTS.md`,** and a one-line `CLAUDE.md` importing it. `AGENTS.md` is the cross-harness convention but Claude Code does not read it, so the repository's own working rules were reaching Codex and not Claude.
+
 ## [0.5.2] - 2026-08-28
 
 ### Added

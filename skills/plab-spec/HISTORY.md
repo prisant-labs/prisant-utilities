@@ -2,12 +2,23 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
+| 1.3.3 | 2026-09-01 | unreleased | fixed | Removed every pointer to `/superpowers:writing-plans`. The implementation-plan stage is now an in-repo template, so the skill names no external plugin. |
 | 1.3.2 | 2026-08-28 | v0.5.2 | changed | Supersession is documented as symmetric: `superseded-by` and `supersedes` are both written, and a cross-file gate enforces the pair. |
 | 1.3.1 | 2026-08-28 | v0.5.1 | changed | `linked-effort` documented as a string, not a path. A tracked artifact must not cite an untracked one. |
 | 1.3.0 | 2026-08-27 | unreleased | changed | Removed `disable-model-invocation`. The skill is auto-discoverable; a do-NOT-fire clause in the description replaces the binary gate. |
 | 1.2.1 | 2026-08-24 | v0.3.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.2.1; prior history remains there. |
 
 
+
+## 1.3.3 - 2026-09-01
+
+**Documentation only. No behavior change.** The skill no longer depends on a plugin it does not ship with.
+
+**Every reference to `/superpowers:writing-plans` is gone.** The description, the when-not-to-use list, and `references/task-summary-block.md` all pointed the reader at a skill from a separate plugin, on the assumption that plugin would be installed. That assumption held only on the maintainer's machine and only while that plugin was enabled; it broke on 2026-09-01, when it was disabled as a reversible experiment. A dangling pointer in a description is worse than no pointer, because an agent that follows it and finds nothing has no way to distinguish "this stage was skipped" from "this stage does not exist here".
+
+The replacement is `docs/internal/release-plans/implementation-plan-template.md`, which is in this repository, is derived from the sixteen implementation plans already tracked here, and cannot be uninstalled.
+
+Recorded because it is the general lesson rather than the specific fix: a sweep for external plugin references across the whole skills tree found `/superpowers:writing-plans` and nothing else, in fourteen live places across nine files. The coupling was a single point, but it reached into the description, both usage READMEs, the root README, `AGENTS.md`, the status page and the generated manifest. **A skill in this library should name no skill it does not ship beside.**
 
 ## 1.3.2 - 2026-08-28
 

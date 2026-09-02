@@ -11,8 +11,8 @@ description: "Create and manage a version-scoped release plan folder: scaffold i
 argument-hint: "--create vX.Y.Z [--theme <text>] | --promote --from _unassigned --to vX.Y.Z S-NN ... | --demote --from vX.Y.Z [--to _unassigned] S-NN | --update vX.Y.Z | --gate vX.Y.Z"
 license: MIT
 metadata:
-  version: "1.5.0"
-  updated: 2026-08-27
+  version: "1.5.1"
+  updated: 2026-09-01
 ---
 
 # Release Plan
@@ -31,7 +31,7 @@ Aggregate every spec and implementation plan in scope of a release into one self
 
 ## When NOT to Use This Skill
 
-- You're writing the spec or plan itself (use `/plab-spec` or `/superpowers:writing-plans`)
+- You're writing the spec or plan itself (use `/plab-spec`, or write the plan against `docs/internal/release-plans/implementation-plan-template.md`)
 - You're tagging or pushing (the skill blesses readiness; tagging is a manual human action)
 - You're trying to add an AC (refuse; redirect to `/plab-spec --revise`)
 - You're modifying CHANGELOG / README / HISTORY content (the skill only manages the *checklist* of what to update, not the content)
@@ -170,7 +170,7 @@ Output: structured report; no file modification. An empty release is never READY
 ## Pairings
 
 - **`/plab-spec`** writes `spec.md` into `_unassigned/<id>_<slug>/` (or directly into `plan_NN_<slug>/<id>_<slug>/` if `--target-release` is passed).
-- **`/superpowers:writing-plans`** writes `implementation-plan.md` into the same per-effort folder as its spec.
+- **`docs/internal/release-plans/implementation-plan-template.md`** is the shape `implementation-plan.md` takes. The plan is written into the same per-effort folder as its spec.
 - **`/plab-release-plan --promote`** moves committed efforts from `_unassigned/` into the release. The promotion is the explicit commitment to ship.
 - **`/plab-release-plan --gate`** is the pre-tag sanity check.
 

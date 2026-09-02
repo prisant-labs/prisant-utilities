@@ -64,14 +64,14 @@
       {
         "name": "plab-spec",
         "path": "skills/plab-spec/SKILL.md",
-        "version": "1.3.2",
+        "version": "1.3.3",
         "tier": "universal",
         "status": "active"
       },
       {
         "name": "plab-release-plan",
         "path": "skills/plab-release-plan/SKILL.md",
-        "version": "1.5.0",
+        "version": "1.5.1",
         "tier": "universal",
         "status": "active"
       },

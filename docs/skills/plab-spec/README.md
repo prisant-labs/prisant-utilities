@@ -1,9 +1,9 @@
 # plab-spec
 
-**Version:** 1.3.2
+**Version:** 1.3.3
 **Source:** [`skills/plab-spec/`](../../../skills/plab-spec/)
 
-Produce a feature specification: the contract between intent and implementation. Spec defines **what** to build and how the team knows it's done. Distinct from `/superpowers:writing-plans` (how to build) and `/plab-strategy-brief` (explore problem space).
+Produce a feature specification: the contract between intent and implementation. Spec defines **what** to build and how the team knows it's done. Distinct from the implementation-plan template in `docs/internal/release-plans/` (how to build) and `/plab-strategy-brief` (explore problem space).
 
 > **v1.1.0 note:** the default output path changed. Specs now live in per-effort folders under `release-plans/_unassigned/` (or directly in a release folder when `--target-release` is passed). The legacy `docs/internal/efforts/<id>/<id>_spec.md` path is no longer the default. That change predates this plugin; prior history remains in the private upstream.
 
@@ -62,8 +62,6 @@ ln -s /path/to/prisant-utilities/skills/plab-spec .claude/skills/plab-spec
 
 Typing `/plab-spec` still works and is still the precise way to run it.
 
-That is deliberate: `superpowers` owns the default spec-writing triggers, and two skills competing for "write a spec" would fire unpredictably.
-
 ---
 
 ## When to Use
@@ -77,7 +75,7 @@ That is deliberate: `superpowers` owns the default spec-writing triggers, and tw
 ## When NOT to Use
 
 - The problem space hasn't been explored yet -- use `/plab-strategy-brief` first
-- You're writing implementation steps -- that's `/superpowers:writing-plans`
+- You're writing implementation steps -- that's `docs/internal/release-plans/implementation-plan-template.md`
 - Bundling completed features for release -- that's `/plab-release-plan`
 - The feature is one sentence and one AC -- write it inline in the effort brief
 - The skill being spec'd is itself a new skill -- use `/skill-creator` (it has its own discovery/zone flow)
@@ -87,8 +85,8 @@ That is deliberate: `superpowers` owns the default spec-writing triggers, and tw
 ## The Skill Chain
 
 ```
-plab-strategy-brief  ->  plab-spec  ->  superpowers:writing-plans  ->  [implementation]  ->  plab-release-plan
-   (explore)           (commit what)    (commit how)                                    (bundle + ship)
+plab-strategy-brief  ->  plab-spec  ->  implementation-plan.md  ->  [implementation]  ->  plab-release-plan
+   (explore)           (commit what)    (commit how)                                 (bundle + ship)
 ```
 
 Each artifact has a distinct purpose. `plab-spec` produces the middle one: **commit what to build**, with acceptance criteria, source traceability, and links to the related effort and plan.

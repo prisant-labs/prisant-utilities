@@ -23,7 +23,7 @@ Works with Claude Code and Codex.
 
 The session pair is a contract: `plab-wrap-session` writes the log that `plab-continue-session` reads. They are versioned and released together.
 
-The document trio is a pipeline: `plab-spec` writes the acceptance criteria, `/superpowers:writing-plans` writes the implementation plan beside it, and `plab-release-plan` aggregates whole effort folders into a release and decides whether it can ship.
+The document trio is a pipeline: `plab-spec` writes the acceptance criteria, an `implementation-plan.md` is written beside it against the template in `docs/internal/release-plans/`, and `plab-release-plan` aggregates whole effort folders into a release and decides whether it can ship.
 
 ## Install
 
