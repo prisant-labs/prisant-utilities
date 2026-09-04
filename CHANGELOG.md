@@ -5,6 +5,18 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Lifecycle invariant 9: a spec's `status` and its acceptance-criteria checkboxes must agree.** A `fulfilled` spec must have every AC checkbox ticked, and a `draft` spec must have none. `scripts/doc-lifecycle-check.py` now enforces mechanically what the corpus had been maintaining by discipline alone: measured immediately before the rule was written, 8 fulfilled specs stood at 52 of 52 ticked and 8 draft specs at 0 of 61. The record was already perfect and guarded by nothing, which is the reason to build the fixture while it still is rather than after the first drift.
+
+  `committed` and `superseded` are deliberately unchecked. `committed` is the one status a spec legitimately holds while its implementation plan is mid-execution, so a partial tick count there is the correct state and not a defect; a rule that flagged it would fire falsely on the first effort that ticks a criterion before flipping status, and would be removed the week it shipped.
+
+  Invariants 8 and 9 share one regex rather than two. The checkbox pattern gained a capture group for the state character, so invariant 8 counts the lines and invariant 9 reads their state, and the two cannot drift into disagreeing about what an acceptance criterion is.
+
+  Proved the way this repository requires: dropping the check from `run_all_checks()` makes the wiring self-test fail naming the missing marker, unticking one criterion in a real fulfilled spec makes the gate exit 1 naming that spec, and ticking one in a real draft spec does the same. A gate that cannot fail is not a gate.
+
 ## [0.5.3] - 2026-09-01
 
 ### Fixed
