@@ -17,6 +17,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   Proved the way this repository requires: dropping the check from `run_all_checks()` makes the wiring self-test fail naming the missing marker, unticking one criterion in a real fulfilled spec makes the gate exit 1 naming that spec, and ticking one in a real draft spec does the same. A gate that cannot fail is not a gate.
 
+- **`scripts/version-parity-check.py`, and a CI step that runs it.** Every version a tracked document claims must equal the version the repository declares: a skill's `metadata.version` in `skills/<name>/SKILL.md`, and the plugin's `version` in `library.json`. Four structured claim locations are read, and only those four: the root `README.md` Skills table, the `docs/status-skills.md` At a glance table, each `docs/skills/<skill>/README.md` `**Version:**` line, and the `**Plugin version:**` line on the status page.
+
+  This closes the gap v0.5.3 exposed, and the gap was wider than the record of it suggested. The "bidirectional drift check" believed to cover this is Check 4 of `skills/plab-wrap-session/references/hygiene-sweep.md`, a bash recipe inside a skill reference. **CI has never run it**, because it is not a committed script and no workflow invokes it, so a stale version reference could sit on `main` through any number of green pull requests until somebody happened to wrap a session. And it asks a different question anyway: it compares each skill's own version against its value at the last tag, and never reads the version numbers written in the documentation. Check 4 is unchanged and still useful; this gate covers what Check 4 was mistakenly believed to cover.
+
+  Deliberately structural rather than a version-string sweep. D-12 (path-citation precision) measured what happens when a prose rule is mechanized literally: 13 flags, 11 false positives. Version-shaped strings in these documents are overwhelmingly historical and correct precisely because they do not match the current version, so a fixture asserts that a `0.9.0` in a history table is ignored.
+
+  A claim location that yields no claims at all is **BROKEN**, not clean. If the table shape or the `**Version:**` label changes, the matcher goes blind, and a gate that reports clean because it can no longer see is the failure this repository has already hit twice, with the empty `git tag -l` in v0.5.2 and with `AGENTS.md` never loading.
+
+  Proved against the real defect: bumping `plab-spec`'s `metadata.version` and touching no documentation makes the gate exit 1 naming all three stale claims, which is the v0.5.3 defect verbatim. Blinding the README table makes it exit 2 rather than 0. Dropping a check from `run_all_checks()` makes the self-test fail naming the dropped location.
+
 ## [0.5.3] - 2026-09-01
 
 ### Fixed
