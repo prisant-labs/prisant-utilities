@@ -875,7 +875,7 @@ def _self_test_releases_in_symmetry_and_links(failures):
 def _self_test_wiring(failures):
     """Defect B: drive the checks through run_all_checks(), the same top-level entry point the real run uses, over one fixture tree seeded with one violation of every invariant, and confirm every invariant is represented in the findings, by a message fragment unique to that check's own wording (not just a shared seeded id, which would let two checks alias each other and hide either one's removal). This proves the PIPELINE, not just the individual check functions: a check silently removed from run_all_checks() would leave its marker missing here even though that check's own dedicated self-test above still passes in isolation.
 
-    To prove this test actually does that (not just that it passes), comment out one line inside run_all_checks(), rerun this file with --self-test-only, and confirm self-test now fails naming the missing marker; then restore the line. Do this once per invariant (nine cycles) before trusting this fixture; see the delivery report for the transcript of all eight, and the 2026-09-04 session log for the ninth."""
+    To prove this test actually does that (not just that it passes), comment out one line inside run_all_checks(), rerun this file with --self-test-only, and confirm self-test now fails naming the missing marker; then restore the line. Do this once per invariant (nine cycles) before trusting this fixture; see the delivery report for the transcript of all eight, and commit b6c173a's message for the ninth."""
     with tempfile.TemporaryDirectory() as tmp:
         # Every fixture must sit under docs/internal/release-plans/, the tree discover() actually
         # walks: a spec or plan written directly under tmp is invisible to it.
