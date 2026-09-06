@@ -30,10 +30,10 @@ Invariant 4 (released-but-unfulfilled) can only fire against tags that are actua
 
 WHY EACH INVARIANT'S FIXTURE IS BUILT IN ITS OWN tempfile.TemporaryDirectory()
 ---------------------------------------------------------------------------------
-`self_test()` below never touches this repository. Each of the eight invariants gets its own small, throwaway fixture tree containing exactly one seeded violation (a canary, which must be flagged) alongside at least one correctly-shaped sibling (an anti-canary, which must not be). That keeps this gate's trustworthiness independent of whatever `docs/internal/release-plans/` happens to look like on the machine it runs on, which is the same discipline `path-citation-check.py` documents under "The self-test never touches --repo-root." On top of the eight per-check fixtures, one more fixture drives the checks through `run_all_checks()` itself, the same top-level entry point the real run uses, seeded with one violation of every invariant at once, so a check silently missing from the shipped pipeline is caught even though each check function still passes its own isolated test. And the invariant-4 tag-availability gate is proved separately, as a pure decision function with no git and no filesystem, against all three of its branches (tags present, tags absent without the opt-in, tags absent with the opt-in).
+`self_test()` below never touches this repository. Each of the nine invariants gets its own small, throwaway fixture tree containing exactly one seeded violation (a canary, which must be flagged) alongside at least one correctly-shaped sibling (an anti-canary, which must not be). That keeps this gate's trustworthiness independent of whatever `docs/internal/release-plans/` happens to look like on the machine it runs on, which is the same discipline `path-citation-check.py` documents under "The self-test never touches --repo-root." On top of the nine per-check fixtures, one more fixture drives the checks through `run_all_checks()` itself, the same top-level entry point the real run uses, seeded with one violation of every invariant at once, so a check silently missing from the shipped pipeline is caught even though each check function still passes its own isolated test. And the invariant-4 tag-availability gate is proved separately, as a pure decision function with no git and no filesystem, against all three of its branches (tags present, tags absent without the opt-in, tags absent with the opt-in).
 
-THE EIGHT INVARIANTS
------------------------
+THE NINE INVARIANTS
+----------------------
   1. Supersession symmetry, both directions: if a document declares `superseded-by: X`, a document with `id: X` must exist and must declare `supersedes:` back naming this document's own id; if a document declares `supersedes: Y`, a document with `id: Y` must exist and must declare `superseded-by:` back naming this document's own id. Checked across specs, implementation plans, AND release plans, not just the first two: this is a field-to-field comparison, not a per-file-type rule, so a release plan carrying either field is checked exactly like a spec.
   2. No two release plans may declare the same `target-version`.
   3. No two release plans may declare the same `sequence`.
@@ -42,6 +42,7 @@ THE EIGHT INVARIANTS
   6. An effort folder named like `D-07_waiting-on-blocker-contract` must contain a `spec.md` whose `id` is `D-07`, and the `implementation-plan.md` beside it must carry the same `id`.
   7. A release plan's `spec-count` and `plan-count` must equal the number of `spec.md` and `implementation-plan.md` files present in that release plan's effort folders, and its `includes` list must name exactly the effort ids whose folders are present there. "Effort folder" has exactly one definition in this script, used for both halves of this invariant and for invariant 6: an immediate subdirectory of the release plan's own folder, matching the `ID_slug` naming convention (`effort_dirs_of()`). Nothing deeper than that is counted, matching the documented convention that effort subfolders are peers of `plan.md`, not an arbitrarily deep tree.
   8. A spec's `ac-count` must equal the number of AC checklist lines in its body, outside fenced code blocks, counting either of two forms: `- [ ] AC-N: <text>` (what the sixteen real specs in this repository use) or `- [ ] **AC-N** - <text>` (what `skills/plab-spec/references/spec-template.md` and its example specs document as the generator's own output).
+  9. A spec's `status` and its acceptance-criteria checkboxes must agree: a `fulfilled` spec must have every AC checkbox ticked, and a `draft` spec must have none ticked. `committed` and `superseded` are deliberately not checked, for a reason that is empirical rather than an oversight; see `check_ac_status_agreement()`. Invariants 8 and 9 read the same checkbox lines through the same regex and therefore cannot disagree about what an acceptance criterion is: 8 counts them, 9 reads their state.
 
 WHAT THIS SCRIPT DELIBERATELY DOES NOT CHECK
 ------------------------------------------------
@@ -61,12 +62,26 @@ RELEASE_PLANS_REL = "docs/internal/release-plans"
 
 KEY_LINE = re.compile(r'^([A-Za-z][A-Za-z0-9_-]*):\s*(.*)$')
 BLOCK_LIST_ITEM = re.compile(r'^\s*-\s')
-AC_CHECKBOX = re.compile(r'^- \[[ xX]\] (?:AC-\d+:|\*\*AC-\d+\*\*)', re.MULTILINE)
+# The capture group holds the checkbox state character, which invariant 9 reads and invariant 8
+# ignores. Deliberately ONE regex rather than two: findall() with a single group returns the group
+# instead of the whole match, so len() is unchanged and invariant 8 counts exactly what it counted
+# before, while invariant 9 becomes structurally incapable of disagreeing with invariant 8 about
+# what an AC line is. Two regexes kept in sync by hand would eventually drift, and the failure mode
+# would be invariant 9 silently not seeing lines invariant 8 counts.
+AC_CHECKBOX = re.compile(r'^- \[([ xX])\] (?:AC-\d+:|\*\*AC-\d+\*\*)', re.MULTILINE)
 EFFORT_FOLDER = re.compile(r'^([A-Z]{1,2}-\d{2,4})_')
 FENCE_LINE = re.compile(r'^\s*```')
 
 LINK_FIELDS = ("linked-spec", "linked-plan", "linked-release")
 TERMINAL_SPEC_STATUSES = ("fulfilled", "superseded")
+
+# Invariant 9's three-way split of the spec status enum in docs/internal/schemas/spec.schema.json.
+# The union of these three tuples must equal that enum. A status in none of them is reported as a
+# finding rather than skipped, so widening the schema without widening this invariant cannot make
+# the invariant pass silently.
+AC_TICK_ALL_REQUIRED = ("fulfilled",)
+AC_TICK_NONE_ALLOWED = ("draft",)
+AC_TICK_UNCHECKED = ("committed", "superseded")
 
 
 class FrontmatterError(Exception):
@@ -375,6 +390,40 @@ def check_ac_count(specs):
     return findings
 
 
+def check_ac_status_agreement(specs):
+    """Invariant 9: a spec's status and its acceptance-criteria checkboxes must agree. A `fulfilled` spec asserts that every criterion was delivered, so every AC checkbox must be ticked; a `draft` spec has not had its contract agreed yet, so none may be. Both directions are real defect shapes rather than tidiness: a fulfilled spec with an unticked criterion claims delivery it never verified, and a draft spec with a ticked one claims delivery before anyone agreed what delivery meant.
+
+    `committed` and `superseded` are deliberately NOT checked, and that is empirical rather than an oversight. `committed` is the one status a spec legitimately holds while its implementation plan is mid-execution, so a partial tick count there is the correct state and not a defect; checking it would false-flag exactly the window this repository is about to spend building A-02, whose spec is currently the only committed spec in the tree. `superseded` is a dead end whose ticks no longer assert anything about a live contract. A status this function does not recognise is reported rather than skipped, so widening the schema enum without widening this invariant cannot make it pass silently.
+
+    A spec with zero AC lines passes vacuously. Whether a spec should carry criteria at all is invariant 8's business (`ac-count` against the body) and, before that, the JSON Schema's; this invariant only compares state that exists.
+
+    Measured across the whole corpus on 2026-09-04, before the rule was written: 8 fulfilled specs at 52 of 52 ticked, 8 draft specs at 0 of 61, and 1 committed spec at 0 of 9. The record was already perfect and enforced by nothing, which is the reason to build the fixture while it still is."""
+    findings = []
+    for s in specs:
+        status = s["fm"].get("status")
+        if isinstance(status, str):
+            status = status.strip().strip('"').strip("'")
+        if status in AC_TICK_UNCHECKED:
+            continue
+        states = AC_CHECKBOX.findall(strip_fenced_code(s["body"]))
+        total = len(states)
+        ticked = sum(1 for c in states if c.lower() == "x")
+        if status in AC_TICK_ALL_REQUIRED:
+            if total and ticked != total:
+                findings.append("%s: status is %r but %d of %d acceptance criteria are still unticked"
+                                 % (s["path"], status, total - ticked, total))
+        elif status in AC_TICK_NONE_ALLOWED:
+            if ticked:
+                findings.append("%s: status is %r but %d of %d acceptance criteria are already ticked"
+                                 % (s["path"], status, ticked, total))
+        else:
+            known = ", ".join(AC_TICK_ALL_REQUIRED + AC_TICK_NONE_ALLOWED + AC_TICK_UNCHECKED)
+            findings.append("%s: status %r is not one of the statuses invariant 9 knows (%s), so it "
+                             "cannot decide whether the acceptance criteria agree, and is refusing to "
+                             "skip silently" % (s["path"], status, known))
+    return findings
+
+
 def run_all_checks(repo_root, specs, plans, releases, tags):
     """The one top-level entry point both the real run and the wiring self-test (_self_test_wiring) drive. A check silently dropped from this list is a check that never runs in production; the wiring self-test exists specifically to catch that, by asserting every invariant is represented in the findings from a single fixture seeded with one violation of each."""
     findings = []
@@ -386,6 +435,7 @@ def run_all_checks(repo_root, specs, plans, releases, tags):
     findings += check_folder_id_agreement(repo_root, specs, plans)
     findings += check_counts(repo_root, releases)
     findings += check_ac_count(specs)
+    findings += check_ac_status_agreement(specs)
     return findings
 
 
@@ -412,7 +462,7 @@ def _fm(pairs):
 
 def _spec_doc(id_, ac_lines=2, ac_count=None, status="draft", target_release=None,
               linked_plan="implementation-plan.md", linked_release=None, superseded_by=None,
-              supersedes=None, ac_form="colon"):
+              supersedes=None, ac_form="colon", ac_ticked=0):
     if ac_count is None:
         ac_count = ac_lines
     pairs = [
@@ -436,10 +486,11 @@ def _spec_doc(id_, ac_lines=2, ac_count=None, status="draft", target_release=Non
         pairs.append(("supersedes", supersedes))
     body_lines = ["", "## Acceptance Criteria", ""]
     for i in range(1, ac_lines + 1):
+        box = "x" if i <= ac_ticked else " "
         if ac_form == "colon":
-            body_lines.append("- [ ] AC-%d: something true" % i)
+            body_lines.append("- [%s] AC-%d: something true" % (box, i))
         else:
-            body_lines.append("- [ ] **AC-%d** - something true" % i)
+            body_lines.append("- [%s] **AC-%d** - something true" % (box, i))
     return _fm(pairs) + "\n".join(body_lines) + "\n"
 
 
@@ -738,6 +789,68 @@ def _self_test_ac_count(failures):
                              "bold-form, colon-form, or fenced-example specs, got %r" % findings)
 
 
+def _self_test_ac_status_agreement(failures):
+    """Invariant 9's canaries and anti-canaries. The anti-canary set is doing the real work here: the
+    two shapes this invariant must NOT flag (a partially-ticked `committed` spec, and a ticked AC
+    quoted inside a fence) are the two ways a status/checkbox rule most plausibly turns into a
+    false-positive generator, and a rule that false-flags the mid-execution state would be removed
+    the first week it fired."""
+    with tempfile.TemporaryDirectory() as tmp:
+        # Canary 1: fulfilled with an unticked criterion. A spec claiming delivery it never verified.
+        _write(os.path.join(tmp, "spec_fulfilled_partial", "spec.md"),
+               _spec_doc("Y-01", ac_lines=3, ac_ticked=2, status="fulfilled"))
+        # Canary 2: draft with a ticked criterion. Delivery claimed before the contract was agreed.
+        _write(os.path.join(tmp, "spec_draft_ticked", "spec.md"),
+               _spec_doc("Y-02", ac_lines=3, ac_ticked=1, status="draft"))
+        # Canary 3: a status outside the four the invariant knows. Widening the schema enum without
+        # widening this invariant must not make it pass silently.
+        _write(os.path.join(tmp, "spec_unknown_status", "spec.md"),
+               _spec_doc("Y-08", ac_lines=2, ac_ticked=1, status="archived"))
+
+        # Anti-canary: fulfilled, fully ticked. The shape all 8 real fulfilled specs have.
+        _write(os.path.join(tmp, "anti_fulfilled_full", "spec.md"),
+               _spec_doc("Y-03", ac_lines=3, ac_ticked=3, status="fulfilled"))
+        # Anti-canary: draft, none ticked. The shape all 8 real draft specs have.
+        _write(os.path.join(tmp, "anti_draft_clean", "spec.md"),
+               _spec_doc("Y-04", ac_lines=3, ac_ticked=0, status="draft"))
+        # Anti-canary: committed, partially ticked. The mid-execution state the invariant deliberately
+        # does not check. Flagging this would break the first effort that ticks a criterion before
+        # flipping status, which is precisely what A-02's execution is expected to do.
+        _write(os.path.join(tmp, "anti_committed_partial", "spec.md"),
+               _spec_doc("Y-05", ac_lines=3, ac_ticked=1, status="committed"))
+        # Anti-canary: superseded, partially ticked. A dead end whose ticks assert nothing.
+        _write(os.path.join(tmp, "anti_superseded_partial", "spec.md"),
+               _spec_doc("Y-06", ac_lines=3, ac_ticked=1, status="superseded"))
+        # Anti-canary: a TICKED AC line quoted inside a fence is documentation, not a criterion, so a
+        # draft spec that shows one must not be flagged. Invariant 8 proves the fence rule for
+        # counting; this fixture proves invariant 9 inherited it rather than reimplementing it.
+        fenced = _spec_doc("Y-07", ac_lines=1, ac_ticked=0, status="draft")
+        fenced += "\n```\n- [x] AC-99: a ticked example inside a fence, not a real criterion\n```\n"
+        _write(os.path.join(tmp, "anti_fenced_ticked", "spec.md"), fenced)
+
+        subs = ("spec_fulfilled_partial", "spec_draft_ticked", "spec_unknown_status",
+                "anti_fulfilled_full", "anti_draft_clean", "anti_committed_partial",
+                "anti_superseded_partial", "anti_fenced_ticked")
+        specs = [read_doc(os.path.join(tmp, sub, "spec.md"), tmp) for sub in subs]
+        findings = check_ac_status_agreement(specs)
+
+        canaries = (("spec_fulfilled_partial", "still unticked"),
+                    ("spec_draft_ticked", "already ticked"),
+                    ("spec_unknown_status", "refusing to skip silently"))
+        for canary, fragment in canaries:
+            hits = [f for f in findings if canary in f and fragment in f]
+            if len(hits) != 1:
+                failures.append("check 9 (status/checkbox agreement): expected exactly one %s finding "
+                                 "containing %r, got %r" % (canary, fragment, findings))
+
+        noise = [f for f in findings if not any(c in f for c, _ in canaries)]
+        if noise:
+            failures.append("check 9 (status/checkbox agreement): the fully-ticked fulfilled spec, the "
+                             "clean draft, the partially-ticked committed and superseded specs, and the "
+                             "fenced ticked example are anti-canaries and must produce zero findings, "
+                             "got %r" % noise)
+
+
 def _self_test_releases_in_symmetry_and_links(failures):
     # Defect E: release plans (plan.md) must not be silently exempted from invariants 1 and 5 the way
     # they used to be.
@@ -762,7 +875,7 @@ def _self_test_releases_in_symmetry_and_links(failures):
 def _self_test_wiring(failures):
     """Defect B: drive the checks through run_all_checks(), the same top-level entry point the real run uses, over one fixture tree seeded with one violation of every invariant, and confirm every invariant is represented in the findings, by a message fragment unique to that check's own wording (not just a shared seeded id, which would let two checks alias each other and hide either one's removal). This proves the PIPELINE, not just the individual check functions: a check silently removed from run_all_checks() would leave its marker missing here even though that check's own dedicated self-test above still passes in isolation.
 
-    To prove this test actually does that (not just that it passes), comment out one line inside run_all_checks(), rerun this file with --self-test-only, and confirm self-test now fails naming the missing marker; then restore the line. Do this once per invariant (eight cycles) before trusting this fixture; see the delivery report for the transcript of all eight."""
+    To prove this test actually does that (not just that it passes), comment out one line inside run_all_checks(), rerun this file with --self-test-only, and confirm self-test now fails naming the missing marker; then restore the line. Do this once per invariant (nine cycles) before trusting this fixture; see the delivery report for the transcript of all eight, and commit b6c173a's message for the ninth."""
     with tempfile.TemporaryDirectory() as tmp:
         # Every fixture must sit under docs/internal/release-plans/, the tree discover() actually
         # walks: a spec or plan written directly under tmp is invisible to it.
@@ -806,6 +919,12 @@ def _self_test_wiring(failures):
         _write(os.path.join(base, "WH-08_acmismatch", "spec.md"),
                _spec_doc("WH-08", ac_lines=2, ac_count=99, linked_plan=None))
 
+        # Invariant 9: fulfilled with one criterion still unticked. No linked-plan and no
+        # target-release, so it cannot alias invariant 4's or 5's marker, and ac-count is left to
+        # match the body so invariant 8 stays isolated to WH-08.
+        _write(os.path.join(base, "WI-09_statusdrift", "spec.md"),
+               _spec_doc("WI-09", ac_lines=2, ac_ticked=1, status="fulfilled", linked_plan=None))
+
         specs, plans, releases, errors = discover(tmp)
         if errors:
             failures.append("wiring fixture failed to parse: %r" % errors)
@@ -821,6 +940,7 @@ def _self_test_wiring(failures):
             ("6 (folder/id agreement)", "folder name claims id WF-06"),
             ("7 (counts)", "WG-99"),
             ("8 (ac-count)", "WH-08"),
+            ("9 (status/checkbox agreement)", "acceptance criteria are still unticked"),
         ]
         for label, marker in markers:
             if not any(marker in f for f in findings):
@@ -871,6 +991,7 @@ def self_test():
     _self_test_folder_id_agreement(failures)
     _self_test_counts(failures)
     _self_test_ac_count(failures)
+    _self_test_ac_status_agreement(failures)
     _self_test_releases_in_symmetry_and_links(failures)
     _self_test_wiring(failures)
     _self_test_tag_gate(failures)
@@ -880,8 +1001,8 @@ def self_test():
             print("  " + f, file=sys.stderr)
         print("\nExiting 2. Do NOT read this as a clean tree.", file=sys.stderr)
         return False
-    print("gate self-test: PASS (8 invariants each proved against a canary and an anti-canary, the "
-          "run_all_checks() wiring proved against one fixture seeding all eight, and the invariant-4 "
+    print("gate self-test: PASS (9 invariants each proved against a canary and an anti-canary, the "
+          "run_all_checks() wiring proved against one fixture seeding all nine, and the invariant-4 "
           "tag-availability gate proved on all three branches)")
     return True
 

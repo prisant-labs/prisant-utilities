@@ -112,3 +112,14 @@ jobs:
         id: index
         if: always()
         run: python3 scripts/gen-release-index.py --check
+
+      # The version numbers written in the documentation against the versions the
+      # repository declares. This is NOT the hygiene sweep's Check 4, which asks a
+      # different question (should this version have been bumped, judged against the
+      # last tag) and which CI has never run, because it is a bash recipe inside a
+      # skill reference rather than a committed script. v0.5.3 shipped with six stale
+      # references that every check above passed over.
+      - name: Documented versions match what the repository declares
+        id: version-parity
+        if: always()
+        run: python3 scripts/version-parity-check.py
