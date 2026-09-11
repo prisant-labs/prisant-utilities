@@ -92,6 +92,8 @@ Six series existed before this table did, and nothing anywhere said what any of 
 
 A new series letter is a real addition to the vocabulary. Add it here first, or the index generator will refuse to run rather than emit a blank cell for it.
 
+**`D-` is an effort series, and it is not the only thing in this repository numbered with a D.** Three schemes now use the letter and they do not refer to each other: `D-07` is an effort in this legend, a defect in the wrap and continue pair; `D1`, `D2` and `D3` are the decision records inside [`docs/internal/planning-artifact-model.md`](../planning-artifact-model.md) section 9; and MADR records scaffolded by `/plab-init-project` are numbered separately again. The distinguishing mark is the hyphen: an effort ID always carries one and always carries a slug (`D-07_waiting-on-blocker-contract`), while an in-document decision never does (`D1`). Cite the bare form only inside the document that owns it.
+
 ### Padding and handles
 
 Effort IDs are zero-padded (`D-07`, `W-02`, `C-05`) to satisfy the schema, while the source roadmaps that define them use unpadded forms (`D-7`, `W-2`, `C-5`). Each spec states its own mapping.
