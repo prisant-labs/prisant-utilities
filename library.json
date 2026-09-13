@@ -29,7 +29,7 @@
       {
         "name": "plab-wrap-session",
         "path": "skills/plab-wrap-session/SKILL.md",
-        "version": "1.6.2",
+        "version": "1.7.0",
         "tier": "universal",
         "status": "active"
       },

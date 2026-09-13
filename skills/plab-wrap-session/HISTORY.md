@@ -2,12 +2,29 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
+| 1.7.0 | 2026-09-13 | unreleased | added | Deep-mode logs carry an Uncertainty Ledger and a What You May Not Realize section. |
 | 1.6.2 | 2026-08-28 | v0.5.2 | fixed | Path-citation gate: three false-positive classes removed, a line-anchor shape brought into scope, and the proof corpus grown from 11 entries to 40. |
 | 1.6.1 | 2026-08-25 | v0.4.1 | fixed | Session-log body prose is not hard-wrapped. CI pin moved to the toolkit release that fixed the Action. |
 | 1.6.0 | 2026-08-25 | v0.4.0 | fixed | Detector gates that could not fail open, plus the log-format and hygiene fixes batched with them. |
 | 1.5.0 | 2026-08-18 | v0.2.0 | added | `--organize` files old logs into `YYYY-MM/` folders. Hygiene sweep gained Check 5. |
 | 1.4.1 | 2026-08-18 | v0.1.2 | fixed | Dropped the "what did we do" trigger. Added `type:` to the frontmatter block and `machine:` to the Quick and Blocked templates. |
 | 1.4.0 | 2026-08-14 | v0.1.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.4.0; prior history remains there. |
+
+## 1.7.0 - 2026-09-13
+
+**Added: two deep-mode sections that record what the log does not know.** Placed immediately after Verification Detail, so what was proven is followed at once by what was not.
+
+**The Uncertainty Ledger merges two questions that are one list sorted two ways.** "What am I least confident about" sorts by confidence; "which assumption would change the outcome most if wrong" sorts by blast radius. They return different orderings of the same set, and the row that matters most sits exactly where the two orderings disagree: **high confidence and high blast radius**, an assumption comfortable enough that nobody thought to check it. Asked as two separate sections, those rows fall into the gap, because they do not feel uncertain and they do not read as remarkable. One table with both axes forces them into view, and they are marked `(!)`.
+
+That failure mode is not hypothetical in this repository. C-1 (the discipline text was not loading), C-2 (fourteen pointers to a plugin the library does not ship with) and C-4 (v0.5.3 installed while the session loaded v0.5.2) were each held confidently, were each load-bearing, and were each wrong. Every one would have been a `(!)` row before it was found.
+
+**What You May Not Realize is a separate section because its source is different, not because its items are.** It records the asymmetry between what a session saw, meaning every file read and every command output, and what the maintainer saw, meaning the conversation. **Every item must cite a source from that session.** An item with no source is speculation wearing the clothes of insight, and is dropped rather than softened into a hedge. That single rule is what separates the section from a horoscope, and it is the reason it earns its always-on cost.
+
+**Both sections are uncapped, deliberately, and the decision is recorded rather than assumed.** A three-item cap was proposed and declined: there is no evidence yet about how long either runs in practice, and pre-constraining an unmeasured thing is the opposite of the pruning rule this portfolio already follows, which is to remove what went unconsulted after two or three real uses. Revisit once there is a run of logs to measure.
+
+**Both follow the repository's fail-open rule.** "Nothing material." and "Nothing surfaced." must be written explicitly. An empty section and a skipped section are indistinguishable to a reader, which is the omission every detector here exists to close. Two Log Self-Check items enforce presence and the source rule.
+
+Deep mode only. Quick, final and blocked are unchanged.
 
 ## 1.6.2 - 2026-08-28
 
