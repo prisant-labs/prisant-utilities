@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [0.5.4] - 2026-09-15
+
 ### Added
+
+- **`.github/workflows/publish-release.yml`, and `scripts/release-notes-from-changelog.py` behind it.** Pushing a `v*` tag now publishes the GitHub Release for it, with the notes taken from that version's section of this file. Thirteen tags existed with zero Releases before this, because a hand-cut tag is only a git ref and nothing was promoting it; those thirteen were backfilled by hand on 2026-09-14 and this stops the gap reopening on the next tag.
+
+  **It does not weaken `AGENTS.md`'s "CI reports; it never fixes, bumps, or tags".** The workflow chooses no version, writes no file, and creates no tag. The tag is its trigger rather than its product, and the notes are the entry the maintainer already wrote.
+
+  Extraction lives in a committed script rather than inline in the workflow, matching the rule `gate.yml` states in its own header, which also makes any version dry-runnable locally. Three-state like every other script in `scripts/`: 0 printed, 1 no section for that version, 2 broken. A self-test proves five properties against a fixture and the workflow runs it **before** extracting, so nothing is published under the maintainer's name on the word of an unproven script. A tag whose version has no section here **fails the run**, because a release with no notes reads as a release that had nothing to say rather than one whose extraction broke. Fenced blocks are dropped whole and inline code spans become plain text, because release notes are read on a web page and in the GitHub mobile app where monospace wraps badly.
 
 - **`plab-wrap-session` 1.7.0: deep-mode logs now record what they do not know.** Two sections, placed immediately after Verification Detail so that what was proven is followed at once by what was not.
 
@@ -36,6 +46,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   A claim location that yields no claims at all is **BROKEN**, not clean. If the table shape or the `**Version:**` label changes, the matcher goes blind, and a gate that reports clean because it can no longer see is the failure this repository has already hit twice, with the empty `git tag -l` in v0.5.2 and with `AGENTS.md` never loading.
 
   Proved against the real defect: bumping `plab-spec`'s `metadata.version` and touching no documentation makes the gate exit 1 naming all three stale claims, which is the v0.5.3 defect verbatim. Blinding the README table makes it exit 2 rather than 0. Dropping a check from `run_all_checks()` makes the self-test fail naming the dropped location.
+
+### Fixed
+
+- **Four dangling citations in two shipped skills.** `skills/plab-spec/SKILL.md` lines 71 and 73, and `skills/plab-init-project/references/folder-spine.md` lines 35 and 123, all pointed at `docs/internal/planning-artifact-model.md`, which did not exist in this repository. The document had been written in a private library and never migrated, and the broken pointers survived the migration unnoticed. It is recovered here and amended for this repository rather than copied: every path, skill name and layout that described the old library is corrected, the HOW stage is named as the implementation-plan template rather than a skill that does not exist here, and D1 gains an as-built table recording three implementation notes that describe a flat `specs/` split superseded by per-effort folders. The decision itself is unchanged and the table is appended rather than edited, because a decided record is append-only.
+
+  Landing the file at the cited path makes all four citations resolve **without editing any file under `skills/`**, so no skill version moved and no drift check was tripped.
+
+- **The series legend did not say that three things are numbered with a D.** `D-07` is an effort, `D1` is a decision record inside `planning-artifact-model.md`, and MADR records scaffolded by `/plab-init-project` are numbered separately again. One line in `docs/internal/release-plans/README.md` now distinguishes them: an effort ID always carries a hyphen and a slug, an in-document decision never does.
+
+- **The spec frontmatter reference omitted a field the gate enforces, and two things claimed to be authoritative.** `skills/plab-spec/references/frontmatter-schema.md` did not document `linked-release`, which is in `docs/internal/schemas/spec.schema.json` and therefore checked by CI, and its `linked-plan` example still used the pre-D1 `docs/internal/efforts/` path. Both corrected. The implementation-plan template called the prose file "the authoritative field list" while CI validates against the JSON Schema; the template now names the schema as authoritative and the prose file as its human-readable companion, so only one thing claims the title.
+
+### Changed
+
+- **`main` is protected, so the branch rule is now a mechanism rather than a discipline.** `AGENTS.md` has always said work happens on a branch and never commit to `main` directly. That is now enforced: a pull request is required, the Standard and Document-lifecycle checks must pass, the branch must be up to date, force pushes and deletions are blocked, and the rules apply to administrators.
+
+  Worth recording precisely, because the obvious description of the gap is wrong: **CI was never bypassed by a direct push.** The Gate workflow already triggered on `push: branches: [main]`, so it ran either way. It simply ran after the commit had landed, which made it a report on something that had already happened rather than a gate on something about to. Protection is what converts it.
+
+  Approvals are set to zero, because a single-maintainer repository requiring one would be unmergeable. Linear history is deliberately **not** required: PR #8 used a merge commit on purpose so `scripts/doc-lifecycle-check.py` could keep citing `b6c173a` for invariant 9's ninth canary, and requiring linear history would have quietly outlawed that.
 
 ## [0.5.3] - 2026-09-01
 
