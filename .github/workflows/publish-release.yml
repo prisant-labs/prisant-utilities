@@ -1,0 +1,72 @@
+# Publish release from tag
+#
+# This file makes no decision of its own. When a human pushes a `v*` tag, it asks
+# `scripts/release-notes-from-changelog.py` for that version's CHANGELOG section and
+# publishes it as a GitHub Release. Extraction logic lives in the script, never inline
+# here, matching the rule the Gate workflow states in its own header.
+#
+# WHAT THIS DOES NOT DO, and the distinction matters because `AGENTS.md` says CI never
+# fixes, bumps, or tags:
+#
+#   it does not choose a version    the maintainer edits the version by hand in the five
+#                                   places `scripts/version-parity-check.py` guards, per
+#                                   `docs/internal/release-plans/release-checklist.yaml`
+#
+#   it does not bump any file       nothing in the repository is written by this workflow
+#
+#   it does not create the tag      the tag is pushed by a human and is the trigger, not
+#                                   the product
+#
+#   it does not write release notes the notes are the CHANGELOG entry the maintainer
+#                                   already wrote; this only reformats and republishes it
+#
+# So the Gate header's claim holds unchanged: CI still reports rather than releases. What
+# this adds is publication of an artifact a human has already authored and already tagged.
+# Thirteen tags existed with zero Releases before this, because a hand-cut tag is only a
+# git ref and nothing was promoting it.
+#
+# FIXED-WIDTH CONTENT IS STRIPPED. Release notes are read on a web page and in the GitHub
+# mobile app, where monospace runs wrap badly. The script removes fenced blocks whole and
+# turns inline code spans into plain text.
+#
+# IT REFUSES RATHER THAN PUBLISHES EMPTY. A tag with no matching CHANGELOG section exits 1
+# and fails the run, because a Release with no notes reads as a release that had nothing to
+# say rather than one whose extraction broke.
+
+name: Publish release from tag
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write   # required to create a Release; nothing else is written
+
+jobs:
+  publish:
+    name: Publish the GitHub Release for this tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      # The self-test runs before any real extraction is trusted, the same contract every
+      # committed gate in scripts/ follows. A script that cannot show it still works is not
+      # a script whose output should be published under the maintainer's name.
+      - name: Prove the extractor before trusting it
+        run: python3 scripts/release-notes-from-changelog.py --self-test
+
+      - name: Extract this version's CHANGELOG section
+        run: python3 scripts/release-notes-from-changelog.py "${GITHUB_REF_NAME#v}" > release-notes.md
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --title "$GITHUB_REF_NAME" \
+            --notes-file release-notes.md \
+            --verify-tag
