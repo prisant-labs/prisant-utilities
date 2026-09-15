@@ -15,6 +15,16 @@
 # "[x] N/A - no docs/skills/README.md in this repo" per the template's documented convention, and
 # use the `docs/skills/<skill>/README.md` row below instead.
 
+# What happens after the tag, added 2026-09-14. Pushing a `v*` tag now triggers
+# `.github/workflows/publish-release.yml`, which extracts this version's CHANGELOG section and
+# publishes it as a GitHub Release. Two consequences for whoever works this checklist:
+#
+#   1. The CHANGELOG entry must be committed and merged BEFORE the tag is pushed. The workflow
+#      reads it from the tagged commit, and a tag with no matching section fails the run rather
+#      than publishing an empty release.
+#   2. Nothing else changes. The workflow chooses no version and writes no file; every row below
+#      is still a human edit.
+#
 add:
   - doc: ".codex-plugin/plugin.json"
     update: >-
