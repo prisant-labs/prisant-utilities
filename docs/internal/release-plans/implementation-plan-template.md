@@ -12,7 +12,7 @@ The shape every `implementation-plan.md` in this tree shares, written down so it
 
 ## Frontmatter
 
-Fenced here so this template is not itself validated as a document. Copy the block without the fences into the real plan, and see `skills/plab-spec/references/frontmatter-schema.md` for the authoritative field list.
+Fenced here so this template is not itself validated as a document. Copy the block without the fences into the real plan. **The authoritative field list is `docs/internal/schemas/implementation-plan.schema.json`**, because that is what `scripts/frontmatter-check.py` validates against and therefore what CI enforces. `skills/plab-spec/references/frontmatter-schema.md` is the human-readable companion and explains what each field means, but where the two ever disagree the schema wins.
 
 ```yaml
 id: X-NN                       # matches the effort folder name and the sibling spec's id

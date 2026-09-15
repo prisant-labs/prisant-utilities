@@ -19,7 +19,8 @@ The spec's YAML frontmatter is its machine-readable contract with downstream rea
 
 | Field | Type | When to use | Example |
 |-------|------|-------------|---------|
-| `linked-plan` | path \| null | Path to the plan, once it exists. `null` until then. | `docs/internal/efforts/S-04/S-04_plan.md` |
+| `linked-plan` | path \| null | Path to the implementation plan, once it exists. `null` until then. Resolved relative to this file, then to the repo root. | `implementation-plan.md` |
+| `linked-release` | path \| null | Path to the release plan this effort is scoped into. `null` while the effort sits in `_unassigned/`. | `docs/internal/release-plans/plan_07_aggregation/plan.md` |
 | `linked-strategy-brief` | path | Path to upstream strategy-brief, if one exists. | `docs/internal/efforts/S-04/S-04_strategy-brief.md` |
 | `gh-issue` | integer | GitHub issue number if one tracks this work. | `15` |
 | `source-count` | integer | Number of distinct external sources cited in Sources & Evidence. Must match actual count. | `4` |
