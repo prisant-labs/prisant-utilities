@@ -46,7 +46,7 @@ The HOW stage of the pipeline carries a template rather than a skill: `docs/inte
 
 ### plab-wrap-session
 
-Document and close agentic coding sessions with structured session logs. Deep mode is the default: a full log with an evidence index, a pre-wrap hygiene sweep (remote divergence, release state, doc drift, working-tree reconciliation, unfiled session logs, all with per-action confirmation), a mandatory "waiting on you" section with file links, and a verbose copy-paste-ready continuation prompt in every mode. Writes to `_local/_session-logs/`, which is expected to be gitignored. `--organize` runs instead of a wrap and files logs from closed months into `YYYY-MM/` subfolders via `skills/plab-wrap-session/scripts/organize-logs.py`, leaving the current and previous month flat.
+Document and close agentic coding sessions with structured session logs. Deep mode is the default: a full log with an evidence index, a pre-wrap hygiene sweep (remote divergence, release state, doc drift, working-tree reconciliation, unfiled session logs, all with per-action confirmation), a mandatory "waiting on you" section with file links, an uncertainty ledger pairing confidence against blast radius so that a high-confidence high-impact assumption cannot hide between the two, a source-cited "what you may not realize" section, and a verbose copy-paste-ready continuation prompt in every mode. Writes to `_local/_session-logs/`, which is expected to be gitignored. `--organize` runs instead of a wrap and files logs from closed months into `YYYY-MM/` subfolders via `skills/plab-wrap-session/scripts/organize-logs.py`, leaving the current and previous month flat.
 
 **Trigger:** `/plab-wrap-session`, "wrap up", "end of session", "session log", "close out"
 

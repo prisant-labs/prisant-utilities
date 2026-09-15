@@ -19,7 +19,7 @@ The current configuration of every skill in `prisant-utilities`, as declared in 
 | `plab-release-plan` | 1.5.1 | Auto + explicit | `--create \| --promote \| --demote \| --update \| --gate` | `docs/internal/release-plans/plan_NN_<slug>/` |
 | `plab-spec` | 1.3.3 | Auto + explicit | `--effort <id> [--target-release vX.Y.Z] [--revise] [--dry-run]` | `docs/internal/release-plans/_unassigned/` by default |
 | `plab-strategy-brief` | 1.1.1 | Auto + explicit | `[paste raw thinking]` | `_output/plab-strategy-brief/` |
-| `plab-wrap-session` | 1.6.2 | Auto + explicit | `[mode: quick\|final\|deep\|blocked] [--organize]` | `_local/_session-logs/` (gitignored) |
+| `plab-wrap-session` | 1.7.0 | Auto + explicit | `[mode: quick\|final\|deep\|blocked] [--organize]` | `_local/_session-logs/` (gitignored) |
 
 **Explicit only** means the skill carries `disable-model-invocation: true`. It never fires on its own and is absent from the auto-loaded skill listing. It runs when you type its name and only then. **Only `plab-init-project` carries it now.** `plab-spec` and `plab-release-plan` carried it through 1.2.1 and 1.3.0 respectively; both are now auto-discoverable, using explicit do-NOT-fire clauses in their descriptions instead of the binary flag.
 

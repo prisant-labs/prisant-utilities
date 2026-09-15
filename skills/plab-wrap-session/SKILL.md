@@ -12,8 +12,8 @@ description: "Document and close agentic coding sessions with structured session
 argument-hint: "[mode: quick|final|deep|blocked] [--organize]"
 license: MIT
 metadata:
-  version: "1.6.2"
-  updated: 2026-08-28
+  version: "1.7.0"
+  updated: 2026-09-13
 ---
 
 # Wrap Session
@@ -168,6 +168,14 @@ resumed-from: # written only by an in-session /plab-continue-session resume; nev
 
 **Continuation Prompt** - In a fenced code block. See requirements below.
 
+### Body Sections (Deep Mode)
+
+Everything in Final Mode, plus four sections. **Evidence Index** and **Verification Detail** as shown in `references/session-log-template.md`, then the two below, placed immediately after Verification Detail so that what was proven is followed at once by what was not.
+
+**Uncertainty Ledger** - One table, sorted by blast radius descending and never by confidence. Columns: item, confidence, blast radius, verified, and what would settle it. It merges two questions that are one list sorted two ways, because "what am I least confident about" and "which assumption would change the outcome most if wrong" produce different orderings of the same set, and the row that matters most sits where they disagree: **high confidence and high blast radius**, an assumption comfortable enough that nobody thought to check it. Asked as two separate sections those rows hide in the gap, since they do not feel uncertain and do not read as remarkable. Mark them `(!)`. Confidence and blast radius are High, Medium or Low, never a percentage. Every row names what would settle it, because an uncertainty with no route to resolution is anxiety rather than a finding. No cap on rows. Write "Nothing material." explicitly rather than omitting the section.
+
+**What You May Not Realize** - Not about the work; about the asymmetry between what the session saw, meaning every file read and every command output, and what the maintainer saw, meaning the conversation. Separate from the ledger because its source is different, not because its items are. **Every item must cite a source from this session** - a file path and line, a command and its output, a corpus document, a verified API response. An item with no source is speculation wearing the clothes of insight and is dropped rather than softened; that rule is the whole reason the section earns its place. Each item carries a confidence marker. Nothing that belongs in the ledger table is repeated here. No cap on items. Write "Nothing surfaced." explicitly rather than omitting the section.
+
 ### Body Sections (Quick Mode)
 
 Summary + files changed + waiting-on + continuation prompt. That's it.
@@ -209,6 +217,8 @@ The two detector-backed gates below report one of three states: clean, findings,
 - No em-dash or en-dash characters anywhere in the log, detector-backed, three-state: run `python scripts/dash-check.py <log-path>`. Exit 0 clean, 1 findings, 2 broken; broken blocks exactly like findings
 - No Waiting on You item begins with "Optional"
 - Every Waiting on You item carries a `(blocked since YYYY-MM-DD)` marker
+- Deep mode only: Uncertainty Ledger present ("Nothing material." counts; absence does not), sorted by blast radius descending, every row naming what would settle it, and every High-confidence/High-blast-radius row marked `(!)`
+- Deep mode only: What You May Not Realize present ("Nothing surfaced." counts; absence does not), and **every item cites a source from this session**. An item with no source is dropped, never softened into a hedge
 
 ## Surrounding Document Updates
 
