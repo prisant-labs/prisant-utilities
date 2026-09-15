@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **`plab-wrap-session` 1.7.0: deep-mode logs now record what they do not know.** Two sections, placed immediately after Verification Detail so that what was proven is followed at once by what was not.
+
+  **The Uncertainty Ledger merges two questions that turn out to be one list sorted two ways.** "What am I least confident about" sorts by confidence; "which assumption would change the outcome most if wrong" sorts by blast radius. Those orderings disagree, and the row that matters most sits exactly where they do: high confidence and high blast radius, an assumption comfortable enough that nobody thought to check it. Asked as two separate questions those rows fall into the gap, because they neither feel uncertain nor read as remarkable. One table carrying both axes forces them into view, marked `(!)`.
+
+  The failure mode is this repository's own. C-1, C-2 and C-4 were each held confidently, were each load-bearing, and were each wrong; every one would have been a `(!)` row before it was found.
+
+  **What You May Not Realize is separate because its source differs, not its items.** It records the asymmetry between what a session saw, meaning every file read and command output, and what the maintainer saw, meaning the conversation. Every item must cite a source from that session; an item with no source is dropped rather than softened. That rule is what keeps the section from becoming a horoscope.
+
+  Both are uncapped by an explicit decision rather than an oversight: nothing has measured how long either runs, and pre-constraining an unmeasured thing inverts the pruning rule of removing what went unconsulted. Both require "Nothing material." or "Nothing surfaced." to be written rather than the section omitted, because an empty section and a skipped one are indistinguishable. Two Log Self-Check items enforce presence and the source rule. Deep mode only.
+
 - **Lifecycle invariant 9: a spec's `status` and its acceptance-criteria checkboxes must agree.** A `fulfilled` spec must have every AC checkbox ticked, and a `draft` spec must have none. `scripts/doc-lifecycle-check.py` now enforces mechanically what the corpus had been maintaining by discipline alone: measured immediately before the rule was written, 8 fulfilled specs stood at 52 of 52 ticked and 8 draft specs at 0 of 61. The record was already perfect and guarded by nothing, which is the reason to build the fixture while it still is rather than after the first drift.
 
   `committed` and `superseded` are deliberately unchecked. `committed` is the one status a spec legitimately holds while its implementation plan is mid-execution, so a partial tick count there is the correct state and not a defect; a rule that flagged it would fire falsely on the first effort that ticks a criterion before flipping status, and would be removed the week it shipped.
