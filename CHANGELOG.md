@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Nothing yet.
+### Changed
+
+- **`plab-continue-session` 1.5.0: Phase 3 no longer dumps the continuation prompt.** It renders the prompt's immediate action as ordinary markdown, gives the log path on one line, and prints the full prompt verbatim only when asked.
+
+  **The rationale for verbatim display did not survive inspection.** The verbatim form exists so a prompt can be pasted into a cold-start session that has not read the log. Phase 3 is the opposite case by construction: the skill has just read the entire log, so reprinting it carries no information the agent does not already hold and none the user cannot `cat`. Meanwhile the cost is real, because inside a fenced block none of the prompt's own markdown renders, so a hundred lines or more of `**bold**` and backtick noise arrive as literal source. It was the longest thing on screen and the least readable. Verbatim stays available on request, because someone resuming in a different tool still needs to copy it.
+
+  **A second defect is fixed in the same change: the display format had two sources of truth that disagreed.** `references/handoff-display.md` specified a `### What's next (from last session)` section that the SKILL.md Phase 3 template omitted, so an agent following SKILL.md silently dropped it. The template now carries it. Both files moved together along with the Constraints line that independently mandated verbatim display, because the three had to change at once or the skill would contradict itself.
+
+  Reported by the maintainer, who watched raw markdown fill a terminal on a real resumption.
 
 ## [0.5.4] - 2026-09-15
 

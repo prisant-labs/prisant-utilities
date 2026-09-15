@@ -9,8 +9,8 @@ description: "Resume an interrupted work session by replaying its recorded hando
 argument-hint: "[--log <path>]"
 license: MIT
 metadata:
-  version: "1.4.0"
-  updated: 2026-08-25
+  version: "1.5.0"
+  updated: 2026-09-15
 ---
 
 # Continue Session
@@ -76,11 +76,32 @@ Display, in this order, before doing anything else:
 ### Declined hygiene proposals
 <from the Hygiene Sweep section: proposals declined or unanswered at wrap time, if any>
 
-### Continuation prompt
-<fenced code block containing the verbatim prompt>
+### What's next (from last session)
+<numbered list from `## What's Next`, or "Not specified.">
+
+### Immediate next action
+<the prompt's immediate-action content, rendered as normal markdown - NOT fenced. See "Do not dump the prompt" below.>
+
+Full continuation prompt: `<path to the log>` - say "show the prompt" to print it verbatim.
 ```
 
 If the prompt is lighter than verbose and carries an objection ("trivial typo fix; no context to carry forward" etc.), surface the objection in the display.
+
+#### Do not dump the prompt
+
+**Never print the continuation prompt verbatim in a fenced block unless the user asks for it.** A verbose prompt runs to a hundred lines or more, and inside a fenced block none of its markdown renders, so the user reads `**bold**` and backtick noise as literal source. It is the single longest thing on screen and the least readable.
+
+The verbatim form exists so a prompt can be **pasted into a cold-start session that has not read the log**. This skill is the opposite case: it has already read the whole log, and so has the user's own last session. Reprinting it carries no information the agent does not already hold.
+
+So:
+
+1. **Render, don't fence.** Extract the prompt's immediate-action content and present it as ordinary prose and lists, so the markdown actually renders.
+2. **Point at the source.** Give the log path on one line. The full prompt is always one `cat` away.
+3. **Keep verbatim as opt-in.** If the user says "show the prompt", print the whole thing in a fenced block exactly as written. Someone resuming in a different tool still needs to copy it.
+
+**Finding the immediate-action content.** `/plab-wrap-session` requires the prompt to be "bounded - one clear immediate action, then ordered secondary steps", but does **not** mandate a heading for it. Prefer an explicit heading (`## Immediate next action` or similar) when the prompt carries one. Otherwise take the prompt's first imperative block, and if the prompt is short enough to be unambiguous, render the whole thing. Never invent an action the prompt does not name.
+
+**Everything above this section still displays in full.** Waiting on you, outstanding issues, declined proposals and what's next are short, they render as markdown, and they are the part the user is re-entering for.
 
 ### Phase 4: Confirm before acting
 
@@ -102,7 +123,8 @@ Note the consumed log's filename: when this session is eventually wrapped, `/pla
 
 - Never modify the session log being resumed from
 - Never auto-execute the continuation prompt without user confirmation
-- Always show the prompt verbatim; don't paraphrase or summarize the prompt itself
+- Never dump the whole continuation prompt in a fenced block unless the user asks; render its immediate action and give the log path instead (Phase 3, "Do not dump the prompt")
+- When the user does ask to see it, reproduce it verbatim; never paraphrase the prompt itself
 - If the latest log is older than 7 days, surface "this log is N days old; are you sure?" before resuming
 - If the log's `branch` field doesn't match the current git branch, surface the mismatch and ask
 - If the log's `repo` field doesn't match the current repo, refuse and surface a cross-repo warning

@@ -13,7 +13,7 @@ The current configuration of every skill in `prisant-utilities`, as declared in 
 | Skill | Version | Invocation | Argument hint | Output lands in |
 |---|---|---|---|---|
 | `plab-ai-review` | 1.2.1 | Auto + explicit | `<doc.md> [--reviewer codex\|gpt\|gemini] [--respond]` | Beside the source doc, plus `_archive/` on `--close` |
-| `plab-continue-session` | 1.4.0 | Auto + explicit | `[--log <path>]` | Nothing. Displays context only |
+| `plab-continue-session` | 1.5.0 | Auto + explicit | `[--log <path>]` | Nothing. Displays context only |
 | `plab-guide` | 2.2.2 | Auto + explicit | `<topic-or-repo-url> [--type repo-url\|tool\|concept] [--out <dir>] [--force]` | `_output/plab-guide/` |
 | `plab-init-project` | 1.3.0 | **Explicit only** | `[--profile minimal\|standard\|public] [--type ...] [--agents ...] [--dry-run]` | The target repository root |
 | `plab-release-plan` | 1.5.1 | Auto + explicit | `--create \| --promote \| --demote \| --update \| --gate` | `docs/internal/release-plans/plan_NN_<slug>/` |

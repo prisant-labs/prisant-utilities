@@ -1,6 +1,6 @@
 # plab-continue-session
 
-**Version:** 1.4.0
+**Version:** 1.5.0
 **Source:** [`skills/plab-continue-session/`](../../../skills/plab-continue-session/)
 
 Resume an interrupted work session by replaying its recorded handoff. Reads the most recent session log, reports what is blocked on you and what the named next action is, then confirms before acting. The read-side companion to `/plab-wrap-session`, which writes the log this reads.
@@ -17,7 +17,7 @@ At the beginning of any session where prior work exists:
 /plab-continue-session
 ```
 
-The skill finds the latest session log at `_local/_session-logs/`, surfaces the resumption context (what was done, what's next, the continuation prompt), and asks if you want to proceed with the named immediate next action.
+The skill finds the latest session log at `_local/_session-logs/`, surfaces the resumption context (what was done, what's next, the immediate next action), and asks if you want to proceed with the named immediate next action.
 
 ### Common Invocations
 
@@ -107,8 +107,10 @@ Standard display:
 1. Draft the implementation plan for the S-09 spec
 2. Update the CHANGELOG entry
 
-### Continuation prompt
-[fenced verbatim prompt from the log]
+### Immediate next action
+[the prompt's immediate action, rendered as ordinary markdown]
+
+Full continuation prompt: `_local/_session-logs/<the log>.md` - say "show the prompt" to print it verbatim.
 ```
 
 ### Phase 4: Ask before acting
