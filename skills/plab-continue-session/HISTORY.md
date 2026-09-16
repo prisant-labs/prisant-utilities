@@ -2,10 +2,35 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
+| 1.5.0 | 2026-09-15 | unreleased | changed | The continuation prompt is no longer dumped verbatim. Phase 3 renders the immediate action and gives the log path; verbatim is opt-in. |
 | 1.4.0 | 2026-08-25 | v0.4.0 | added | Capture-lite orientation on the no-log and stale-log paths. |
 | 1.3.0 | 2026-08-18 | v0.2.0 | added | Discovery reads `YYYY-MM/` month folders alongside the flat store. Empty-store message diagnoses version skew. |
 | 1.2.1 | 2026-08-18 | v0.1.2 | fixed | Body trigger list aligned with the narrowed description. Records the 2026-08-17 description change that shipped un-versioned. |
 | 1.2.0 | 2026-08-14 | v0.1.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.2.0; prior history remains there. |
+
+## 1.5.0 - 2026-09-15
+
+**Changed: Phase 3 no longer dumps the continuation prompt.** It renders the prompt's immediate
+action as ordinary markdown, gives the log path on one line, and prints the full prompt verbatim only
+when the user asks for it.
+
+The verbatim fenced block was the longest thing on screen and the least readable. Fenced, none of the
+prompt's own markdown renders, so a reader gets `**bold**` and backtick noise as literal source for a
+hundred lines or more.
+
+**The rationale for verbatim display did not survive inspection.** It exists so a prompt can be pasted
+into a **cold-start session that has not read the log**. Phase 3 is the opposite case by construction:
+the skill has just read the entire log, so reprinting it carries no information the agent does not
+already hold and none the user cannot `cat`. Verbatim stays available on request, because someone
+resuming in a different tool still needs to copy it.
+
+**Fixed: the display format had two sources of truth that disagreed.** `references/handoff-display.md`
+specified a `### What's next (from last session)` section that the SKILL.md Phase 3 template omitted,
+so an agent following SKILL.md silently dropped it. The template now carries it. Both files were
+changed together, along with the Constraints line that independently mandated verbatim display; the
+three had to move at once or the skill would contradict itself.
+
+**Reported by the user**, who saw the raw markdown fill a terminal on a real resumption.
 
 ## 1.4.0 - 2026-08-25
 

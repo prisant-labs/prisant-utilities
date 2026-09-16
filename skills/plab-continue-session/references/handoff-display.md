@@ -21,10 +21,12 @@ The structured resumption context shown to the user in Phase 3 of `/plab-continu
 <from `## Hygiene Sweep`: proposals declined or unanswered at wrap time. Omit the heading entirely when there are none.>
 
 ### What's next (from last session)
-<numbered list from `## What's Next`, or "Not specified - see Continuation Prompt below.">
+<numbered list from `## What's Next`, or "Not specified.">
 
-### Continuation prompt
-<fenced code block with the prompt verbatim>
+### Immediate next action
+<the continuation prompt's immediate-action content, rendered as normal markdown - NOT fenced>
+
+Full continuation prompt: `<path to the log>` - say "show the prompt" to print it verbatim.
 ```
 
 After this block, ask the user one question (Phase 4): resume with the named immediate next action, or pick something else?
@@ -36,7 +38,9 @@ After this block, ask the user one question (Phase 4): resume with the named imm
 - **Outstanding issues:** if the log recorded blockers, risks, or unfinished work, show them. The user resuming needs to know what's known to be incomplete.
 - **Declined hygiene proposals:** actions the wrap proposed and the user declined or left unanswered; they are re-decidable now.
 - **What's next:** if the log has a `## What's Next` section, show its ordered list. This is the wrapping agent's recommendation; the continuation prompt is its operationalization.
-- **Continuation prompt:** verbatim, in a fenced code block. Never paraphrase. The wrapping agent wrote this for cold-start consumption; preserve it.
+- **Immediate next action:** the one action the prompt names, rendered as ordinary markdown, plus the log path on its own line.
+
+The prompt itself is **not** dumped verbatim. The rule, its rationale, and how to locate the immediate action live in SKILL.md Phase 3, "Do not dump the prompt", and are deliberately not restated here - one rule, one home.
 
 ## What to elide
 
