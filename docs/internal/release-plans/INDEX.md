@@ -18,6 +18,7 @@ Every effort id's letter prefix names which series it belongs to. An id whose le
 | CI | continuous integration |
 | A | ai-review roadmap item |
 | H | hygiene and repo-wide |
+| AU | audit-skill roadmap item |
 
 ---
 
