@@ -35,10 +35,10 @@ Budget accordingly: Phase 2 is a real audit of a 14-skill repository, and Phase 
 |---|---|---|---|---|
 | P1 | Series letter registered, fixtures confirmed reachable | N/A (prerequisite) | agent | **Done** 2026-09-20, `9d0dfc3` |
 | P2 | Hand-run fixture audit exists and is the output specification | N/A (produces the specimen) | agent | **Done** 2026-09-20, `_local/ideas/audit/draft/fixture/` |
-| P3 | Draft skill tree authored under `_local/` | AC-1 to AC-15 authored | agent | In progress |
+| P3 | Draft skill tree authored under `_local/` | AC-1 to AC-15 authored | agent | **Done** 2026-09-20, 10 files |
 | P4 | Skill installed and manifests regenerated | AC-1, AC-13 | agent | Not started |
 | P5 | Documentation wired | N/A (documentation) | agent | Not started |
-| P6 | Gates pass and the canary is proven to fail | AC-4, AC-5, AC-14 | agent | Not started |
+| P6 | Gates pass and the canary is proven to fail | AC-4, AC-5, AC-14, AC-15 | agent | **Canaries done** 2026-09-20; sample bundle waits on P4 |
 | P7 | Dogfood run, degradation test, release | AC-2, AC-3, AC-12 | agent | Not started |
 
 ---
@@ -261,6 +261,10 @@ The self-check under test is `skills/plab-audit/scripts/bundle-check.py`, writte
 **Verification:**
 
 `_local/ideas/audit/draft/canary/RESULTS.md` contains three proven exit-1 cases and one proven exit-2 case, each with quoted output, plus one proven-passing baseline. A phase that produces only passing results has not tested anything.
+
+**Executed 2026-09-20, ahead of Phases 4 and 5**, because the canaries need only the script and the fixture, not an installed skill. Five exit-1 cases, one exit-2, two passing baselines. Steps 1 to 7 and 9 are done; **step 8 is not**, because committing a sample bundle to `skills/plab-audit/examples/sample-bundle/` requires Phase 4 to have created `skills/plab-audit/` first. Do not add the `gate.yml` step in Phase 5 before that directory exists, or every CI run fails on a missing target.
+
+**Canary 4 failed on its first run and the rule was wrong.** Stripping one roadmap item of its finding citation produced exit 0. R6 had been written to check that every citation present resolves, which is a per-file property; AC-9 states a per-item one, and seven valid sibling citations kept the file passing. The rule now slices each rank-numbered item and requires a resolvable citation inside it. The embedded self-test passed throughout, because its own R6 fixture reproduced the same misunderstanding of the criterion. That is the argument for canarying against a real bundle rather than a synthetic one, and it is the single most transferable result of this phase.
 
 ---
 
