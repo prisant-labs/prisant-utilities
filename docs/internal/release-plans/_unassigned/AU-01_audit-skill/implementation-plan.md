@@ -256,6 +256,10 @@ The self-check under test is `skills/plab-audit/scripts/bundle-check.py`, writte
 6. [ ] Point it at a directory that does not exist. **It must exit 2**, the broken state, not 1. A check that reports "findings" when it could not run is the failure mode the three-state convention exists to prevent.
 7. [ ] Record all four canary results, pass and fail states with their exact output and exit codes, in `_local/ideas/audit/draft/canary/RESULTS.md`.
 8. [ ] Commit a minimal sample bundle to `skills/plab-audit/examples/sample-bundle/` so CI has something to run `bundle-check.py` against. Without it the Phase 5 workflow step has no target.
+
+   **The sample must exercise every rule, AC-15 included.** `bundle-check.py` R3 requires `evidence.md` to carry a `Decision records consulted` section, so a sample cut down to the bare minimum will fail CI on the sample rather than on any real output, which trains everyone to ignore the job. The cheapest correct sample is a trimmed copy of the Phase 2 fixture, which already satisfies all seven rules; trim the prose, keep every required section, and keep at least two rank-numbered roadmap items so the per-item half of R6 is exercised.
+
+   **Also decide how the packs name the toolkit.** `references/type-packs/agent-plugin.md` currently writes it as `<toolkit>` in commands and once as an absolute machine path in its provenance note. `AGENTS.md` uses the placeholder `<agent-skills-toolkit>`; match that before copying into `skills/`, because an absolute path under `E:/Projects/` is machine-specific and this is a public repository.
 9. [ ] Delete the canary scratch copy, keeping `RESULTS.md`.
 
 **Verification:**
