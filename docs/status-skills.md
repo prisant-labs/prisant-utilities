@@ -2,7 +2,7 @@
 
 The current configuration of every skill in `prisant-utilities`, as declared in the repository. One row per skill, plus the setup each one needs and where its output lands.
 
-**Plugin version:** 0.5.4 **Skills:** 8 (7 auto-discoverable, 1 explicit-invocation only) **Verified against:** `library.json`, `manifest.generated.json`, and each `skills/*/SKILL.md` **As of:** 2026-09-15
+**Plugin version:** 0.5.5 **Skills:** 8 (7 auto-discoverable, 1 explicit-invocation only) **Verified against:** `library.json`, `manifest.generated.json`, and each `skills/*/SKILL.md` **As of:** 2026-09-20
 
 > This file describes what the repository declares, not what is installed on any given machine. To check a local install, read `~/.claude/plugins/installed_plugins.json`.
 
@@ -27,7 +27,7 @@ The current configuration of every skill in `prisant-utilities`, as declared in 
 
 ## Per-skill detail
 
-### `plab-wrap-session` 1.6.2
+### `plab-wrap-session` 1.7.0
 
 The most-used skill in the plugin. Writes a structured session log and hands off to `plab-continue-session`.
 
@@ -43,7 +43,7 @@ The most-used skill in the plugin. Writes a structured session log and hands off
 
 Runs a pre-wrap hygiene sweep across five checks (remote divergence, working tree, release state, documentation drift, session-log store) under per-action confirmation, and a Log Self-Check gate before writing. Two of those gates are canary-proven and report three states: `clean`, `findings`, `broken`, where `broken` blocks exactly as `findings` does.
 
-### `plab-continue-session` 1.4.0
+### `plab-continue-session` 1.5.0
 
 Reads the newest session log and replays its recorded handoff.
 

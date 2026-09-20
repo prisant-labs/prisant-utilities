@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [0.5.5] - 2026-09-20
+
 ### Changed
 
 - **`plab-continue-session` 1.5.0: Phase 3 no longer dumps the continuation prompt.** It renders the prompt's immediate action as ordinary markdown, gives the log path on one line, and prints the full prompt verbatim only when asked.
@@ -16,6 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   **A second defect is fixed in the same change: the display format had two sources of truth that disagreed.** `references/handoff-display.md` specified a `### What's next (from last session)` section that the SKILL.md Phase 3 template omitted, so an agent following SKILL.md silently dropped it. The template now carries it. Both files moved together along with the Constraints line that independently mandated verbatim display, because the three had to change at once or the skill would contradict itself.
 
   Reported by the maintainer, who watched raw markdown fill a terminal on a real resumption.
+
+### Fixed
+
+- **Two stale version headings in `docs/status-skills.md`.** The `plab-wrap-session` section heading read 1.6.2 and the `plab-continue-session` section heading read 1.4.0, two bumps and one bump behind what those skills declare in their own `SKILL.md` metadata, which is 1.7.0 and 1.5.0. Both drifted the same way: the change that bumped each skill updated the At a glance table and the usage README and left the section heading alone.
+
+  **`scripts/version-parity-check.py` passes on both, by design.** It checks four locations and a section heading is not one of them, because version-shaped strings outside those four are presumed historical, which is the rule that keeps it from firing on every HISTORY row. These two headings are the counter-example: the convention in this file is that the heading states the current version, so a stale one is a false claim rather than a historical record. Whether to add a fifth location is a gate change and is left to its own decision rather than folded into a release.
 
 ## [0.5.4] - 2026-09-15
 
