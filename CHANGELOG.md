@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing yet.
 
+## [0.6.0] - 2026-09-20
+
+### Added
+
+- **`plab-audit` 1.0.0: audit a repository into a five-file bundle.** What it is and is worth, what is wrong with it with a file path on every finding, and what to do next ranked and traceable to those findings. Three composable modes (`--appraise`, `--audit`, `--roadmap`), repository type detected from disk with an override, and a coverage statement recording every command with its exit code so that a tool which is absent or fails becomes a recorded gap rather than a silence. Ships with `disable-model-invocation: true`, the second skill to do so; `/plab-audit` runs it.
+
+  **The step that makes the output worth acting on is reconciliation.** The deterministic layer produces candidates, not findings. A candidate becomes a finding only after it has been checked against the repository's own recorded decisions. On the fixture audit that specified this skill, that step withdrew 7 of 15 candidates, including the two highest-ranked, and one of the withdrawn candidates recommended a change the target had already tested and rejected with measured evidence.
+
+  **Validated against two bundles, both real.** The Phase 2 fixture is a hand-run audit of a working repository, produced before the skill existed and used as the output specification rather than written to match one. The committed sample under `skills/plab-audit/examples/sample-bundle/` is trimmed from it, genericized so that a public repository does not carry another repository's findings or machine-specific paths, and kept complete rather than minimal so that every rule stays exercised.
+
+- **`skills/plab-audit/scripts/bundle-check.py`, run by CI.** Seven structural rules over a finished bundle, on the repository's three-state exit convention (`0` clean, `1` findings, `2` broken), with a self-test that runs on every invocation so a checker which cannot prove itself refuses to report. `.github/workflows/gate.yml` runs it against the committed sample, because the workflow enumerates its checks and globs nothing, so a script not named there never runs at all.
+
+  **Rule R6 was wrong when it was written, and a canary is what found it.** It checked that every finding citation present in a roadmap resolves, which is a per-file property, where AC-9 states that every item above the break must carry one, which is a per-item property. Stripping a single item of its citation left seven valid siblings and the checker returned clean on a direct violation. The rule now slices each rank-numbered item and requires a resolvable citation inside it. **The embedded self-test passed throughout**, because its fixture was written by the same author at the same time against the same misreading of the criterion. That is the argument for canarying against a real artifact rather than a synthetic one, and it is recorded here rather than quietly fixed because the mistake is available to anyone extending the checker.
+
+### Deliberately omitted
+
+- **`--lens=publish-readiness`** was cut. Its source proposal is not in this repository, so the lens had no specification to build against.
+- **`--deep` and `--ideate`** are deferred. Neither has an executable design yet, and a flag that cannot say what it does differently is a name rather than a feature.
+
 ## [0.5.5] - 2026-09-20
 
 ### Changed

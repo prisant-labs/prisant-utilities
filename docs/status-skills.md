@@ -2,7 +2,7 @@
 
 The current configuration of every skill in `prisant-utilities`, as declared in the repository. One row per skill, plus the setup each one needs and where its output lands.
 
-**Plugin version:** 0.5.5 **Skills:** 8 (7 auto-discoverable, 1 explicit-invocation only) **Verified against:** `library.json`, `manifest.generated.json`, and each `skills/*/SKILL.md` **As of:** 2026-09-20
+**Plugin version:** 0.6.0 **Skills:** 9 (7 auto-discoverable, 2 explicit-invocation only) **Verified against:** `library.json`, `manifest.generated.json`, and each `skills/*/SKILL.md` **As of:** 2026-09-20
 
 > This file describes what the repository declares, not what is installed on any given machine. To check a local install, read `~/.claude/plugins/installed_plugins.json`.
 
@@ -13,6 +13,7 @@ The current configuration of every skill in `prisant-utilities`, as declared in 
 | Skill | Version | Invocation | Argument hint | Output lands in |
 |---|---|---|---|---|
 | `plab-ai-review` | 1.2.1 | Auto + explicit | `<doc.md> [--reviewer codex\|gpt\|gemini] [--respond]` | Beside the source doc, plus `_archive/` on `--close` |
+| `plab-audit` | 1.0.0 | **Explicit only** | `<path> [--appraise\|--audit\|--roadmap] [--type ...] [--lens=docs] [--out <path>]` | `_output/plab-audit/<repo>_<YYYY-MM-DD>/` |
 | `plab-continue-session` | 1.5.0 | Auto + explicit | `[--log <path>]` | Nothing. Displays context only |
 | `plab-guide` | 2.2.2 | Auto + explicit | `<topic-or-repo-url> [--type repo-url\|tool\|concept] [--out <dir>] [--force]` | `_output/plab-guide/` |
 | `plab-init-project` | 1.3.0 | **Explicit only** | `[--profile minimal\|standard\|public] [--type ...] [--agents ...] [--dry-run]` | The target repository root |
@@ -21,7 +22,7 @@ The current configuration of every skill in `prisant-utilities`, as declared in 
 | `plab-strategy-brief` | 1.1.1 | Auto + explicit | `[paste raw thinking]` | `_output/plab-strategy-brief/` |
 | `plab-wrap-session` | 1.7.0 | Auto + explicit | `[mode: quick\|final\|deep\|blocked] [--organize]` | `_local/_session-logs/` (gitignored) |
 
-**Explicit only** means the skill carries `disable-model-invocation: true`. It never fires on its own and is absent from the auto-loaded skill listing. It runs when you type its name and only then. **Only `plab-init-project` carries it now.** `plab-spec` and `plab-release-plan` carried it through 1.2.1 and 1.3.0 respectively; both are now auto-discoverable, using explicit do-NOT-fire clauses in their descriptions instead of the binary flag.
+**Explicit only** means the skill carries `disable-model-invocation: true`. It never fires on its own and is absent from the auto-loaded skill listing. It runs when you type its name and only then. **`plab-init-project` and `plab-audit` carry it now.** `plab-spec` and `plab-release-plan` carried it through 1.2.1 and 1.3.0 respectively; both are now auto-discoverable, using explicit do-NOT-fire clauses in their descriptions instead of the binary flag.
 
 ---
 
@@ -151,6 +152,27 @@ Scaffolds agentic development infrastructure into a repository.
 | References | 4 files |
 
 Pairs with `plab-wrap-session` and `plab-continue-session`, which write and read the session logs it scaffolds.
+
+---
+
+### `plab-audit` 1.0.0, explicit only
+
+Audits a repository into a five-file bundle: what it is worth, what is wrong with it, and what to do next.
+
+| Property | Value |
+|---|---|
+| Invocation | `disable-model-invocation: true` |
+| Modes | `--appraise`, `--audit`, `--roadmap`, composable, all three by default |
+| Types | `agent-plugin`, `tauri`, `generic`, detected from disk, `--type` overrides |
+| Lenses | `--lens=docs` |
+| Output | `_output/plab-audit/<repo>_<YYYY-MM-DD>/`, or `--out <path>` |
+| Produces | `appraise.md`, `findings.md`, `roadmap.md`, `evidence.md`, `README.md` |
+| Scripts | `bundle-check.py`, its own output gate, run by CI against a committed sample |
+| Setup required | Nothing. Read-only against the audited repository |
+| Dry run | None. It never writes to the repository it audits |
+| References | 7 files |
+
+**The deterministic layer produces candidates, not findings.** A candidate becomes a finding only after reconciliation against the repository's own recorded decisions; on the fixture run that specified the skill, that withdrew 7 of 15 candidates including the two highest-ranked. `evidence.md` is produced in every mode, and a tool that is absent or fails is recorded as a coverage gap with its exit code rather than as silence.
 
 ---
 

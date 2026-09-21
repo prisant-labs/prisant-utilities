@@ -123,3 +123,33 @@ jobs:
         id: version-parity
         if: always()
         run: python3 scripts/version-parity-check.py
+
+      # plab-audit's own output gate, run against the committed sample bundle.
+      #
+      # WHY IT LIVES IN THIS JOB RATHER THAN ITS OWN. Branch protection on
+      # `main` requires status checks BY JOB NAME, and it requires this job.
+      # A new job would run, report, and be ignored by the merge gate until
+      # someone remembered to add it in the repository settings, which is the
+      # same "runs but does not gate" failure the step below exists to avoid.
+      # For the same reason, DO NOT RENAME THIS JOB: the protection rule
+      # matches the old name and renaming silently drops the requirement.
+      #
+      # WHY IT IS NAMED HERE AT ALL. This workflow enumerates its checks and
+      # globs nothing, so a script that is not written out in a `run:` step
+      # never executes in CI. `bundle-check.py` passing locally is not the
+      # same as it running.
+      #
+      # The target is committed and deliberately NOT minimal: it is trimmed
+      # from the Phase 2 fixture and keeps every required section, including
+      # the `Decision records consulted` section R3 requires and the second
+      # ranked roadmap item the per-item half of R6 needs. A sample cut to the
+      # bare minimum would fail on the sample rather than on real output.
+      # Mutation results proving each rule can fail against this sample are in
+      # the effort's canary record.
+      #
+      # Exit 2 means the checker could not prove itself and its silence means
+      # nothing. Never read it as clean.
+      - name: The audit bundle checker, against its committed sample
+        id: bundle-check
+        if: always()
+        run: python3 skills/plab-audit/scripts/bundle-check.py skills/plab-audit/examples/sample-bundle

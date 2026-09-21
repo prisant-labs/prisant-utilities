@@ -1,6 +1,6 @@
 {
   "name": "prisant-utilities",
-  "version": "0.5.5",
+  "version": "0.6.0",
   "tier": "universal",
   "standard": "0.14",
   "skills": [
@@ -8,6 +8,11 @@
       "name": "plab-ai-review",
       "path": "skills/plab-ai-review/SKILL.md",
       "description": "Run a structured peer review of a document with a second model, then synthesize the findings into decisions. Use when you need a second opinion on a plan, brief, spec, RFC, or design doc, or when the user says 'review this with codex', 'get a second opinion', 'peer review this', or 'close this review'. Three modes: --review generates a self-contained review request for another model; --respond adds requestor synthesis once findings come back; --close archives the pair, applies accepted changes, and writes unresolved decisions to a backlog."
+    },
+    {
+      "name": "plab-audit",
+      "path": "skills/plab-audit/SKILL.md",
+      "description": "Audit a repository and produce a five-file bundle: what it is and is worth, what is wrong with it with a file path on every finding, and what to do next ranked and traceable. Three composable modes, --appraise, --audit and --roadmap, defaulting to all three. Detects repository type from disk (agent-plugin, tauri, generic) and runs that type's deterministic tools first, recording every command and exit code in a coverage statement that names what was read, sampled and skipped. Every candidate finding is reconciled against the repository's own recorded decisions before it is published. Use when you want a repository appraised, audited, or its backlog reordered on evidence. Explicit invocation only: run /plab-audit; it does not fire on its own. Do NOT use for dependency scanning (that is cargo audit, npm audit and their kin), for anything concerning an audit log or audit trail as a runtime feature, or to review a single document with a second model (that is /plab-ai-review, and the two are different jobs by maintainer ruling)."
     },
     {
       "name": "plab-continue-session",
