@@ -155,6 +155,27 @@ Pairs with `plab-wrap-session` and `plab-continue-session`, which write and read
 
 ---
 
+### `plab-audit` 1.0.0, explicit only
+
+Audits a repository into a five-file bundle: what it is worth, what is wrong with it, and what to do next.
+
+| Property | Value |
+|---|---|
+| Invocation | `disable-model-invocation: true` |
+| Modes | `--appraise`, `--audit`, `--roadmap`, composable, all three by default |
+| Types | `agent-plugin`, `tauri`, `generic`, detected from disk, `--type` overrides |
+| Lenses | `--lens=docs` |
+| Output | `_output/plab-audit/<repo>_<YYYY-MM-DD>/`, or `--out <path>` |
+| Produces | `appraise.md`, `findings.md`, `roadmap.md`, `evidence.md`, `README.md` |
+| Scripts | `bundle-check.py`, its own output gate, run by CI against a committed sample |
+| Setup required | Nothing. Read-only against the audited repository |
+| Dry run | None. It never writes to the repository it audits |
+| References | 7 files |
+
+**The deterministic layer produces candidates, not findings.** A candidate becomes a finding only after reconciliation against the repository's own recorded decisions; on the fixture run that specified the skill, that withdrew 7 of 15 candidates including the two highest-ranked. `evidence.md` is produced in every mode, and a tool that is absent or fails is recorded as a coverage gap with its exit code rather than as silence.
+
+---
+
 ## Shared plugin-root dependencies
 
 Used by skills rather than duplicated inside them:

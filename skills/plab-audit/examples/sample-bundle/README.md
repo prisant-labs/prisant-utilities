@@ -8,7 +8,9 @@
 
 **What this bundle is.** It is the committed sample that `.github/workflows/gate.yml` runs `bundle-check.py` against on every push and pull request. It is deliberately small, and it is deliberately complete: every structural rule the checker enforces is exercised here, so a rule that stops working fails CI on this sample instead of failing silently on real output months later.
 
-**It is not a real audit.** The target is illustrative. Trimmed from the Phase 2 fixture, which audited a real repository; that fixture stays out of this public tree because its findings belong to that repository and its evidence carried machine-specific paths.
+**It is not a real audit, and nothing in it is a claim about any repository.** The target `example-plugin` does not exist. Its file paths and line numbers are illustrative: they are shaped like real citations because demonstrating the citation convention is part of the sample's job, and a finding that is line-scoped carries a line number. Do not read them as findings about this repository or any other.
+
+It is modelled on the structure of the Phase 2 fixture, which audited a real repository. That fixture stays out of this public tree: its findings belong to that repository, and its evidence recorded machine-specific absolute paths.
 
 ## The bundle
 

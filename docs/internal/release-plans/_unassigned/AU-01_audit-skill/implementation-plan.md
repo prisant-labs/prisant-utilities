@@ -299,8 +299,11 @@ The self-check under test is `skills/plab-audit/scripts/bundle-check.py`, writte
    - If `cargo` is present, force the degradation case deliberately by running with a temporarily altered PATH, so AC-12 is proven either way.
 6. [ ] **Apply the dogfood gate honestly.** Read the nonfiction-studio roadmap. Did it change what you would do next in that repository? Record the answer in `_local/ideas/audit/draft/DOGFOOD.md`, including a "no" if that is the truth. The gate is that one output reorders the maintainer's queue, not that the skill ran.
 7. [ ] Open the pull request. Merge when the Standard and Document-lifecycle checks are green.
-8. [ ] Tag `v0.6.0` after merge. The publish workflow creates the GitHub Release from the CHANGELOG section written in Phase 5, so that section must exist or the run fails rather than publishing an empty release.
-9. [ ] Repin the marketplace, then verify the installed skill by behaviour.
+8. [ ] **Correct the `## [0.6.0]` date in `CHANGELOG.md` before tagging.** Phase 5 wrote it as `2026-09-20`, the authoring date, which is a prediction rather than a record: Keep a Changelog dates the release, and step 6's dogfood gate can legitimately answer "no" and stop this version from shipping at all. Set it to the actual tag date. `scripts/release-notes-from-changelog.py 0.6.0` reads the section by version and is indifferent to the date, so this is a correctness fix rather than a blocker discovered at tag time.
+9. [ ] Tag `v0.6.0` after merge. The publish workflow creates the GitHub Release from the CHANGELOG section written in Phase 5, so that section must exist or the run fails rather than publishing an empty release.
+10. [ ] Repin the marketplace, then verify the installed skill by behaviour.
+
+**Expected between Phase 5 and the tag, and not a defect.** `library.json` now declares 0.6.0 while the newest tag is v0.5.5, so the hygiene sweep's Check 3 version-parity question reports a mismatch until step 9 tags. `scripts/version-parity-check.py` is a different check and passes, because it compares documents against what the repository declares rather than against tags.
 
 **Verification:**
 
