@@ -36,9 +36,9 @@ Budget accordingly: Phase 2 is a real audit of a 14-skill repository, and Phase 
 | P1 | Series letter registered, fixtures confirmed reachable | N/A (prerequisite) | agent | **Done** 2026-09-20, `9d0dfc3` |
 | P2 | Hand-run fixture audit exists and is the output specification | N/A (produces the specimen) | agent | **Done** 2026-09-20, `_local/ideas/audit/draft/fixture/` |
 | P3 | Draft skill tree authored under `_local/` | AC-1 to AC-15 authored | agent | **Done** 2026-09-20, 10 files |
-| P4 | Skill installed and manifests regenerated | AC-1, AC-13 | agent | Not started |
-| P5 | Documentation wired | N/A (documentation) | agent | Not started |
-| P6 | Gates pass and the canary is proven to fail | AC-4, AC-5, AC-14, AC-15 | agent | **Canaries done** 2026-09-20; sample bundle waits on P4 |
+| P4 | Skill installed and manifests regenerated | AC-1, AC-13 | agent | **Done** 2026-09-20 |
+| P5 | Documentation wired | N/A (documentation) | agent | **Done** 2026-09-20 |
+| P6 | Gates pass and the canary is proven to fail | AC-4, AC-5, AC-14, AC-15 | agent | **Done** 2026-09-20, sample committed and mutation-tested |
 | P7 | Dogfood run, degradation test, release | AC-2, AC-3, AC-12 | agent | Not started |
 
 ---
@@ -199,6 +199,10 @@ node E:/Projects/product-on-purpose/agent-skills-toolkit/scripts/check.mjs .
 
 Reports 0 errors, 0 warnings, exit 0. **Expect eleven advisory lines beginning `[error/house]` before that summary.** Those are house-tier findings above the Universal tier this repository is graded at, they predate this effort, and the gate is passing despite them. Do not try to fix them here.
 
+**Executed 2026-09-20. The gate failed on its first run, with a real defect.** `skills/plab-audit/SKILL.md` carried a 1,039-character `description` against the Universal-tier limit of 1,024 (`frontmatter-valid (U3)`), so the tier came back `None (Universal blocked: 1 issue)` and the exit code was 1. Twenty-one characters of provenance were cut from the do-NOT-use clause (`, and the two are different jobs by maintainer ruling` became `, a different job`), which is recorded in the spec at AC-1's source line and did not need to be in the description. Final length 1,003, headroom 21. No acceptance criterion governs the description text, so this was a trim rather than a specification change.
+
+**The transferable part is why it surfaced this late.** The toolkit gate grades `skills/`. Phase 3 authored the tree in `_local/ideas/audit/draft/skills/plab-audit/`, which is gitignored and outside the graded surface, so ten files were written, reviewed and canary-tested without the conformance gate ever seeing them. An over-length description is exactly the class of defect that gate exists to catch in seconds. **Drafting a skill outside `skills/` defers every conformance check to install time**, and the advisory `[error/house]` count went from eleven to twelve for the same reason: the new skill directory immediately picked up the pre-existing `folder-readme (G8)` finding that every sibling already carries. Anyone repeating this shape should run `check.mjs` against a temporary copy placed inside `skills/` before declaring an authoring phase done.
+
 ---
 
 ## Phase 5: Documentation wiring
@@ -255,11 +259,11 @@ The self-check under test is `skills/plab-audit/scripts/bundle-check.py`, writte
 5. [ ] Restore. Remove the finding citation from one item above the break in `canary/roadmap.md`. Run it. **It must exit 1** (AC-9).
 6. [ ] Point it at a directory that does not exist. **It must exit 2**, the broken state, not 1. A check that reports "findings" when it could not run is the failure mode the three-state convention exists to prevent.
 7. [ ] Record all four canary results, pass and fail states with their exact output and exit codes, in `_local/ideas/audit/draft/canary/RESULTS.md`.
-8. [ ] Commit a minimal sample bundle to `skills/plab-audit/examples/sample-bundle/` so CI has something to run `bundle-check.py` against. Without it the Phase 5 workflow step has no target.
+8. [x] Commit a minimal sample bundle to `skills/plab-audit/examples/sample-bundle/` so CI has something to run `bundle-check.py` against. Without it the Phase 5 workflow step has no target.
 
    **The sample must exercise every rule, AC-15 included.** `bundle-check.py` R3 requires `evidence.md` to carry a `Decision records consulted` section, so a sample cut down to the bare minimum will fail CI on the sample rather than on any real output, which trains everyone to ignore the job. The cheapest correct sample is a trimmed copy of the Phase 2 fixture, which already satisfies all seven rules; trim the prose, keep every required section, and keep at least two rank-numbered roadmap items so the per-item half of R6 is exercised.
 
-   **Also decide how the packs name the toolkit.** `references/type-packs/agent-plugin.md` currently writes it as `<toolkit>` in commands and once as an absolute machine path in its provenance note. `AGENTS.md` uses the placeholder `<agent-skills-toolkit>`; match that before copying into `skills/`, because an absolute path under `E:/Projects/` is machine-specific and this is a public repository.
+   **Resolved 2026-09-20 at copy time.** `references/type-packs/agent-plugin.md` wrote the toolkit as `<toolkit>` in five commands; all five now read `<agent-skills-toolkit>`, matching `AGENTS.md`. **The absolute-path half of this trap was already stale when Phase 4 ran:** the draft's provenance note carried no machine path, so the warning as written sent the executor looking for something that was not there. Recorded rather than deleted, because the trap that did bite was in a file this note never mentioned: the Phase 2 fixture carried seven absolute paths under `E:/Projects/`, and the sample bundle is trimmed from that fixture. A warning scoped to one file missed the file that actually mattered.
 9. [ ] Delete the canary scratch copy, keeping `RESULTS.md`.
 
 **Verification:**
