@@ -4,11 +4,11 @@ title: Derive session-log facts from git instead of model recall
 type: spec
 status: draft
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-10-04
 linked-effort: the maintainer's private plab-wrap-session evolution roadmap, 2026-08-16
 linked-plan: implementation-plan.md
-ac-count: 9
-source-count: 7
+ac-count: 11
+source-count: 10
 requires-human-review: false
 target-release: v0.7.0
 linked-release: docs/internal/release-plans/plan_06_derived-facts/plan.md
@@ -20,10 +20,10 @@ priority: P1
 ## Task Summary
 
 **Status:** Draft
-**Last updated:** 2026-08-23
-**Linked plan:** `implementation-plan.md`
-**Open questions:** 1 open, 2 decided and recorded below (see Open Questions / Decisions)
-**Revisions:** Initial draft created 2026-08-23
+**Last updated:** 2026-10-04
+**Linked plan:** `implementation-plan.md` (not yet updated for the 2026-10-04 revision)
+**Open questions:** 1 open, 4 decided and recorded below (see Open Questions / Decisions)
+**Revisions:** 2 (initial draft 2026-08-23; widened to one-step evidence gathering 2026-10-04; see Revisions)
 
 ### Acceptance Criteria Fulfillment
 
@@ -34,8 +34,10 @@ priority: P1
 - [ ] AC-5: Verification content is derived only when a real record exists; otherwise stays model-authored
 - [ ] AC-6: The four judgment sections receive no script-generated content
 - [ ] AC-7: Script path resolution follows the `organize-logs.py` precedent
-- [ ] AC-8: Script is read-only, supports `--json`, and ships with a stdlib-only test script
+- [ ] AC-8: Script writes nothing outside `.git`, fetches only on request and never prunes, supports `--json`, and ships with a stdlib-only test script
 - [ ] AC-9: `SKILL.md` is rewired to actually call the script
+- [ ] AC-10: One invocation also emits the Evidence Gathering inputs and the hygiene sweep's detection results
+- [ ] AC-11: A re-measurement shows the wrap's median step count fell against the 2026-10-01 baseline
 
 ### Currently In Progress
 
@@ -47,23 +49,29 @@ W-02 (the roadmap's W-2, zero-padded per this effort's ID scheme) adds `scripts/
 
 The case for this is not only token cost. A long session's early hours are the haziest part of the model's own context, and they are exactly where today's factual sections draw from, so derivation is the version that stays correct as sessions lengthen, not merely the version that is cheaper to produce. [S1]
 
+The 2026-10-04 revision widens the script's job from the frontmatter facts to everything the wrap gathers before it writes: the Evidence Gathering inputs and the hygiene sweep's detection results. A measurement of 293 wraps across 39 projects found a median of 10 assistant API calls per wrap. Cache reads were 53% of a wrap's cost, cache writes 35%, and the log's own text only 11%. [S9] Each call re-reads the whole session, so the number of calls sets the price far more than the length of the log does. At list prices, the median wrap cost $3.01 at the models actually used, or $1.64 repriced at Opus 5.5. [S9] Evidence Gathering and the sweep run their commands one at a time today [S7, S8], so collapsing them into one invocation attacks the larger share of that cost.
+
 ## Scope
 
 ### In Scope
 
-1. New file `skills/plab-wrap-session/scripts/derive-log-facts.py`: a stdlib-only Python script that derives the fields named in Requirements below.
+1. New file `skills/plab-wrap-session/scripts/derive-log-facts.py`: a stdlib-only Python script that derives the fields named in Requirements below, including the Evidence Gathering inputs and hygiene-sweep detection results of Requirement 10.
 2. New file `skills/plab-wrap-session/scripts/test-derive-log-facts.py`: fixture tests with no external test framework, matching the existing `test-organize-logs.py` precedent.
-3. Edits to `skills/plab-wrap-session/SKILL.md`: the Evidence Gathering section and the "### Frontmatter" block, wiring the skill's own procedure to run the script and use its output; `metadata.version` bump to 1.7.0.
-4. A new entry in `skills/plab-wrap-session/HISTORY.md` for 1.7.0.
-5. Version bookkeeping owned by wrap alone: a `CHANGELOG.md` `[Unreleased]` bullet for wrap 1.7.0, wrap's row in root `README.md`'s skill table, wrap's `version` field in `library.json`, and a regeneration of `manifest.generated.json` and both `plugin.json` files via the existing generator (`AGENTS.md:73`).
+3. Edits to `skills/plab-wrap-session/SKILL.md`: the Evidence Gathering section, the Pre-Wrap Hygiene Sweep section, and the "### Frontmatter" block, wiring the skill's own procedure to run the script and use its output; `metadata.version` bump to the next minor version. Wrap shipped 1.7.0 after this spec was first drafted, so that is 1.8.0 as of the 2026-10-04 revision.
+4. A new entry in `skills/plab-wrap-session/HISTORY.md` for that version.
+5. Version bookkeeping owned by wrap alone: a `CHANGELOG.md` `[Unreleased]` bullet for wrap's new version, wrap's row in root `README.md`'s skill table, wrap's `version` field in `library.json`, and a regeneration of `manifest.generated.json` and both `plugin.json` files via the existing generator (`AGENTS.md:117`).
+6. Edits to `skills/plab-wrap-session/references/hygiene-sweep.md`, limited to pointing each check's detection step at the script's output. The resolution protocol in that file, propose and then confirm each action, is unchanged.
 
 ### Non-Goals
 
 1. Does not change what Summary, Decisions Made, Waiting on You, or the Continuation Prompt contain, or how they are authored. These stay fully model-written; that is the explicit point the source roadmap makes about this split. [S1]
 2. Does not implement or repair W-1's capture-lite `SessionEnd` hook. The script may consume an existing capture-lite record where one is relevant, but building, fixing, or wiring that hook is a separate, already-tracked item (D-4) and is out of scope here. [S6]
-3. Does not edit any file under `skills/plab-continue-session/`, any file under `skills/plab-wrap-session/references/`, or `docs/skills/plab-wrap-session/README.md`. Those restate the same log-format contract from the read side or the human-facing side, and consolidating them is D-10's territory, not this effort's. Touching them here would let two specs claim the same edit.
-4. Does not commit to a specific frontmatter key name for commit-range or git-tag data without first checking it does not collide with the existing Tier 3 `tags:` field (topic keywords, `frontmatter-schema.md:50`) or `commit-sha` field (single SHA, `frontmatter-schema.md:49`). The exact name is left to implementation; colliding silently with an existing field is explicitly out of bounds (see AC-3).
-5. Does not change the plugin-level version in `.claude-plugin/plugin.json` or `.codex-plugin/plugin.json` beyond what the existing generator produces from `library.json`. The release-level `0.6.0` plugin version is the release plan's own gate to set, not a step in this effort's plan.
+3. Does not edit any file under `skills/plab-continue-session/`, any file under `skills/plab-wrap-session/references/` other than `hygiene-sweep.md` (In Scope item 6), or `docs/skills/plab-wrap-session/README.md`. Those restate the same log-format contract from the read side or the human-facing side, and consolidating them is D-10's territory, not this effort's. Touching them here would let two specs claim the same edit. `hygiene-sweep.md` is the exception because it catalogues the sweep's commands rather than the log's format, and this revision moves those commands into the script.
+4. Does not commit to a specific frontmatter key name for commit-range or git-tag data without first checking it does not collide with the existing Tier 3 `tags:` field (topic keywords, `frontmatter-schema.md:58`) or `commit-sha` field (single SHA, `frontmatter-schema.md:57`). The exact name is left to implementation; colliding silently with an existing field is explicitly out of bounds (see AC-3).
+5. Does not change the plugin-level version in `.claude-plugin/plugin.json` or `.codex-plugin/plugin.json` beyond what the existing generator produces from `library.json`. The release-level plugin version, v0.7.0 for this release plan, is the release plan's own gate to set, not a step in this effort's plan.
+6. Does not run the project's own validation scripts, the third bullet of the sweep's Check 3. Which scripts exist is specific to each repository, and their output is a finding to read rather than a fact to paste, so the wrapping agent still runs them as a separate step (see D5). [S7]
+7. Does not move any judgment or any write into the script. The script reports; the agent still decides whether the newest log covers the same arc, which carried Waiting on You items are resolved, and what to propose, and every proposed action still needs its own confirmation. [S7, S8]
+8. Does not change what `plab-continue-session` reads. Narrowing the resume's read to fewer sections is a separate, continue-side change.
 
 ## Users / Actors
 
@@ -81,16 +89,22 @@ The case for this is not only token cost. A long session's early hours are the h
 5. When a tool-call record or transcript is available for the current session, the script should surface verification-relevant facts into the Verification table's content. When none is available, including when only a capture-lite record exists (capture-lite fires at `SessionEnd` and therefore cannot describe a still-open session, per D-4's finding), the Verification section stays fully model-authored, with nothing presented as derived that was not actually derived. [S1, S6]
 6. Summary, Decisions Made, Waiting on You, and the Continuation Prompt must receive no script-generated content; all four remain entirely agent-authored text. [S1]
 7. The script must resolve its own path relative to the skill's own installed directory, and must treat any git-repository argument as relative to the project being wrapped, matching the resolution rule already shipped for `organize-logs.py`. [S2, S4]
-8. The script must be read-only (it inspects git and the environment; it writes nothing to disk) and must support a `--json` output mode, matching `organize-logs.py`'s existing contract. A stdlib-only sibling test script must exercise it against fixture git repositories with no external test framework. [S4, S5]
+8. The script must write nothing outside the repository's `.git` directory, and inside it only what Requirement 11 allows; by default it inspects git and the environment and writes nothing at all. It must support a `--json` output mode, matching `organize-logs.py`'s existing contract. A stdlib-only sibling test script must exercise it against fixture git repositories with no external test framework. [S4, S5, S10]
 9. `SKILL.md`'s Evidence Gathering section and its "### Frontmatter" block must be rewritten to call the script and use its output, rather than leaving the script and the skill's own manual-derivation prose as two disconnected paths. A committed script nothing calls is exactly the "producer with zero consumers" failure D-4 already found once in this pair; this requirement exists so W-02 does not repeat it. [S2, S6]
+10. The same single invocation must also emit what Evidence Gathering and the hygiene sweep collect today with separate commands. [S7, S8, S9]
+    - Evidence Gathering inputs: capture-lite records newer than the newest existing log, with their count and earliest-to-latest `head` (step 7); the newest existing log's filename (step 8, whose same-arc judgment stays with the agent); and that log's Waiting on You items, verbatim, with their `(blocked since YYYY-MM-DD)` dates (step 9). [S8]
+    - Files under gitignored locations modified since the newest log's timestamp, as the starting inventory for step 5. [S8, model-inference: the modification-time cutoff is this spec's choice; step 5 names the inventory but not how to find it]
+    - The hygiene sweep's detection results for Checks 1, 2, 4 and 5, and Check 3's CHANGELOG and version-versus-tag facts, produced with the commands `hygiene-sweep.md` documents. [S7]
+11. Remote facts are only true after a fetch, and a fetch writes remote-tracking refs inside `.git`. The script must fetch only when explicitly asked to, must use `git fetch origin --tags`, and must never prune. On 2026-09-25 a `git fetch --prune`, run during a status check, deleted a remote-tracking ref without the per-action confirmation the sweep requires. [S7, S10]
+12. The effort's proof is a re-measurement. Wraps made with the new version must be measured by the same method as the 2026-10-01 baseline, and the result must be reported against that baseline's median of 10 assistant API calls and $1.64 per wrap at Opus 5.5 list prices. [S9]
 
 ## Acceptance Criteria
 
 **AC-1:** Running `derive-log-facts.py` inside a git checkout emits `machine`, `repo`, `branch`, and `date` values equal to `hostname`, the git remote (or directory name absent a configured remote), `git branch --show-current`, and the system clock, respectively, with none of the four requiring the wrapping agent to separately run git or shell commands to obtain them. [S1, S3]
 
-**AC-2:** The script's output includes a `files-changed` list equal to `git diff --name-only` against a caller-supplied base ref, grouped per the existing "grouped by purpose if many" guidance at `SKILL.md:143`. [S1, S2]
+**AC-2:** The script's output includes a `files-changed` list equal to `git diff --name-only` against a caller-supplied base ref, grouped per the existing "grouped by purpose if many" guidance at `SKILL.md:155`. [S1, S2, S8]
 
-**AC-3:** The script's output includes commit-range and latest-tag values derived from `git log` and `git describe`, under field or key names distinct from the existing `commit-sha` field (`frontmatter-schema.md:49`) and `tags` field (`frontmatter-schema.md:50`). [S1, S3]
+**AC-3:** The script's output includes commit-range and latest-tag values derived from `git log` and `git describe`, under field or key names distinct from the existing `commit-sha` field (`frontmatter-schema.md:57`) and `tags` field (`frontmatter-schema.md:58`). [S1, S3]
 
 **AC-4:** The `decisions-count` value in a written log's frontmatter equals a manual count of that same log's own Decisions Made section entries; it is never a value the model supplies from estimation or recall. [S1]
 
@@ -98,11 +112,15 @@ The case for this is not only token cost. A long session's early hours are the h
 
 **AC-6:** No content in the Summary, Decisions Made, Waiting on You, or Continuation Prompt sections of a written log originates from the script; all four remain fully agent-authored text. [S1]
 
-**AC-7:** The script resolves its own file location relative to the skill's own installed directory rather than the project being wrapped, matching the resolution rule already shipped for `organize-logs.py` at `SKILL.md:91`. Any argument identifying the git repository to inspect is relative to the project being wrapped, not the plugin install location. [S2, S4]
+**AC-7:** The script resolves its own file location relative to the skill's own installed directory rather than the project being wrapped, matching the resolution rule already shipped for `organize-logs.py` at `SKILL.md:103`. Any argument identifying the git repository to inspect is relative to the project being wrapped, not the plugin install location. [S2, S4]
 
-**AC-8:** The script performs no filesystem writes, supports a `--json` output mode, and ships with a stdlib-only sibling `test-derive-log-facts.py` that exercises it against fixture git repositories with no external test framework, matching the `organize-logs.py` / `test-organize-logs.py` pair. [S4, S5]
+**AC-8:** Run without its fetch option, the script performs no filesystem writes. Run with it, the script's only write is `git fetch origin --tags`, with no prune. It supports a `--json` output mode, and ships with a stdlib-only sibling `test-derive-log-facts.py` that exercises it against fixture git repositories with no external test framework, matching the `organize-logs.py` / `test-organize-logs.py` pair. [S4, S5, S10]
 
 **AC-9:** `SKILL.md`'s Evidence Gathering section and its "### Frontmatter" block instruct the agent to run `derive-log-facts.py` and use its output, rather than leaving the script unreferenced by the skill's own procedure. [S2, S6]
+
+**AC-10 (Given/When/Then):** Given a project with a git remote and a session-log store, when the wrapping agent runs the script once, then the output contains every item Requirement 10 names. And the agent runs no further git or shell command to obtain any fact that output contains. Running the project's own validation scripts stays a separate step (Non-Goal 6). [S7, S8, S9]
+
+**AC-11:** Measured by the same method as the 2026-10-01 baseline, at least ten wraps made with the new version show a median of at most six assistant API calls per wrap, against the baseline's median of ten. The measurement report also states the median cost per wrap at Opus 5.5 list prices, against the baseline's $1.64. [S9; model-inference for the threshold of six: one script call, one validation call, one write, one self-check, and up to two calls for a fix or a confirmation]
 
 ## Behavior / Examples
 
@@ -139,21 +157,26 @@ The script's frontmatter-and-files-changed output happens before the model draft
 
 A session run in a harness that exposes no transcript or tool-call record, and with no capture-lite record relevant to it (capture-lite describes prior closed sessions only, never the current one), produces a Verification section identical in authorship to today's: the agent writes it from context, and the log does not claim any part of it was derived.
 
+### Example 4: One step instead of many (added 2026-10-04)
+
+Today a deep wrap runs Evidence Gathering's commands, reads the previous log, scans the capture records, and then runs each hygiene check, each as its own tool call. With this revision the agent runs the script once, with the fetch option, and gets back one output holding the frontmatter facts, the Evidence Gathering inputs, and the sweep's detection results. It then runs the project's own validation scripts, writes the log, and runs the self-check. A wrap whose sweep finds nothing to propose reaches a written, checked log in about five calls instead of the baseline median of ten. Where the sweep does find something, each proposal still gets its own confirmation, exactly as before. [S7, S8, S9]
+
 ## Non-Functional Requirements
 
 | Category | Requirement | Source |
 |---|---|---|
-| Token cost | One script invocation whose output is pasted into context replaces several manual git tool-calls plus the model's own transcription of their results, on every wrap. | [S1] |
+| Token cost | One script invocation whose output is pasted into context replaces several manual git tool-calls plus the model's own transcription of their results, on every wrap. Baseline measured 2026-10-01: a median of 10 assistant API calls and $1.64 per wrap at Opus 5.5 list prices, with cache reads 53% of the cost. AC-11 sets the target. | [S1, S9] |
 | Correctness under session length | Derived-field accuracy must not degrade as a session gets longer, unlike model-recalled facts drawn from early-session context. | [S1] |
 | Portability | stdlib-only Python, no third-party dependencies, matching the existing script in this skill. | [S4] |
 | Consistency | Git commands the script needs that the hygiene sweep already documents (for example, tag lookups) are reused from `hygiene-sweep.md` rather than re-invented a second way. | [S7] |
-| Safety | Read-only: no filesystem writes, so every invocation is safe to re-run and never needs a dry-run flag. | [S4] |
+| Safety | No filesystem writes by default, so every invocation is safe to re-run and never needs a dry-run flag. The fetch option is the only write, it is confined to `.git`, and it never prunes. | [S4, S10] |
 
 ## Revisions
 
 | Date | Change | By |
 |---|---|---|
 | 2026-08-23 | Initial draft created | agent |
+| 2026-10-04 | Widened from derived facts to one-step evidence gathering, after a measurement (S9) showed that a wrap's cost is driven by its number of steps. Added Requirements 10 to 12, AC-10 and AC-11, In Scope item 6, Non-Goals 6 to 8, Example 4, decisions D4 and D5, and sources S8 to S10. Narrowed Requirement 8 and AC-8 to allow an explicit fetch that never prunes. Corrected stale references: wrap shipped 1.7.0 in the meantime, so the bump now targets the next minor version; `SKILL.md:143` became `SKILL.md:155`, `SKILL.md:91` became `SKILL.md:103`, `frontmatter-schema.md:49` and `:50` became `:57` and `:58`, `AGENTS.md:73` became `AGENTS.md:117`, and Non-Goal 5's release version became v0.7.0. The implementation plan has not yet been updated to match. | agent |
 
 ## Sources & Evidence
 
@@ -163,7 +186,10 @@ A session run in a harness that exposes no transcript or tool-call record, and w
 - [S4] `skills/plab-wrap-session/scripts/organize-logs.py`. Repo file, credibility A, read in full.
 - [S5] `skills/plab-wrap-session/scripts/test-organize-logs.py`. Repo file, credibility A, read in full.
 - [S6] the maintainer's private defect record for the wrap/continue pair, 2026-08-18, section "D-4. Capture-lite is a producer with zero consumers." Maintainer-local, gitignored, exists on disk. Credibility A.
-- [S7] `skills/plab-wrap-session/references/hygiene-sweep.md`. Repo file, credibility A, read in full.
+- [S7] `skills/plab-wrap-session/references/hygiene-sweep.md`. Repo file, credibility A, read in full, and re-read in full on 2026-10-04 for the revision.
+- [S8] `skills/plab-wrap-session/SKILL.md` at v1.7.0, re-read 2026-10-04 for the revision: Evidence Gathering at lines 36 to 53, the Pre-Wrap Hygiene Sweep at line 55. Repo file, credibility A. S2 records the v1.5.0 text the initial draft was written against.
+- [S9] the maintainer's private measurement of wrap and continue cost, 2026-10-01, re-run 2026-10-02. It covers 293 wraps and 181 resumes across 3,645 transcripts in 39 projects. A wrap's median is 10 assistant API calls, and its cost splits into cache reads 53%, cache writes 35%, output 11%. The median wrap cost $3.01 at the models used and $1.64 repriced at Opus 5.5 list prices. Maintainer-local, gitignored, exists on disk. Credibility A for the counts, which are computed from transcripts. Credibility B for the dollar figures: they use a cached list-price table, and they are lower bounds, because a confirmation prompt ends the measured window.
+- [S10] the maintainer's private session log for 2026-09-20, written 2026-09-27, Hygiene Sweep section. It records that a `git fetch --prune` during a 2026-09-25 status check removed the stale `origin/release/v0.5.5` remote-tracking ref without the per-action confirmation the sweep requires. Maintainer-local, gitignored, exists on disk. Credibility A.
 
 ### Unverified Claims
 
@@ -176,9 +202,15 @@ None.
 | D1 | Exact field/key names for commit-range and git-describe-tag data | Open, left to implementation |
 | D2 | Whether `decisions-count` needs a second script invocation after the Decisions Made section is drafted | Decided, see below |
 | D3 | Whether capture-lite (W-1 / D-4) grounds the current session's Verification table | Decided, see below |
+| D4 | Whether the script may fetch from the remote | Decided 2026-10-04, see below |
+| D5 | Whether the script runs the project's own validation scripts | Decided 2026-10-04, see below |
 
 **D1.** The roadmap names "commit range and tags" as one derivable row but does not name field keys. `frontmatter-schema.md` already has Tier 3 fields `commit-sha` (single SHA) and `tags` (topic keywords) that a careless implementation could collide with. Left open for implementation time; AC-3 constrains the answer (must not collide) without dictating the exact name.
 
 **D2.** The roadmap's implementation shape describes the script as emitting "a frontmatter block and a files-changed section... which the skill then wraps prose around," which reads as the script running before the model drafts prose. But `decisions-count` depends on the Decisions Made section's content, which does not exist yet at that point. This spec resolves the ordering by treating `decisions-count` as computed after that section is drafted (AC-4), which may mean a second, smaller invocation of the script, or a single generation pass in which the model still authors the whole document but defers the exact count to a mechanical recount rather than free recall. The precise mechanism is left to the implementation plan; the fixed outcome is a mechanical count, never an estimate.
 
 **D3.** D-4 already established that a `SessionEnd`-triggered capture-lite record for the *current* session does not exist at wrap time, so it cannot ground this session's Verification table. AC-5 reflects this directly: verification derivation depends on a tool-call or transcript record if the harness exposes one, not on capture-lite, which is the record W-1 defines for prior sessions. Where no such record exists, the section stays model-authored, same as today. This spec treats the source roadmap's table row ("Verification table... tool-call record, or capture-lite from W-1") as needing this caveat rather than taking it literally, since a literal reading would contradict D-4's own, already-settled finding.
+
+**D4.** The sweep's Check 1 can only report true remote facts after a fetch, and a fetch writes remote-tracking refs, which the initial draft's Requirement 8 forbade. Three options were considered. The agent could fetch first, but that adds back one of the calls this revision removes. The script could always fetch, but then it would mutate state silently, and a later change adding `--prune` would delete refs unasked, which already happened once by hand. Decided: the script fetches only when explicitly asked to, uses `git fetch origin --tags`, and never prunes (Requirement 11, AC-8). [S7, S10]
+
+**D5.** Check 3 also runs the project's own validation scripts. Which scripts exist differs by repository, some are slow, and their output is a finding to read rather than a fact to paste. Decided: they stay a separate agent step (Non-Goal 6), so a wrap with no findings takes about two commands before writing, not one. AC-11's threshold allows for that call. [S7, model-inference]
