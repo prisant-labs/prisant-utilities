@@ -2,7 +2,7 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
-| 1.5.0 | 2026-09-15 | unreleased | changed | The continuation prompt is no longer dumped verbatim. Phase 3 renders the immediate action and gives the log path; verbatim is opt-in. |
+| 1.5.0 | 2026-09-15 | v0.5.5 | changed | The continuation prompt is no longer dumped verbatim. Phase 3 renders the immediate action and gives the log path; verbatim is opt-in. |
 | 1.4.0 | 2026-08-25 | v0.4.0 | added | Capture-lite orientation on the no-log and stale-log paths. |
 | 1.3.0 | 2026-08-18 | v0.2.0 | added | Discovery reads `YYYY-MM/` month folders alongside the flat store. Empty-store message diagnoses version skew. |
 | 1.2.1 | 2026-08-18 | v0.1.2 | fixed | Body trigger list aligned with the narrowed description. Records the 2026-08-17 description change that shipped un-versioned. |

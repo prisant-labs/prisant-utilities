@@ -2,9 +2,9 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
-| 1.5.1 | 2026-09-01 | unreleased | fixed | Removed every pointer to `/superpowers:writing-plans`, including the stale-plan gate's failure message. The skill names no external plugin. |
+| 1.5.1 | 2026-09-01 | v0.5.3 | fixed | Removed every pointer to `/superpowers:writing-plans`, including the stale-plan gate's failure message. The skill names no external plugin. |
 | 1.5.0 | 2026-08-27 | v0.5.0 | changed | Release folders are named by sequence and theme, not by version. The version moves to `target-version:` frontmatter. |
-| 1.4.0 | 2026-08-27 | unreleased | changed | Removed `disable-model-invocation`. The skill is auto-discoverable; a do-NOT-fire clause in the description replaces the binary gate. |
+| 1.4.0 | 2026-08-27 | v0.5.0 (as 1.5.0) | changed | Removed `disable-model-invocation`. The skill is auto-discoverable; a do-NOT-fire clause in the description replaces the binary gate. |
 | 1.3.0 | 2026-08-24 | v0.3.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.3.0; prior history remains there. |
 
 

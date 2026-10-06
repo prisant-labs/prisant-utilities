@@ -2,10 +2,10 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
-| 1.3.3 | 2026-09-01 | unreleased | fixed | Removed every pointer to `/superpowers:writing-plans`. The implementation-plan stage is now an in-repo template, so the skill names no external plugin. |
+| 1.3.3 | 2026-09-01 | v0.5.3 | fixed | Removed every pointer to `/superpowers:writing-plans`. The implementation-plan stage is now an in-repo template, so the skill names no external plugin. |
 | 1.3.2 | 2026-08-28 | v0.5.2 | changed | Supersession is documented as symmetric: `superseded-by` and `supersedes` are both written, and a cross-file gate enforces the pair. |
 | 1.3.1 | 2026-08-28 | v0.5.1 | changed | `linked-effort` documented as a string, not a path. A tracked artifact must not cite an untracked one. |
-| 1.3.0 | 2026-08-27 | unreleased | changed | Removed `disable-model-invocation`. The skill is auto-discoverable; a do-NOT-fire clause in the description replaces the binary gate. |
+| 1.3.0 | 2026-08-27 | v0.5.0 | changed | Removed `disable-model-invocation`. The skill is auto-discoverable; a do-NOT-fire clause in the description replaces the binary gate. |
 | 1.2.1 | 2026-08-24 | v0.3.0 | migrated | First release in prisant-utilities. Migrated from a private upstream at version 1.2.1; prior history remains there. |
 
 

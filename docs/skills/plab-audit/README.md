@@ -1,6 +1,6 @@
 # plab-audit
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 **Source:** [`skills/plab-audit/`](../../../skills/plab-audit/)
 
 Audit a repository and produce a five-file bundle: what it is and is worth, what is wrong with it with a file path on every finding, and what to do next ranked and traceable to those findings. Manual invocation only.
@@ -15,7 +15,7 @@ Audit a repository and produce a five-file bundle: what it is and is worth, what
 /plab-audit path/to/repository
 ```
 
-All three modes run by default and the bundle lands in `_output/plab-audit/<repo>_<YYYY-MM-DD>/`.
+All three modes run by default and the bundle lands in `_output/plab-audit/<repo>_<YYYY-MM-DD>/`, relative to the folder you start from. Start from outside the repository being audited. If that default would put the bundle inside the audited repository and the repository does not gitignore it, the skill stops and asks for `--out` rather than write there.
 
 ### Common Invocations
 
