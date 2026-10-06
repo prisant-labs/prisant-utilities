@@ -4,7 +4,7 @@ title: Derive session-log facts from git instead of model recall
 type: spec
 status: draft
 created: 2026-08-23
-updated: 2026-10-04
+updated: 2026-10-05
 linked-effort: the maintainer's private plab-wrap-session evolution roadmap, 2026-08-16
 linked-plan: implementation-plan.md
 ac-count: 11
@@ -95,7 +95,7 @@ The 2026-10-04 revision widens the script's job from the frontmatter facts to ev
     - Evidence Gathering inputs: capture-lite records newer than the newest existing log, with their count and earliest-to-latest `head` (step 7); the newest existing log's filename (step 8, whose same-arc judgment stays with the agent); and that log's Waiting on You items, verbatim, with their `(blocked since YYYY-MM-DD)` dates (step 9). [S8] The script finds the newest log by the newest-wins rule in `skills/plab-continue-session/references/log-discovery.md`. It mirrors that rule rather than redefining it, which makes a second copy of one contract; consolidating the copies is D-10's job, not this effort's (Non-Goal 3).
     - Files under gitignored locations modified since the newest log's timestamp, as the starting inventory for step 5. [S8, model-inference: the modification-time cutoff is this spec's choice; step 5 names the inventory but not how to find it]
     - The hygiene sweep's detection results for Checks 1, 2, 4 and 5, and Check 3's CHANGELOG and version-versus-tag facts, produced with the commands `hygiene-sweep.md` documents. [S7]
-11. Remote facts are only true after a fetch, and a fetch writes remote-tracking refs inside `.git`. The script must fetch only when explicitly asked to, must use `git fetch origin --tags`, and must never prune. On 2026-09-25 a `git fetch --prune`, run during a status check, deleted a remote-tracking ref without the per-action confirmation the sweep requires. [S7, S10]
+11. Remote facts are only true after a fetch, and a fetch writes remote-tracking refs inside `.git`. The script must fetch only when explicitly asked to, must use `git fetch --no-prune origin --tags`, and must never prune. The `--no-prune` flag is written out because a plain fetch prunes whenever `fetch.prune` or `remote.<name>.prune` is set in git configuration, and the explicit flag overrides that setting. On 2026-09-25 a `git fetch --prune`, run during a status check, deleted a remote-tracking ref without the per-action confirmation the sweep requires. [S7, S10]
 12. The effort's proof is a re-measurement. Wraps made with the new version must be measured by the same method as the 2026-10-01 baseline, comparing completed wraps with completed wraps: those that wrote their log before any user prompt. That baseline's median is 12 assistant API calls. [S9]
 
 ## Acceptance Criteria
@@ -114,7 +114,7 @@ The 2026-10-04 revision widens the script's job from the frontmatter facts to ev
 
 **AC-7:** The script resolves its own file location relative to the skill's own installed directory rather than the project being wrapped, matching the resolution rule already shipped for `organize-logs.py` at `SKILL.md:103`. Any argument identifying the git repository to inspect is relative to the project being wrapped, not the plugin install location. [S2, S4]
 
-**AC-8:** Run without its fetch option, the script performs no filesystem writes. Run with it, the script's only write is `git fetch origin --tags`, with no prune. It supports a `--json` output mode, and ships with a stdlib-only sibling `test-derive-log-facts.py` that exercises it against fixture git repositories with no external test framework, matching the `organize-logs.py` / `test-organize-logs.py` pair. [S4, S5, S10]
+**AC-8:** Run without its fetch option, the script performs no filesystem writes. Run with it, the script's only write is `git fetch --no-prune origin --tags`, which keeps stale remote-tracking refs even when `fetch.prune` is set in git configuration. It supports a `--json` output mode, and ships with a stdlib-only sibling `test-derive-log-facts.py` that exercises it against fixture git repositories with no external test framework, matching the `organize-logs.py` / `test-organize-logs.py` pair. [S4, S5, S10]
 
 **AC-9:** `SKILL.md`'s Evidence Gathering section and its "### Frontmatter" block instruct the agent to run `derive-log-facts.py` and use its output, rather than leaving the script unreferenced by the skill's own procedure. [S2, S6]
 
@@ -177,6 +177,7 @@ Today a deep wrap runs Evidence Gathering's commands, reads the previous log, sc
 |---|---|---|
 | 2026-08-23 | Initial draft created | agent |
 | 2026-10-04 | Widened from derived facts to one-step evidence gathering, after a measurement (S9) showed that a wrap's cost is driven by its number of steps. Added Requirements 10 to 12, AC-10 and AC-11, In Scope item 6, Non-Goals 6 to 8, Example 4, decisions D4 and D5, and sources S8 to S10. Narrowed Requirement 8 and AC-8 to allow an explicit fetch that never prunes. Corrected stale references: wrap shipped 1.7.0 in the meantime, so the bump now targets the next minor version; `SKILL.md:143` became `SKILL.md:155`, `SKILL.md:91` became `SKILL.md:103`, `frontmatter-schema.md:49` and `:50` became `:57` and `:58`, `AGENTS.md:73` became `AGENTS.md:117`, and Non-Goal 5's release version became v0.7.0. The implementation plan has not yet been updated to match. Same day, before publication: AC-11 and Requirement 12 now count only completed wraps, those that wrote their log before any user prompt. The measurement window ends at the first prompt, so a wrap that stopped to ask for confirmation looked cheap without having finished; the completed-wrap baseline is a median of 12 calls, not 10. Requirement 10 now names the newest-wins rule the script mirrors from `log-discovery.md`. | agent |
+| 2026-10-05 | Requirement 11 and AC-8 now specify `git fetch --no-prune origin --tags`. The earlier `git fetch origin --tags` would prune whenever `fetch.prune` is set in git configuration; checked on 2026-10-05 with a fixture clone holding a stale branch ref and `fetch.prune=true`, where the plain fetch deleted the ref and the `--no-prune` fetch kept it. The implementation plan's P3 step 1, P4 step 6 and P4 verification were changed to match, and the no-prune test case now sets `fetch.prune=true` so it exercises the configuration path. | agent |
 
 ## Sources & Evidence
 

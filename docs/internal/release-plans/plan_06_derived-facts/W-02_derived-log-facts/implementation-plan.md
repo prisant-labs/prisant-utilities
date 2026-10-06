@@ -93,7 +93,7 @@ phase-count: 7
 **Fulfills:** AC-10; the fetch half of AC-8.
 
 **Steps:**
-- [ ] Step 1: Add a `--fetch` option that runs `git fetch origin --tags` and no other write. Never pass `--prune`: a by-hand `git fetch --prune` deleted a remote-tracking ref without confirmation on 2026-09-25 (spec D4). Without the option, run no fetch, and state in the output that remote facts are as of the last fetch.
+- [ ] Step 1: Add a `--fetch` option that runs `git fetch --no-prune origin --tags` and no other write. Pass `--no-prune` explicitly, because a plain fetch prunes whenever `fetch.prune` is set in git configuration, and never pass `--prune`: a by-hand `git fetch --prune` deleted a remote-tracking ref without confirmation on 2026-09-25 (spec D4). Without the option, run no fetch, and state in the output that remote facts are as of the last fetch.
 - [ ] Step 2: Port the sweep's detection commands from `references/hygiene-sweep.md` rather than re-inventing them (spec NFR "Consistency"). Cover Check 1's ahead/behind, unpushed commits, remote branches and tags; Check 2's dirty and untracked files, stashes and worktrees; Check 3's CHANGELOG content above the last release heading and its version fields against the latest tag; Check 4's per-skill version-drift recipe; and Check 5's `organize-logs.py --json` dry run. Emit findings only. The script never emits a proposal and never acts on a finding.
 - [ ] Step 3: Find the newest session log by the newest-wins rule in `skills/plab-continue-session/references/log-discovery.md`: the flat store, its `YYYY-MM/` folders, and the two legacy paths, sorted by filename rather than by path. Mirror the rule in the script; do not edit that file (spec Non-Goal 3).
 - [ ] Step 4: From that log, emit its filename and its Waiting on You bullets verbatim, each with its `(blocked since YYYY-MM-DD)` date unchanged.
@@ -118,11 +118,11 @@ phase-count: 7
 - [ ] Step 3: Build fixture git repositories (`git init` in a temp dir, a couple of commits, a tag) to exercise files-changed, commit-range, and tag derivation deterministically.
 - [ ] Step 4: Add cases for the Phase 2 decisions-count and verification-degradation paths.
 - [ ] Step 5: Add a no-write case. Without `--fetch`, hash every file under the fixture's `.git` directory and working tree before and after a run, and assert the hashes are identical.
-- [ ] Step 6: Add a no-prune case. Make a fixture clone, delete a branch on its remote, then run with `--fetch`, and assert the clone's stale remote-tracking ref still exists. Canary: temporarily add `--prune` to the script's fetch call, and confirm this case fails.
+- [ ] Step 6: Add a no-prune case. Make a fixture clone, set `fetch.prune=true` in its configuration, delete a branch on its remote, then run with `--fetch`, and assert the clone's stale remote-tracking ref still exists. Canary: temporarily remove `--no-prune` from the script's fetch call, and confirm this case fails.
 - [ ] Step 7: Add log-store cases. Place logs in the flat store, in a `YYYY-MM/` folder and in a legacy path, and assert the newest filename wins regardless of folder. Assert that Waiting on You extraction preserves each `(blocked since ...)` date exactly.
 - [ ] Step 8: Add capture-record cases, including one record within the local-time offset of the cutoff, which a comparison that skips the timezone conversion would misclassify.
 
-**Verification:** `python skills/plab-wrap-session/scripts/test-derive-log-facts.py` exits 0 and prints an all-pass summary, matching `test-organize-logs.py`'s own reporting style. With `--prune` temporarily added to the fetch call, the same command exits non-zero, naming the no-prune case.
+**Verification:** `python skills/plab-wrap-session/scripts/test-derive-log-facts.py` exits 0 and prints an all-pass summary, matching `test-organize-logs.py`'s own reporting style. With `--no-prune` temporarily removed from the fetch call, the same command exits non-zero, naming the no-prune case.
 
 ---
 
