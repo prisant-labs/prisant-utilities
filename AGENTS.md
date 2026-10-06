@@ -4,9 +4,13 @@ Agent navigation entrypoint for the `prisant-utilities` plugin.
 
 ## What this is
 
-Eight general-purpose agent skills for the work around the work: scaffolding a repository for agent-assisted development, closing and resuming coding sessions, turning raw thinking into a decision-ready brief, producing guide bundles, getting a second model to review a document, and carrying a feature from written specification through to a taggable release plan.
+Nine general-purpose agent skills for the work around the work: scaffolding a repository for agent-assisted development, closing and resuming coding sessions, turning raw thinking into a decision-ready brief, producing guide bundles, getting a second model to review a document, auditing a repository and reordering its backlog on evidence, and carrying a feature from written specification through to a taggable release plan.
 
-One of the eight ships with `disable-model-invocation: true` and runs only when invoked by name: `plab-init-project`. It scaffolds files into a repository root, its trigger phrases ("init", "initialize", "set up") are among the most common words in ordinary conversation, and it is run once per repository rather than routinely.
+Two of the nine ship with `disable-model-invocation: true` and run only when invoked by name.
+
+`plab-init-project` scaffolds files into a repository root, its trigger phrases ("init", "initialize", "set up") are among the most common words in ordinary conversation, and it is run once per repository rather than routinely.
+
+`plab-audit` is gated by maintainer ruling of 2026-09-19: an audit is occasional and explicit, it is expensive to run by accident, and "audit" collides with dependency scanning and with audit logs as a runtime feature. The counter-argument is recorded in the parent brief and is not dismissed: a manual-only skill cannot displace a manual habit, so if the audit habit does not form, a weak description is no longer a candidate explanation and the dogfood gate is the only adoption signal left.
 
 `plab-spec` and `plab-release-plan` carried the same flag through v0.4.3 and no longer do. Their descriptions now carry explicit do-NOT-fire clauses instead, which is the mechanism that took `plab-continue-session` from over-triggering to correct: a narrowed description is a better instrument than a binary gate, because it can distinguish a request from a mention.
 
@@ -105,6 +109,14 @@ Aggregate every spec and implementation plan in scope of a release into one self
 Initialize agent development infrastructure in a repository: `AGENTS.md`, `CLAUDE.md`, gitignored `_local/_session-logs/`, and MADR v4 decision records. Three profiles: `minimal`, `standard`, `public`. Non-destructive and idempotent, so it is safe to run against a repository that already has some of this. Pairs with `plab-wrap-session` and `plab-continue-session`, which write and read the session logs it scaffolds.
 
 **Invocation:** manual only (`disable-model-invocation: true`). `/plab-init-project`.
+
+---
+
+### plab-audit
+
+Audit a repository and produce a five-file bundle: what it is and is worth, what is wrong with it with a file path on every finding, and what to do next ranked and traceable. Three composable modes, `--appraise`, `--audit` and `--roadmap`, defaulting to all three. Detects repository type from disk (`agent-plugin`, `tauri`, `generic`) and runs that type's deterministic tools first, recording every command and exit code in a coverage statement naming what was read, sampled and skipped, so a missing tool becomes a recorded gap rather than a silence. Every candidate finding is reconciled against the repository's own recorded decisions before it is published; on the fixture run that specified the skill, that step withdrew 7 of 15 candidates including the two highest-ranked. Its own output is gated by `skills/plab-audit/scripts/bundle-check.py`, which CI runs against the committed sample under `skills/plab-audit/examples/sample-bundle/`.
+
+**Invocation:** manual only (`disable-model-invocation: true`). `/plab-audit`.
 
 ---
 

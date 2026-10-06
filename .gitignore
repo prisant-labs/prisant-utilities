@@ -23,3 +23,7 @@ Thumbs.db
 # Local dev marketplace only. Published distribution is the standalone
 # prisant-labs/agent-plugins repo (D-2); an embedded marketplace must never ship.
 .claude-plugin/marketplace.json
+
+# Project-level skill copies used to test an unreleased skill before it ships
+# (AU-01 Phase 7). Never committed: the plugin, not this folder, is what users load.
+.claude/skills/
