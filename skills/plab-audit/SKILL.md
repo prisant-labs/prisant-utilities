@@ -82,6 +82,9 @@ For each candidate the deterministic layer or your reading produced, find out wh
 - **Release notes and changelog**, including entries about what has deliberately not happened yet
 - **Any prior audit in the tree**, including gitignored ones under `_local/`
 - **The repository's own instruction files**, `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`
+- **Gitignored working records**, such as a decisions register or open-questions file, and the newest session log's list of what is waiting on the maintainer. These often hold the most recent decisions of all
+
+**Search the gitignored record explicitly, because a repository-wide search skips it.** ripgrep, and the Grep tool built on it, honour `.gitignore` by default. On this skill's first real run, `rg -l 'v0\.6\.0' .` matched 0 files under `_local/`, while `--no-ignore` matched 57. That audit never opened the gitignored decisions register, and reported the record silent on a problem it was recording. Pass the gitignored folder as the search path, or add `--no-ignore`. A search that returns nothing has answered only for the paths it could see.
 
 Then do one of three things with the candidate, and record which:
 
