@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing yet.
 
-## [0.6.0] - 2026-09-20
+## [0.6.0] - 2026-10-06
 
 ### Added
 
@@ -27,6 +27,10 @@ Nothing yet.
 
 - **`--lens=publish-readiness`** was cut. Its source proposal is not in this repository, so the lens had no specification to build against.
 - **`--deep` and `--ideate`** are deferred. Neither has an executable design yet, and a flag that cannot say what it does differently is a name rather than a feature.
+
+### Not yet verified
+
+- **Released without the planned dogfood runs.** Before release the skill was exercised in `--appraise` mode on this repository, where it wrote exactly two files and `bundle-check.py` reported the bundle clean. A full five-file audit of another repository, the shape comparison with the hand-run fixture, and the degradation run with `cargo` hidden (AC-12, honest degradation when a tool is missing) run after release against the installed version. A defect they find ships as a patch release.
 
 ## [0.5.5] - 2026-09-20
 
