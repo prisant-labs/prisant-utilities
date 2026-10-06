@@ -2,7 +2,18 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
-| 1.0.0 | 2026-09-20 | unreleased | added | First version. Three composable modes, three type packs, one docs lens, a coverage statement, and a canary-proven bundle self-check. |
+| 1.0.1 | 2026-10-06 | v0.6.1 | fixed | Its first full run on another repository found three defects in the skill: an output folder that could land inside the audited repository, a vendored-copy comparison that asked the wrong question, and a misattributed tier-ceiling marker. Also adds the first-party plugin validator to the agent-plugin pack. |
+| 1.0.0 | 2026-09-20 | v0.6.0 | added | First version. Three composable modes, three type packs, one docs lens, a coverage statement, and a canary-proven bundle self-check. |
+
+## 1.0.1 - 2026-10-06
+
+**Fixed: three defects found by the skill's first full run on another repository.** The run audited `nonfiction-studio` on 2026-10-06, as step 2 of Phase 7 in AU-01 (audit skill). Its bundle passed `bundle-check.py`, and the run surfaced three places where the skill itself was wrong.
+
+- **The default output folder could land inside the audited repository.** The default is relative to the working directory, so an audit started from inside its target wrote there, against the skill's own read-only rule. The run avoided it only because the operator redirected the bundle by hand. Step 1 now resolves the output folder first and refuses a location inside the target unless `git -C <target> check-ignore -q <output-folder>/README.md` exits 0. The check names a file inside the folder because, for a folder that does not exist yet, `check-ignore` on the folder itself returns 1 even when a directory pattern such as `_output*/` would ignore it. Canary: the check exits 0 in `prisant-utilities`, which ignores `_output*/`, and 1 in `nonfiction-studio`, which does not.
+- **The agent-plugin pack's vendored-copy comparison asked one question and reported another.** It diffed the target against the toolkit's current files, which measures how stale a copy is, and read the result as evidence of local edits. That is how the 2026-09-20 fixture audit's highest-ranked finding, "vendored spine modified", came to be wrong. Step 3 now runs two labelled comparisons: against the pinned commit for edits, and against upstream `HEAD` for staleness. Canary: against its pin, `nonfiction-studio`'s vendored `checks/` and `lib/` folders show 0 content differences; against `HEAD`, `checks/` shows 22. Without `--strip-trailing-cr`, the comparison against the pin reports 49 false differences on a Windows checkout, so the flag is now part of the command.
+- **The pack misattributed `effectiveSeverity: "off"`.** It called "off" a tier-ceiling marker, and its note said the marking varied with the toolkit version. Both are wrong. On one toolkit commit, `549eb32`, `prisant-utilities` returned its 35 above-tier findings at `"error"` and `nonfiction-studio` returned 150 at `"off"`. The difference is the profile: `nonfiction-studio` sets `plain-plugin`, which switches the toolkit's house conventions off. The tier ceiling marks nothing per finding under either profile. The pack now says so, and tells the audit to record `config.profile`.
+
+**Added: the first-party plugin validator as pack tool 7.** `claude plugin validate --strict <target>` ships with Claude Code, so unlike the third-party validators the pack already names, it can be a required step. The pack records that it does not read `settings.json`, which is how the run's F-01 (an unquoted status-line path) stayed invisible to it.
 
 ## 1.0.0 - 2026-09-20
 

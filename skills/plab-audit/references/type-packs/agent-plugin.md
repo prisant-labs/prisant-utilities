@@ -20,11 +20,13 @@ On the fixture, the human output was four lines ending `0 error(s), 0 warning(s)
 
 | Field | What it means |
 |---|---|
-| `effectiveSeverity: "off"` | The requirement sits above the repository's declared tier, so the tier ceiling switches it off |
+| `effectiveSeverity: "off"` | The repository's profile turns the rule off. Under `profile: "plain-plugin"`, set in `askit.config.json`, the toolkit switches off its house conventions: U1, U2, U5, U16 and the whole S and G series. This is not a tier-ceiling marker |
 | `suppressed: true` with a `ceiling` object | A migration ceiling, usually `{pinned, from, to, due}`, holding a graduated rule at a lower severity because of the repository's declared `standard` |
 | `suppressionReason` | Present when the repository configured the suppression itself. **Read it in full.** Truncating it is how the fixture audit's first draft went wrong |
 
-**How the JSON marks a tier ceiling varies with the toolkit version.** The table above describes the fixture's run. On toolkit `v1.20.0-2`, against `prisant-utilities` on 2026-10-05, it did not hold. All 35 above-tier findings carried `effectiveSeverity: "error"`, `suppressed: false` and `ceiling: null`, with no per-finding marker at all, while the human output labelled them "Above your declared tier (informational; these cannot affect the grade or the exit code)". Only three things revealed the ceiling: `errorCount: 0` against a non-empty `findings` array, the `tierReport` object, and `reqId` values from a series above the declared tier, such as G4 to G10 under a `universal` declaration. Read all three before concluding that a finding is live, and record the toolkit version with `git -C <agent-skills-toolkit> describe --tags`, because CI may pin a different one.
+**The tier ceiling carries no per-finding marker. A profile does, and the two are easy to confuse.** Until 2026-10-06 this pack said that the tier-ceiling marker varied with the toolkit version. It does not. On the same toolkit commit, `549eb32` (`v1.20.0-2`), `prisant-utilities` returned 35 above-tier findings, all at `effectiveSeverity: "error"` with `suppressed: false` and `ceiling: null`. `nonfiction-studio` returned 150 at `"off"`. The difference is the profile: `prisant-utilities` runs the default `askit-library` profile, which keeps every rule's declared severity, and `nonfiction-studio` sets `plain-plugin`, which the toolkit's `scripts/lib/profiles.mjs` uses to switch the house conventions off. The fixture's "off" findings came from the same profile.
+
+Under either profile, only three things reveal the tier ceiling: `errorCount: 0` against a non-empty `findings` array, the `tierReport` object, and `reqId` values from a series above the declared tier, such as G4 to G10 under a `universal` declaration. Read all three before concluding that a finding is live. Record `config.profile` from the JSON, because it says which rubric the repository chose to be graded against. Record the toolkit version with `git -C <agent-skills-toolkit> describe --tags`, because CI may pin a different one.
 
 Record `findings.length`, the breakdown by `check`, and the breakdown by `effectiveSeverity`. A repository reporting zero errors while holding a hundred findings is a fact worth stating, whether or not any of them is actionable.
 
@@ -40,15 +42,32 @@ Find them in `scripts/`, `bin/`, or the `scripts` block of `package.json`. Run e
 
 ### 3. Vendored-versus-upstream comparison, if the repository vendors a toolchain
 
-A repository that vendors its validation spine has taken on an obligation to track the delta. Check whether it has:
+A repository that vendors its validation spine has taken on an obligation to track the delta. Two different questions apply, and each needs its own baseline:
+
+- **A. Was the vendored copy edited?** Compare it against the upstream commit it was copied from, the pin.
+- **B. How far behind upstream is it?** Compare it against upstream `HEAD`.
+
+Start with the attribution file, usually `scripts/ATTRIBUTION.md`, which records the pin and the copy date. Then extract both baselines to a scratch folder outside the target. `git archive` reads the toolkit at any commit without touching its worktree:
 
 ```bash
-diff <target>/scripts/check.mjs <agent-skills-toolkit>/scripts/check.mjs
-comm -13 <(ls <target>/scripts/checks/ | sort) <(ls <agent-skills-toolkit>/scripts/checks/ | sort)
-comm -23 <(ls <target>/scripts/checks/ | sort) <(ls <agent-skills-toolkit>/scripts/checks/ | sort)
+pin=<commit recorded in the target's attribution file>
+mkdir -p <scratch>/pinned <scratch>/head
+git -C <agent-skills-toolkit> archive "$pin" scripts | tar -x -C <scratch>/pinned
+git -C <agent-skills-toolkit> archive HEAD scripts | tar -x -C <scratch>/head
+
+# A. Edited? Content differences against the pin, per vendored folder
+diff -rq --strip-trailing-cr <scratch>/pinned/scripts/checks <target>/scripts/checks
+diff -rq --strip-trailing-cr <scratch>/pinned/scripts/lib <target>/scripts/lib
+
+# B. Stale? Upstream checks the copy does not carry
+comm -13 <(ls <target>/scripts/checks/ | sort) <(ls <scratch>/head/scripts/checks/ | sort)
 ```
 
-Look for an attribution file, usually `scripts/ATTRIBUTION.md`, recording the upstream commit and copy date. Two questions: how old is the pin, and does the file record the modifications it promises to record.
+**Never report a B result as an A finding.** Until 2026-10-06 this step diffed the target against the toolkit's current files and nothing else. That comparison answers B but reads like A, and the fixture audit's highest-ranked finding, "vendored spine modified", was a B result reported as A. Against its pin, `nonfiction-studio`'s vendored `checks/` and `lib/` folders show 0 content differences. Against upstream `HEAD`, the same `checks/` comparison shows 22.
+
+**`--strip-trailing-cr` is required on a Windows checkout.** With `core.autocrlf=true` the working tree carries CRLF line endings, and without the flag the same comparison against the pin reported 49 false differences.
+
+In A's output, `Only in <target>` lines are files the repository added inside the vendored folders, and `Only in <pinned>` lines are upstream files it chose not to vendor. Ask of the attribution file whether it records both, and whether it records the modifications it promises to record.
 
 **Checks present upstream and absent from the fork cannot run in that repository's CI.** Name them, and name what is therefore unchecked. On the fixture this was how a live divergence from the declared Standard stayed invisible: the check that would have caught it was one of the five the fork did not carry.
 
@@ -85,6 +104,7 @@ Report the number and the per-skill average. **Do not attach it to a budget the 
 Compare what the manifests enumerate against what exists in `skills/`, `agents/`, `hooks/` and `commands/`. Both directions: catalogued but missing, and present but uncatalogued.
 
 **Verify the consequence before repeating it.** A registration check asserting that an unregistered skill "ships but is invisible to installers" is asserting something testable. Claude Code discovers skills from the `skills/` directory on disk, and a control repository whose manifest enumerates no components while its skills demonstrably load refutes the claim in one comparison. Find a control before publishing a delivery failure.
+
 
 ## What this pack deliberately does not run
 

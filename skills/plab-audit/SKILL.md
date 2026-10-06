@@ -15,8 +15,8 @@ argument-hint: "<path> [--appraise|--audit|--roadmap] [--type=agent-plugin|tauri
 disable-model-invocation: true
 license: MIT
 metadata:
-  version: "1.0.0"
-  updated: 2026-09-20
+  version: "1.0.1"
+  updated: 2026-10-06
 ---
 
 # Audit
@@ -56,6 +56,10 @@ Detect type from disk unless `--type` overrides:
 | neither | `generic` |
 
 Load the matching pack from `references/type-packs/`. The pack names the deterministic tools, the type-specific judgment questions, and what complete documentation means for that type.
+
+**Resolve the output folder before writing anything, and refuse to write inside the target unless the target ignores it.** The default output folder is relative to the working directory, so an audit started from inside the repository it audits would write its bundle into that repository. If the resolved output folder lies inside the target, run `git -C <target> check-ignore -q <output-folder>/README.md`. Exit 0 means the target ignores the folder and the default stands. Any other exit, including 128 for a target that is not a git repository, means stop and ask for `--out`. Check a file path inside the folder, not the folder itself: for a folder that does not exist yet, `check-ignore` cannot tell that a directory pattern such as `_output*/` applies, and returns 1 for a folder that would in fact be ignored.
+
+Prefer starting the audit from outside the target altogether, because the harness writes into the working directory too. On the nonfiction-studio run of 2026-10-06, the bundle was redirected by hand, but `/plugin` commands run in that session still created `.claude/settings.json` inside the audited repository.
 
 ### 2. Snapshot, then run the deterministic layer
 
@@ -127,7 +131,7 @@ Exit 0 clean, 1 findings, 2 broken. Fix what it reports rather than explaining i
 
 ## Constraints
 
-- **Read-only on the target.** Write only inside the output folder. Never modify the repository under audit, including to fix something trivial you noticed.
+- **Read-only on the target.** Write only inside the output folder. Never modify the repository under audit, including to fix something trivial you noticed. The output folder itself may sit inside the target only when the target ignores it, as step 1 checks.
 - **Every finding carries a file path**, and a line number where the finding is line-scoped.
 - **No finding without evidence.** If the only support is that something seems unwise, it belongs below the speculation break, not in `findings.md`.
 - **Severity is about consequence, not effort.** A one-character fix that silently disables a gate outranks a large refactor that would be tidier.
