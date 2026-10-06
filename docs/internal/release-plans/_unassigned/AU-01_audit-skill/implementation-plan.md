@@ -4,7 +4,7 @@ title: "Implementation plan: plab-audit, repository appraisal, findings and road
 type: implementation-plan
 status: draft
 created: 2026-09-19
-updated: 2026-09-20
+updated: 2026-10-05
 linked-spec: spec.md
 linked-release: null
 ac-coverage: complete
@@ -39,7 +39,7 @@ Budget accordingly: Phase 2 is a real audit of a 14-skill repository, and Phase 
 | P4 | Skill installed and manifests regenerated | AC-1, AC-13 | agent | **Done** 2026-09-20 |
 | P5 | Documentation wired | N/A (documentation) | agent | **Done** 2026-09-20 |
 | P6 | Gates pass and the canary is proven to fail | AC-4, AC-5, AC-14, AC-15 | agent | **Done** 2026-09-20, sample committed and mutation-tested |
-| P7 | Dogfood run, degradation test, release | AC-2, AC-3, AC-12 | agent | Not started |
+| P7 | Dogfood run, degradation test, release | AC-2, AC-3, AC-12 | agent | In progress: step 1 done 2026-10-05 |
 
 ---
 
@@ -286,10 +286,12 @@ The self-check under test is `skills/plab-audit/scripts/bundle-check.py`, writte
 
 **Steps:**
 
-1. [ ] **Solve skill loading before anything else in this phase.** The skill lives in `skills/plab-audit/` but the installed plugin is loaded from the marketplace cache, so the repository copy is not what runs. There is no `.claude/` directory in this project today. Try in this order and record which worked:
+1. [x] **Solve skill loading before anything else in this phase.** The skill lives in `skills/plab-audit/` but the installed plugin is loaded from the marketplace cache, so the repository copy is not what runs. There is no `.claude/` directory in this project today. Try in this order and record which worked:
    - Copy `skills/plab-audit/` to `.claude/skills/plab-audit/` in this repository and start a fresh session. If the project-level skills directory is honoured, this is the cheapest path. Add `.claude/skills/` to `.gitignore` if it is not already covered, so the test copy cannot be committed.
    - If that does not load, cut a pre-release tag and repin the marketplace.
    - **Verify by behaviour, not by a cache listing and not by the description.** Confirm a behaviour only the new skill has, per the standing lesson that merged is not installed.
+
+   **Result, 2026-10-05: the first option worked, through a directory junction rather than a copy.** `.claude/skills/plab-audit` was created on 2026-09-27 as a Windows directory junction to `skills/plab-audit/` (commit `ff000a9` gitignores `.claude/skills/`). The departure from "copy" is deliberate: fixes made in `skills/plab-audit/` during this phase reach the test copy at once, where a copy would silently keep testing the pre-fix version. The maintainer typed `/plab-audit . --appraise` in a fresh session. The skill reported its base directory as `.claude/skills/plab-audit`, and `diff -rq` against `skills/plab-audit/` showed identical trees. The installed plugin was 0.5.4, which has no `plab-audit`, so nothing else could have answered. In the same session `plab-audit` was absent from the model-invocable skill list while loaded, which is the Claude Code half of AC-1; Codex was not tested. That run also met step 4's condition, writing only `appraise.md` and `evidence.md`, and `bundle-check.py` exited 0 on the result. This first real run found two defects in the skill, both fixed on this branch the same day. Pack step 4's description-score command was inert (`b7f12fe`), and the skill's reconciliation search could not see gitignored records (`8f696b7`).
 2. [ ] Run `/plab-audit E:/Projects/prisant-labs/nonfiction-studio`. Confirm it detects `agent-plugin` (AC-3) and emits all five files (AC-2).
 
    **The path changed after the fixture run, and so did the repository.** Found 2026-09-27. The folder was renamed from `Nonfiction` to `nonfiction-studio` by 2026-09-25, and its history was rewritten when it was republished as a public repository: the fixture's `a2a1f56` (2026-09-05) is on no branch, it descends from root `84454ef` where today's `main` descends from `8276f13`, and pull-request numbering restarted (the fixture's history reached #17, today's `main` is at #4). The repository also gained a root `AGENTS.md` and `CLAUDE.md` on 2026-09-23, in a commit preparing it for public release, which resolves the fixture's F-02 (no root agent instructions). So the live run audits a materially different repository than the fixture did. Step 3 already compares shape rather than content; expect the content, including the ranking, to diverge, and do not read that divergence as a defect in the skill. The fixture's own citations now point at a commit that no branch reaches, so they can no longer be reproduced from `main`.
