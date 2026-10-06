@@ -24,6 +24,8 @@ On the fixture, the human output was four lines ending `0 error(s), 0 warning(s)
 | `suppressed: true` with a `ceiling` object | A migration ceiling, usually `{pinned, from, to, due}`, holding a graduated rule at a lower severity because of the repository's declared `standard` |
 | `suppressionReason` | Present when the repository configured the suppression itself. **Read it in full.** Truncating it is how the fixture audit's first draft went wrong |
 
+**How the JSON marks a tier ceiling varies with the toolkit version.** The table above describes the fixture's run. On toolkit `v1.20.0-2`, against `prisant-utilities` on 2026-10-05, it did not hold. All 35 above-tier findings carried `effectiveSeverity: "error"`, `suppressed: false` and `ceiling: null`, with no per-finding marker at all, while the human output labelled them "Above your declared tier (informational; these cannot affect the grade or the exit code)". Only three things revealed the ceiling: `errorCount: 0` against a non-empty `findings` array, the `tierReport` object, and `reqId` values from a series above the declared tier, such as G4 to G10 under a `universal` declaration. Read all three before concluding that a finding is live, and record the toolkit version with `git -C <agent-skills-toolkit> describe --tags`, because CI may pin a different one.
+
 Record `findings.length`, the breakdown by `check`, and the breakdown by `effectiveSeverity`. A repository reporting zero errors while holding a hundred findings is a fact worth stating, whether or not any of them is actionable.
 
 `--strict` disables the ceiling, which is useful for seeing what the pin is deferring. Run it only if you intend to report on the pin.
@@ -53,8 +55,22 @@ Look for an attribution file, usually `scripts/ATTRIBUTION.md`, recording the up
 ### 4. Description scoring, with its caveat
 
 ```bash
-node <agent-skills-toolkit>/scripts/checks/description-score.mjs <target>
+node --input-type=module -e '
+import { pathToFileURL } from "node:url";
+const [tk, target] = process.argv.slice(1);
+const lib = (p) => import(pathToFileURL(`${tk}/scripts/${p}`).href);
+const { loadPlugin } = await lib("lib/load-plugin.mjs");
+const s = await lib("checks/description-score.mjs");
+for (const k of loadPlugin(target).skills) {
+  const d = k.frontmatter?.description ?? "";
+  const v = s.englishDensity(d) < s.READABLE_FLOOR ? "NOT SCORED" : s.scoreDescription(d).toFixed(2);
+  console.log(`${v}  ${k.name ?? k.dir}`);
+}' <agent-skills-toolkit> <target>
 ```
+
+**Do not run `description-score.mjs` directly.** It is a library module with no command-line entry point, so `node .../checks/description-score.mjs <target>` loads it, does nothing, prints nothing and exits 0. This pack named exactly that command until 2026-10-05, when its first real run caught it. The command above builds the context with the toolkit's own loader and calls the module's exported scorer, so it prints one line per skill. **If it prints nothing, it did not run.** Record that as a coverage gap, never as a clean result. `check.mjs` also runs this check as U5, but only reports scores below the threshold, so its silence does not tell you what the scores were.
+
+`NOT SCORED` is the toolkit declining to score a description its English lexicon cannot read (ADR 0049). It is not a pass and not a failure.
 
 `THRESHOLD = 0.7`. **A score of exactly 0.65 is checked before it is called a defect.** ADR 0049 in the toolkit documents that a description whose `WHEN` pattern the English lexicon cannot match caps at 0.65 and cannot pass at any quality. A 0.65 is therefore a likely tool artifact rather than a bad description, and reporting it as a defect wastes a rewrite.
 
