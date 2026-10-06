@@ -2,7 +2,7 @@
 
 Generated file. Regenerate with `python scripts/gen-release-index.py` from the repository root. Hand edits will be overwritten on the next regeneration.
 
-**Releases:** 5 **Efforts:** 17 (1 unassigned) **Source:** every `plan.md` and `spec.md` under `docs/internal/release-plans/`, including `_unassigned/`, plus each effort's `implementation-plan.md` where present
+**Releases:** 5 **Efforts:** 17 (3 unassigned) **Source:** every `plan.md` and `spec.md` under `docs/internal/release-plans/`, including `_unassigned/`, plus each effort's `implementation-plan.md` where present
 
 ---
 
@@ -26,11 +26,11 @@ Every effort id's letter prefix names which series it belongs to. An id whose le
 | Release | Target Version | Theme | Efforts | Spec Statuses | Implementation Plan Statuses |
 |---|---|---|---|---|---|
 | [plan_04_gates-that-cannot-fail-open](plan_04_gates-that-cannot-fail-open/plan.md) | v0.4.0 | Gates that cannot fail open | 8 | fulfilled: 8 | complete: 8 |
-| [plan_05_reconcile-at-resume](plan_05_reconcile-at-resume/plan.md) | v0.6.0 | Reconcile at resume | 2 | draft: 2 | draft: 2 |
+| [plan_05_reconcile-at-resume](plan_05_reconcile-at-resume/plan.md) | v0.6.0 | Reconcile at resume | 0 |  |  |
 | [plan_06_derived-facts](plan_06_derived-facts/plan.md) | v0.7.0 | Derived facts | 2 | draft: 2 | draft: 2 |
 | [plan_07_aggregation](plan_07_aggregation/plan.md) | v0.8.0 | Aggregation | 2 | draft: 2 | draft: 2 |
 | [plan_08_escape-and-measure](plan_08_escape-and-measure/plan.md) | v0.9.0 | Escape and measure | 2 | draft: 2 | draft: 2 |
-| **Total (assigned to a release)** | | | **16** | draft: 8, fulfilled: 8 | complete: 8, draft: 8 |
+| **Total (assigned to a release)** | | | **14** | draft: 6, fulfilled: 8 | complete: 8, draft: 6 |
 
 ---
 
@@ -41,6 +41,8 @@ Specs written before being assigned to a release: the documented default home `/
 | Effort | Handle | Series | Spec Status | Implementation Plan Status | Priority | Human Review Required |
 |---|---|---|---|---|---|---|
 | [A-02](_unassigned/A-02_programmatic-review-dispatch/spec.md) | programmatic review dispatch | A (ai-review roadmap item) | committed | (no implementation plan yet) | P1 | No |
+| [C-02](_unassigned/C-02_reconcile-at-resume/spec.md) | reconcile at resume | C (continue-session roadmap item) | draft | draft | P1 | Yes |
+| [C-03](_unassigned/C-03_cold-repo-degradation/spec.md) | cold repo degradation | C (continue-session roadmap item) | draft | draft | P2 | Yes |
 
 ---
 
@@ -58,8 +60,6 @@ One row per effort, grouped by release in sequence order (see the Release column
 | [D-07](plan_04_gates-that-cannot-fail-open/D-07_waiting-on-blocker-contract/spec.md) | waiting on blocker contract | D (defect in the wrap and continue pair) | fulfilled | complete | [plan_04_gates-that-cannot-fail-open](plan_04_gates-that-cannot-fail-open/plan.md) | v0.4.0 | P1 | Yes |
 | [D-11](plan_04_gates-that-cannot-fail-open/D-11_three-state-gate-canaries/spec.md) | three state gate canaries | D (defect in the wrap and continue pair) | fulfilled | complete | [plan_04_gates-that-cannot-fail-open](plan_04_gates-that-cannot-fail-open/plan.md) | v0.4.0 | P1 | Yes |
 | [D-12](plan_04_gates-that-cannot-fail-open/D-12_path-citation-precision/spec.md) | path citation precision | D (defect in the wrap and continue pair) | fulfilled | complete | [plan_04_gates-that-cannot-fail-open](plan_04_gates-that-cannot-fail-open/plan.md) | v0.4.0 | P2 | Yes |
-| [C-02](plan_05_reconcile-at-resume/C-02_reconcile-at-resume/spec.md) | reconcile at resume | C (continue-session roadmap item) | draft | draft | [plan_05_reconcile-at-resume](plan_05_reconcile-at-resume/plan.md) | v0.6.0 | P1 | Yes |
-| [C-03](plan_05_reconcile-at-resume/C-03_cold-repo-degradation/spec.md) | cold repo degradation | C (continue-session roadmap item) | draft | draft | [plan_05_reconcile-at-resume](plan_05_reconcile-at-resume/plan.md) | v0.6.0 | P2 | Yes |
 | [D-10](plan_06_derived-facts/D-10_log-format-contract/spec.md) | log format contract | D (defect in the wrap and continue pair) | draft | draft | [plan_06_derived-facts](plan_06_derived-facts/plan.md) | v0.7.0 | P2 | No |
 | [W-02](plan_06_derived-facts/W-02_derived-log-facts/spec.md) | derived log facts | W (wrap-session roadmap item) | draft | draft | [plan_06_derived-facts](plan_06_derived-facts/plan.md) | v0.7.0 | P1 | No |
 | [C-05](plan_07_aggregation/C-05_arc-resume/spec.md) | arc resume | C (continue-session roadmap item) | draft | draft | [plan_07_aggregation](plan_07_aggregation/plan.md) | v0.8.0 | P2 | No |
@@ -67,4 +67,6 @@ One row per effort, grouped by release in sequence order (see the Release column
 | [C-04](plan_08_escape-and-measure/C-04_consumption-disposition/spec.md) | consumption disposition | C (continue-session roadmap item) | draft | draft | [plan_08_escape-and-measure](plan_08_escape-and-measure/plan.md) | v0.9.0 | P2 | No |
 | [W-03](plan_08_escape-and-measure/W-03_waiting-on-escapes-gitignore/spec.md) | waiting on escapes gitignore | W (wrap-session roadmap item) | draft | draft | [plan_08_escape-and-measure](plan_08_escape-and-measure/plan.md) | v0.9.0 | P2 | Yes |
 | [A-02](_unassigned/A-02_programmatic-review-dispatch/spec.md) | programmatic review dispatch | A (ai-review roadmap item) | committed | (no implementation plan yet) | `_unassigned/` | - | P1 | No |
+| [C-02](_unassigned/C-02_reconcile-at-resume/spec.md) | reconcile at resume | C (continue-session roadmap item) | draft | draft | `_unassigned/` | - | P1 | Yes |
+| [C-03](_unassigned/C-03_cold-repo-degradation/spec.md) | cold repo degradation | C (continue-session roadmap item) | draft | draft | `_unassigned/` | - | P2 | Yes |
 

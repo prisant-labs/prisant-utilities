@@ -4,9 +4,9 @@ title: "Implementation plan: Reconcile the Session Log Against Repo Reality at R
 type: implementation-plan
 status: draft
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-10-05
 linked-spec: spec.md
-linked-release: docs/internal/release-plans/plan_05_reconcile-at-resume/plan.md
+linked-release: null
 ac-coverage: complete
 phase-count: 3
 ---
