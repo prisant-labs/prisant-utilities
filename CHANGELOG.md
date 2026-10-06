@@ -9,6 +9,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Nothing yet.
 
+## [0.6.1] - 2026-10-06
+
+The patch release that the 0.6.0 entry promised. The first full run of `plab-audit` on another repository found three defects in the skill itself, and this release fixes them.
+
+### Fixed
+
+- **`plab-audit` 1.0.1: the default output folder could land inside the audited repository.** The default `_output/plab-audit/<repo>_<YYYY-MM-DD>/` is relative to the working directory, so an audit started from inside its target wrote its bundle there, against the skill's own read-only rule. The 2026-10-06 run on `nonfiction-studio` avoided this only because the operator redirected the bundle by hand. Step 1 now resolves the output folder before anything is written, and refuses a location inside the target unless `git -C <target> check-ignore -q <output-folder>/README.md` exits 0.
+
+  **The check names a file inside the folder, not the folder itself.** For a folder that does not exist yet, `check-ignore` cannot tell that a directory pattern such as `_output*/` applies, so it returns 1 for a folder that would in fact be ignored. Canary: the file-path form exits 0 in this repository, which ignores `_output*/`, and 1 in `nonfiction-studio`, which does not.
+
+- **`plab-audit` 1.0.1: the vendored-copy comparison asked one question and reported another.** Step 3 of the agent-plugin pack diffed the target against the toolkit's current files. That comparison measures how stale a vendored copy is, but the pack read its result as evidence of local edits. This is how the 2026-09-20 fixture audit's highest-ranked finding, "vendored spine modified", came to be wrong. The step now runs two labelled comparisons, each against its own baseline: against the pinned commit to find edits, and against upstream `HEAD` to measure staleness.
+
+  **Canary.** Against its pin, `nonfiction-studio`'s vendored `checks/` and `lib/` folders show 0 content differences. Against `HEAD`, `checks/` shows 22. Without `--strip-trailing-cr`, the comparison against the pin reports 49 false differences on a Windows checkout, so the flag is part of the command.
+
+- **`plab-audit` 1.0.1: `effectiveSeverity: "off"` was misattributed.** The pack called "off" a tier-ceiling marker, and a note added on 2026-10-05 said the marking varied with the toolkit version. Both claims are wrong. On one toolkit commit, `549eb32`, this repository returned its 35 above-tier findings at `"error"`, and `nonfiction-studio` returned 150 at `"off"`. The difference is the profile: `nonfiction-studio` sets `plain-plugin`, which switches the toolkit's house conventions off. The tier ceiling marks nothing per finding under either profile. The pack now says so, and the audit records `config.profile` from the JSON.
+
+- **Seven `HISTORY.md` rows read "unreleased" for versions that had shipped.** Each now names the tag that shipped it, derived from `library.json` at every tag rather than recalled. `plab-release-plan` 1.4.0 never shipped under its own number, so its row reads `v0.5.0 (as 1.5.0)`. No script reads this column, which is how the drift built up across five skills.
+
+### Added
+
+- **`plab-audit` 1.0.1: the first-party plugin validator is agent-plugin pack tool 7.** `claude plugin validate --strict <target>` ships with Claude Code, so unlike the third-party validators the pack already names, it is a required step. The pack records that this validator does not read `settings.json`. That is how the run's F-01 (an unquoted plugin path in the status-line command) stayed invisible to it while the same pattern in `hooks.json` was caught.
+
+### Verified
+
+- **AU-01 (audit skill) Phase 7 steps 2 and 3, waived before 0.6.0, have now run.** The run on `nonfiction-studio` detected `agent-plugin` from `library.json` and `.claude-plugin/plugin.json` and wrote all five bundle files, and `bundle-check.py` reported the bundle clean. Compared with the hand-run Phase 2 fixture, the bundle has the same five files and every section the output specification requires. The degradation run with `cargo` hidden and the dogfood gate are still to come.
+
 ## [0.6.0] - 2026-10-06
 
 ### Added
