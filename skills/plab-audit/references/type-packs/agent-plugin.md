@@ -105,6 +105,16 @@ Compare what the manifests enumerate against what exists in `skills/`, `agents/`
 
 **Verify the consequence before repeating it.** A registration check asserting that an unregistered skill "ships but is invisible to installers" is asserting something testable. Claude Code discovers skills from the `skills/` directory on disk, and a control repository whose manifest enumerates no components while its skills demonstrably load refutes the claim in one comparison. Find a control before publishing a delivery failure.
 
+### 7. The harness's own plugin validator
+
+```bash
+claude plugin validate --strict <target>
+claude --version
+```
+
+This validator is first-party and is installed wherever Claude Code is, so unlike the third-party validators below it is a required step. Where the `claude` command is absent, record that as a coverage gap. Record the Claude Code version beside the result, because the validator's rules change between releases. On `nonfiction-studio` on 2026-10-06, version 2.1.291 flagged six hook commands that used `${CLAUDE_PLUGIN_ROOT}` without quotes. That repository runs the same command in its own CI, where a newer Claude Code release had turned it red on every pull request.
+
+**It does not read `settings.json`.** Its help lists no option or target for that file, so its silence about `settings.json` says nothing. The same unquoted pattern in `nonfiction-studio`'s `settings.json` went unflagged while every instance in `hooks.json` was caught. Read `settings.json` yourself.
 
 ## What this pack deliberately does not run
 
@@ -114,7 +124,7 @@ Recorded because the alternative is a future extender re-adding them.
 
 **`path-citation-check.py` is never invoked.** It false-positives on every markdown inline link and its fix is an open item awaiting maintainer approval. Note it in the coverage statement as unavailable-pending-fix rather than running it and recording noise.
 
-**Third-party plugin validators are optional accelerators only.** `plugin-dev:plugin-validator` and its kin are useful when installed and absent when not; the superpowers plugin was disabled on 2026-09-01 and any installed plugin can vanish the same way. Never make one a required step, and state the fallback wherever one is named.
+**Third-party plugin validators are optional accelerators only.** `plugin-dev:plugin-validator` and its kin are useful when installed and absent when not; the superpowers plugin was disabled on 2026-09-01 and any installed plugin can vanish the same way. Never make one a required step, and state the fallback wherever one is named. The first-party `claude plugin validate` is not one of these; it is tool 7 above.
 
 ## Judgment questions
 
