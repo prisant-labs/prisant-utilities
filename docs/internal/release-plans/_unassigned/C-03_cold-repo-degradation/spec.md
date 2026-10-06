@@ -4,14 +4,14 @@ title: Build Orientation From Repo Reality When No Recent Log Exists
 type: spec
 status: draft
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-10-05
 linked-effort: the maintainer's private plab-continue-session evolution roadmap, 2026-08-16
 linked-plan: implementation-plan.md
 ac-count: 9
 source-count: 9
 requires-human-review: true
-target-release: v0.6.0
-linked-release: docs/internal/release-plans/plan_05_reconcile-at-resume/plan.md
+target-release: null
+linked-release: null
 priority: P2
 ---
 
