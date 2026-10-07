@@ -8,7 +8,7 @@ updated: 2026-10-07
 linked-effort: "the maintainer's private walk-decisions strategy brief, 2026-10-04"
 linked-plan: null
 linked-release: null
-ac-count: 16
+ac-count: 20
 source-count: 7
 requires-human-review: true
 priority: P2
@@ -19,17 +19,17 @@ priority: P2
 ## Task Summary
 
 **Status:** draft
-**Last updated:** 2026-10-07 by claude (Opus 5.5), recording the maintainer's answers to D1 to D8 (revision 1)
+**Last updated:** 2026-10-07 by claude (Opus 5.5), D9 and D10 ratified and written into scope, requirements and criteria (revision 2)
 **Linked plan:** not yet planned
-**Open questions:** 3 (Q1 Needs info, skipped twice with its default in effect; D9 and D10 Proposed on 2026-10-06 and not yet ratified; see Open Questions / Decisions)
-**Revisions:** 1
+**Open questions:** 1 (Q1 Needs info, skipped twice with its default in effect; see Open Questions / Decisions)
+**Revisions:** 2
 
 ### Acceptance Criteria Fulfillment
 
 - [ ] **AC-1** - Gathering is limited to the conversation and documents touched this session
-- [ ] **AC-2** - Items are presented as Q or D, with lettered options and a recommendation on D items
+- [ ] **AC-2** - Items are presented as Q, D or T, with lettered options and a recommendation on D items
 - [ ] **AC-3** - Every sourced item names its source document and that document's own item id
-- [ ] **AC-4** - Every Q item states its default if skipped; a D item states none
+- [ ] **AC-4** - Every Q item states its default if skipped; a D or T item states none
 - [ ] **AC-5** - A one-line answer parses to the exact item and option or text it names
 - [ ] **AC-6** - A skipped D item is left untouched; a skipped Q item proceeds on its stated default
 - [ ] **AC-7** - A bare accept-all answer is explicit, never inferred from silence
@@ -42,6 +42,10 @@ priority: P2
 - [ ] **AC-14** - The skill is auto-invocable, with do-NOT-fire clauses for three named cases
 - [ ] **AC-15** - Applying answers needs no extra confirmation; only outward actions do
 - [ ] **AC-16** - The skill's own description names the deferred future work rather than omitting it
+- [ ] **AC-17** - An item found in several documents is presented once and answered only in its home
+- [ ] **AC-18** - A reservation marks an answer provisional; a request for more re-presents the item next round
+- [ ] **AC-19** - Every decided item names its follow-up action and where it is tracked, or that none is needed
+- [ ] **AC-20** - A T item is answered done, later or drop, recorded in the walk record only
 
 ### Currently In Progress
 
@@ -62,7 +66,7 @@ The format this skill reads and writes is not new. `references/decisions-section
 ### In Scope
 
 1. Gathering pending items from exactly two sources: the current conversation's own unresolved questions and decisions, and the "Open Questions / Decisions" section of any document the session has read or edited. When the maintainer names one document to walk, such as a decision register, gathering is limited to that document's section instead (D2, option C).
-2. Presenting gathered items in two numbered series: Q, a question whose answer only the maintainer has, and D, a decision carrying two to four lettered options and a recommendation with a stated confidence level.
+2. Presenting gathered items in three numbered series: Q, a question whose answer only the maintainer has; D, a decision carrying two to four lettered options and a recommendation with a stated confidence level; and T, a task only the maintainer can perform, answered "done", "later" or "drop" (D10).
 3. Naming, for every item drawn from a source document, that document and the item's own id there.
 4. Accepting a single-line maintainer answer such as "D1 A, D2 B, Q1: the NAS" and parsing each token against the item it names.
 5. Writing an answered decision's choice into its source document's maintainer decision block, updating the three surfaces `references/decisions-section.md` defines for a status change, and leaving that item's own body untouched.
@@ -73,6 +77,9 @@ The format this skill reads and writes is not new. `references/decisions-section
 10. Running from an explicit walk request rather than a manual-only command, carrying a description with do-NOT-fire clauses for three named cases.
 11. Treating a skipped decision item and a skipped question item differently: a decision left unanswered is left exactly as found, while a question left unanswered proceeds on its own stated default, recorded in the walk record as assumed rather than decided.
 12. Recognizing a bare "ok" or "accept all" answer as an explicit instruction to accept every item's recommendation or default, never inferring acceptance from an answer line's silence.
+13. Recording an answer that is more than a choice: a reservation marks the answer provisional, while a request for more context, a question back, or "I don't understand" leaves the item unanswered and re-presents it, with more context, in a further round of the same walk (D9).
+14. Presenting an item that appears in several documents once, under its one home, and writing its answer only there, with a pointer in each other copy (D9).
+15. Naming, for every decided item, its follow-up action and where that action is tracked, or that none is needed (D9).
 
 ### Non-Goals
 
@@ -105,9 +112,9 @@ Options the maintainer chose not to take now, kept here so they stay with this e
 
 1. Gathering is limited to two sources: the current conversation's own unresolved items, and the Open Questions / Decisions section of any document the session has read or edited. This is a deliberately narrow slice of a broader gathering design already written for a repository's specs, plans, and session logs; that broader design stays reserved for the `--backlog` mode, outside this spec (see Non-Goals). When the maintainer names one document to walk, gathering is limited to that document's Open Questions / Decisions section. [S1, S3, S7]
 2. A document counts as touched when the current session has read it or written to it. The design brief itself notes that what counts as pending inside a session is not defined anywhere, so this definition is this spec's own judgment call. [S1, model-inference]
-3. Every gathered item is presented under one of two series: Q, a question only the maintainer can answer, or D, a decision carrying two to four lettered options and exactly one recommendation with a stated confidence level. [S1, S2]
+3. Every gathered item is presented under one of three series: Q, a question only the maintainer can answer; D, a decision carrying two to four lettered options and exactly one recommendation with a stated confidence level; or T, a task only the maintainer can perform. [S1, S2, S7]
 4. An item drawn from a source document names that document and the item's own id there. An item with no source document is marked as having none, never given a fabricated one. [S1]
-5. Every Q item states the default the skill will assume if the maintainer does not answer it. A D item carries no such default, and an unanswered D item is left exactly as found. [S1]
+5. Every Q item states the default the skill will assume if the maintainer does not answer it. A D item carries no such default, and an unanswered D item is left exactly as found. A T item carries no default either, and an unanswered T item stays open. [S1, S7]
 6. The maintainer's answer arrives as one line, such as "D1 A, D2 B, Q1: the NAS". Each token in that line resolves to exactly the item and option, or free text, it names. [S1, S4]
 7. A bare answer such as "ok" or "accept all" is recognized as an explicit instruction accepting every item's recommendation or default. Such acceptance is never inferred from an answer line's silence about an item. [S1, model-inference]
 8. For a D item with a source document, write-back updates exactly the three surfaces `references/decisions-section.md` defines for a status change: the summary-table row, the subsection header's status, and the maintainer decision block. The item's own Summary, Context, Desired outcome, Options, and Recommendation text is never rewritten. [S2]
@@ -120,16 +127,20 @@ Options the maintainer chose not to take now, kept here so they stay with this e
 15. Applying the maintainer's answer line, including write-back to current-branch documents and writing the walk record, happens in the same pass that reads the answer line, without an added confirmation step. [S1, S4]
 16. A confirmation step is required only before an action that deletes, pushes, merges, posts externally, or edits a document outside the current repository or the current branch. [S1, S4]
 17. The skill's own description and documentation name the `--backlog` mode, automatic GitHub filing, a GitHub Projects board, cross-repository gathering, and a published web-page rendering as deferred or separate work, rather than omitting any of them silently. [S1]
+18. When a gathered item appears in more than one document, the walk presents it once and names its home. The home is the tracked document closest to the work, an effort's spec or plan, over an untracked one such as a brief or a register. When two tracked documents tie, the walk asks which is the home, as a Q item. Write-back goes only to the home; each other copy receives a one-line pointer to the home, never a second copy of the answer. [S7]
+19. Besides an option letter or free text, an answer may carry a reservation or ask for more. A reservation is recorded verbatim with the answer, and the answer is marked provisional. A request for more context, a question back, or a statement that the item was not understood leaves the item unanswered; the walk re-presents it, with more context, in a further round. The walk record keeps every round. [S7]
+20. Every decided item's record names its follow-up action and where that action is tracked, or states that none is needed, so that a decision is never mistaken for work done. The maintainer decision block carries this as an optional `Follow-up` line, which `references/decisions-section.md` is amended to define. [S7]
+21. A T item is answered "done", "later" or "drop". Its answer is recorded in the walk record only; slice 1 writes no task back to any document. [S7]
 
 ## Acceptance Criteria
 
 **AC-1:** Gathering is limited to exactly two sources per walk: the current conversation's own unresolved items, and the "Open Questions / Decisions" section of a document the session has read or edited. When the maintainer names one document to walk, the walk gathers from that document's section alone. [S1, S3, S7]
 
-**AC-2:** Every gathered item is presented under one of two series, Q for a question only the maintainer can answer, or D for a decision carrying two to four lettered options and exactly one recommendation with a stated confidence level. [S1, S2]
+**AC-2:** Every gathered item is presented under one of three series: Q for a question only the maintainer can answer, D for a decision carrying two to four lettered options and exactly one recommendation with a stated confidence level, or T for a task only the maintainer can perform. [S1, S2, S7]
 
 **AC-3:** An item drawn from a source document names that document and the item's own id there, for example "D4, from the WD-01 spec's D1." An item with no source document is marked as having none. [S1]
 
-**AC-4:** Every Q item states the default the skill will assume if the maintainer skips it. A D item states no default, and an unanswered D item is left exactly as found. [S1]
+**AC-4:** Every Q item states the default the skill will assume if the maintainer skips it. A D or T item states no default; an unanswered D item is left exactly as found, and an unanswered T item stays open. [S1, S7]
 
 **AC-5:** A one-line answer parses to the exact item, and the option or text, it names. [S1, S4]
   Given: an answer line reading "D1 A, D2 B, Q1: the NAS"
@@ -163,6 +174,20 @@ Options the maintainer chose not to take now, kept here so they stay with this e
 **AC-15:** Applying the maintainer's answer line, including write-back to current-branch documents and writing the walk record, happens in the same pass that reads the answer line. A confirmation step is required only before an action that deletes, pushes, merges, posts externally, or edits a document outside the current repository or the current branch. [S1, S4]
 
 **AC-16:** The skill's own description and documentation name the `--backlog` mode, automatic GitHub filing, a GitHub Projects board, cross-repository gathering, and a published web-page rendering as deferred or separate, rather than omitting any of them silently. [S1]
+
+**AC-17:** An item in several documents has one home. [S7]
+  Given: a decision that appears in an effort's spec and in a gitignored brief
+  When: the walk gathers and the maintainer answers it
+  Then: the item was presented once, naming the spec as its home; the answer is written only to the spec; and the brief receives a one-line pointer to the spec, not a second copy of the answer.
+
+**AC-18:** An answer is recorded as what it meant. [S7]
+  Given: an answer line reading "D1 A, but I'm not sure. D2: expand this. D3: I don't understand this"
+  When: the walk applies it
+  Then: D1 is recorded as option A, marked provisional, with the reservation kept verbatim; D2 and D3 are not written anywhere and are re-presented, with more context, in a second round; and the walk record holds both rounds.
+
+**AC-19:** Every item recorded as decided, in the walk record and in its home's maintainer block, names a follow-up action and where that action is tracked, or states that none is needed. [S7]
+
+**AC-20:** A T item is answered "done", "later" or "drop", and its answer appears in the walk record and in no other document. [S7]
 
 ## Behavior / Examples
 
@@ -198,6 +223,7 @@ A walk presents D1 through D3 and Q1. The maintainer answers "D2 B, Q1: the NAS,
 |------|--------|------|-------------|
 | 2026-10-05 | claude | added | Initial draft created |
 | 2026-10-07 | claude | changed | Recorded the maintainer's answers to D1 to D8 from walks on 2026-10-06 and 2026-10-07. Renamed the skill `plab-resolve-open-items` (D1) and the backlog mode `--backlog`. Widened gathering to a single named document (D2, option C: Scope item 1, Requirement 1, AC-1; `ac-count` unchanged). Added the Backlog section, rows D2 and D8 so this document is the single home for all nine items, and two new Proposed items, D9 and D10 |
+| 2026-10-07 | claude | changed | The maintainer ratified D9 (three answer rules) and D10 (T series). Written into Scope items 2 and 13 to 15, Requirements 3, 5 and 18 to 21, AC-2 and AC-4, and new AC-17 to AC-20; `ac-count` 16 to 20 |
 
 ## Sources & Evidence
 
@@ -221,7 +247,7 @@ A walk presents D1 through D3 and Q1. The maintainer answers "D2 B, Q1: the NAS,
 
 ## Open Questions / Decisions
 
-**What these statuses mean.** `Decided` and `Deferred` carry the maintainer's answer, given in two walks on 2026-10-06 and 2026-10-07 and recorded in each item's maintainer block; that block is the authoritative record. `Proposed` marks an answer adopted as a working default that the maintainer has not ratified. `Needs info` marks a question only the maintainer can answer. This section is the single home for these items. The design brief [S1] carried the same D1 to D8 and Q1 with fuller analysis, and points here; D2 and D8 were first omitted from this spec as settled by its scope, and are now recorded here so that no item has two homes. D9 and D10 came out of the 2026-10-06 walk and must be ratified or struck before this spec's status moves past `draft`.
+**What these statuses mean.** `Decided` and `Deferred` carry the maintainer's answer, given in two walks on 2026-10-06 and 2026-10-07 and recorded in each item's maintainer block; that block is the authoritative record. `Proposed` marks an answer adopted as a working default that the maintainer has not ratified. `Needs info` marks a question only the maintainer can answer. This section is the single home for these items. The design brief [S1] carried the same D1 to D8 and Q1 with fuller analysis, and points here; D2 and D8 were first omitted from this spec as settled by its scope, and are now recorded here so that no item has two homes. D9 and D10 came out of the 2026-10-06 walk and were ratified on 2026-10-07. Q1 is the only item still open, and its default is in effect.
 
 | ID | Title | Resolution | Status | Updated |
 |----|-------|------------|--------|---------|
@@ -233,8 +259,8 @@ A walk presents D1 through D3 and Q1. The maintainer answers "D2 B, Q1: the NAS,
 | D6 | GitHub issues | Option A | Decided | 2026-10-06 |
 | D7 | Invocation | Option A | Decided | 2026-10-06 |
 | D8 | Overlap with the options board and status document | Deferred to the backlog mode | Deferred | 2026-10-07 |
-| D9 | Answers that are not a letter, and items with several homes | (none) | Proposed | 2026-10-07 |
-| D10 | A third series for maintainer tasks | (none) | Proposed | 2026-10-07 |
+| D9 | Answers that are not a letter, and items with several homes | Option A, all three rules | Decided | 2026-10-07 |
+| D10 | A third series for maintainer tasks | Option A, a T series | Decided | 2026-10-07 |
 | Q1 | What happened to past walk answers | Skipped twice; default in effect | Needs info | 2026-10-07 |
 
 ### D1: Skill name (Decided)
@@ -453,7 +479,7 @@ A walk presents D1 through D3 and Q1. The maintainer answers "D2 B, Q1: the NAS,
 > * **Reasoning:** The in-session walk touches neither surface. Answered explicitly after a plain-language re-explanation; the first presentation was not understood.
 > * **Decided by / date:** jp / 2026-10-07
 
-### D9: Answers that are not a letter, and items with several homes (Proposed)
+### D9: Answers that are not a letter, and items with several homes (Decided)
 
 **Summary.** Three rules that would resolve the reservation the maintainer attached to D4.
 
@@ -473,14 +499,15 @@ A walk presents D1 through D3 and Q1. The maintainer answers "D2 B, Q1: the NAS,
 
 ---
 
-> **Maintainer decision:** _(pending ratification)_
+> **Maintainer decision:** Decided 2026-10-07 by jp
 >
-> * **Status:** Proposed as a working default; NOT yet ratified
-> * **Choice (proposed):** Option A
-> * **Reasoning:** Each rule answers one observed failure of the 2026-10-06 walk.
-> * **Proposed by / date:** claude, 2026-10-07. Raised in the walk as its D10; the maintainer said they did not know what to do with it, and it was parked here as Proposed. No maintainer input has been received on this item.
+> * **Status:** Decided
+> * **Choice:** Option A, all three rules: one home per item, answer states for a reservation and for a request for more, and a follow-up named for every decided item.
+> * **Reasoning:** Selected as recommended, once the item was explained as a spec change parked as Proposed. Written into Requirements 18 to 20 and AC-17 to AC-19.
+> * **Follow-up:** Implementation amends `references/decisions-section.md` to define the optional `Follow-up` line; tracked in this effort's implementation plan, not yet written.
+> * **Decided by / date:** jp / 2026-10-07. Proposed by claude the same day, raised in the walk as its D10; the maintainer said they did not know what to do with it, and it was parked here as Proposed.
 
-### D10: A third series for maintainer tasks (Proposed)
+### D10: A third series for maintainer tasks (Decided)
 
 **Summary.** Whether a walk should carry a T series for actions only the maintainer can perform.
 
@@ -500,12 +527,13 @@ A walk presents D1 through D3 and Q1. The maintainer answers "D2 B, Q1: the NAS,
 
 ---
 
-> **Maintainer decision:** _(pending ratification)_
+> **Maintainer decision:** Decided 2026-10-07 by jp
 >
-> * **Status:** Proposed as a working default; NOT yet ratified
-> * **Choice (proposed):** Option A
-> * **Reasoning:** The waiting lists already hold tasks, and forcing them into Q or D distorts their answers.
-> * **Proposed by / date:** claude, 2026-10-07. Raised in the walk as its D11 and parked here as Proposed. No maintainer input has been received on this item.
+> * **Status:** Decided
+> * **Choice:** Option A, a T series answered "done", "later" or "drop".
+> * **Reasoning:** Selected as recommended, with the note that it matters mostly for the backlog mode and that slice 1 need only recognise a task. Written into Scope item 2, Requirements 3, 5 and 21, AC-2, AC-4 and AC-20.
+> * **Follow-up:** None beyond building the criteria above.
+> * **Decided by / date:** jp / 2026-10-07. Proposed by claude the same day, raised in the walk as its D11 and parked here as Proposed.
 
 ### Q1: What happened to past walk answers (Needs info)
 
