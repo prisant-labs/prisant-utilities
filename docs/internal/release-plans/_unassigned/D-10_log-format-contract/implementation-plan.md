@@ -4,9 +4,9 @@ title: "Implementation plan: Make derive-log-facts.py's output the single log-fo
 type: implementation-plan
 status: draft
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-10-06
 linked-spec: spec.md
-linked-release: docs/internal/release-plans/plan_06_derived-facts/plan.md
+linked-release: null
 ac-coverage: complete
 phase-count: 5
 ---
