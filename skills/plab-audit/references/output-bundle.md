@@ -28,7 +28,7 @@ Index and verdict. The only file that assumes the reader has read nothing else.
 
 ## `appraise.md`
 
-What the repository is and is worth. Seven required sections, in this order, numbered as headings: `## 1. What this is` through `## 7. Standing back`.
+What the repository is and is worth. Seven required sections, in this order. The skill numbers their headings, `## 1. What this is` through `## 7. Standing back`, and `bundle-check.py` accepts the closing heading with or without its number.
 
 1. **What this is.** Written for someone who has not seen it. Name the architecture's organising idea, not just its parts.
 2. **Current status.** A table: version, last release, last commit, open pull requests, branches in flight, worktree state, and the conformance position. Where something was not checked, say `not queried` rather than leaving it out.
