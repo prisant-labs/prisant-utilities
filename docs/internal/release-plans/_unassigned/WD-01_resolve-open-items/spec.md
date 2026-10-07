@@ -1,28 +1,28 @@
 ---
 id: WD-01
-title: "plab-walk-decisions: the in-session decision and question walk"
+title: "plab-resolve-open-items: the in-session walk of open questions and decisions"
 type: spec
 status: draft
 created: 2026-10-05
-updated: 2026-10-05
+updated: 2026-10-07
 linked-effort: "the maintainer's private walk-decisions strategy brief, 2026-10-04"
 linked-plan: null
 linked-release: null
 ac-count: 16
-source-count: 6
+source-count: 7
 requires-human-review: true
 priority: P2
 ---
 
-# Spec: plab-walk-decisions, the in-session decision and question walk
+# Spec: plab-resolve-open-items, the in-session walk of open questions and decisions
 
 ## Task Summary
 
 **Status:** draft
-**Last updated:** 2026-10-05 by claude (Sonnet 5), on initial draft
+**Last updated:** 2026-10-07 by claude (Opus 5.5), recording the maintainer's answers to D1 to D8 (revision 1)
 **Linked plan:** not yet planned
-**Open questions:** 7 (6 carried from the design brief as Proposed working defaults, not yet ratified by the maintainer, and 1 Needs info; see Open Questions / Decisions)
-**Revisions:** 0
+**Open questions:** 3 (Q1 Needs info, skipped twice with its default in effect; D9 and D10 Proposed on 2026-10-06 and not yet ratified; see Open Questions / Decisions)
+**Revisions:** 1
 
 ### Acceptance Criteria Fulfillment
 
@@ -51,9 +51,9 @@ None.
 
 ## Purpose
 
-`plab-walk-decisions` turns a request the maintainer already types by hand, roughly a dozen times since early September 2026, into a dependable command [S1]. Given the current conversation, the skill finds every pending question and decision inside it, lists each one with context and a recommendation, and accepts the maintainer's answer as a single line of chat.
+`plab-resolve-open-items` turns a request the maintainer already types by hand, roughly a dozen times since early September 2026, into a dependable command [S1]. Given the current conversation, the skill finds every pending question and decision inside it, lists each one with context and a recommendation, and accepts the maintainer's answer as a single line of chat.
 
-This spec covers only the first of two planned slices: the in-session walk, including writing each answer back to where its question came from. A second slice, the backlog `--sitting` mode, is explicitly out of scope here, following the design brief's own decision on which slice comes first, D2 (first slice) [S1]. It is named in Non-Goals below.
+This spec covers only the first of two planned slices: the in-session walk, including writing each answer back to where its question came from. A second slice, the `--backlog` mode, is explicitly out of scope here, following the maintainer's answer to D2 (first slice) below [S7]. It is named in Non-Goals below.
 
 The format this skill reads and writes is not new. `references/decisions-section.md` already defines the lettered-option, recommendation, and maintainer-block structure this skill operates on, and the maintainer has already hand-run an equivalent walk at least once over a different project's backlog [S2, S4]. This spec packages that existing design into one skill, rather than inventing a new format.
 
@@ -61,7 +61,7 @@ The format this skill reads and writes is not new. `references/decisions-section
 
 ### In Scope
 
-1. Gathering pending items from exactly two sources: the current conversation's own unresolved questions and decisions, and the "Open Questions / Decisions" section of any document the session has read or edited.
+1. Gathering pending items from exactly two sources: the current conversation's own unresolved questions and decisions, and the "Open Questions / Decisions" section of any document the session has read or edited. When the maintainer names one document to walk, such as a decision register, gathering is limited to that document's section instead (D2, option C).
 2. Presenting gathered items in two numbered series: Q, a question whose answer only the maintainer has, and D, a decision carrying two to four lettered options and a recommendation with a stated confidence level.
 3. Naming, for every item drawn from a source document, that document and the item's own id there.
 4. Accepting a single-line maintainer answer such as "D1 A, D2 B, Q1: the NAS" and parsing each token against the item it names.
@@ -76,13 +76,23 @@ The format this skill reads and writes is not new. `references/decisions-section
 
 ### Non-Goals
 
-1. The `--sitting` backlog mode: gathering across a repository's specs, plans, session logs, and any tracker of open items; sorting the result into tiers; writing a standalone sitting file. This is slice 2, deferred to its own future spec.
+1. The `--backlog` mode: gathering across a repository's specs, plans, session logs, and any tracker of open items at once; sorting the result into tiers; writing a standalone backlog file. This is slice 2, deferred to its own future spec. Walking one document the maintainer names is in scope (Scope item 1); sweeping every source at once is not.
 2. Automatically filing a GitHub issue, or managing a GitHub Projects board, for any item.
 3. Adding a "Decision" GitHub issue type to any organization's settings. This spec depends on no such type existing.
 4. Applying any default to a skipped decision item. Only a skipped question gets a stated default; a skipped decision is left exactly as found (see In Scope item 11).
 5. Gathering across more than the current repository, or across more than the current session's own documents.
 6. A published web-page rendering of a walk.
-7. A persistent, fleet-wide view of open items, such as a redesigned options board for a resume-style skill, or a living status document a wrap-style skill might write in place. The design brief's own decision D8 (overlap with the options board and the living status document) stages this: slice 1, this spec, reads nothing from either surface, and a future `--sitting` slice is where they are expected to merge, because a sitting and either surface would otherwise gather the same "waiting on the maintainer" material twice.
+7. A persistent, fleet-wide view of open items, such as a redesigned options board for a resume-style skill, or a living status document a wrap-style skill might write in place. D8 (overlap with the options board and the living status document), deferred by the maintainer to the backlog mode on 2026-10-07, stages this: slice 1, this spec, reads nothing from either surface, and the future `--backlog` slice is where they are expected to merge, because a backlog walk and either surface would otherwise gather the same "waiting on the maintainer" material twice.
+
+### Backlog
+
+Options the maintainer chose not to take now, kept here so they stay with this effort rather than being discarded. Recorded at the maintainer's request on 2026-10-07 [S7].
+
+1. **D2, option A: in-session walk only, then the full backlog sweep.** The design brief's original recommendation. Superseded by option C, which adds walking one named document to slice 1.
+2. **D2, option B: the backlog sweep first.** The fallback if walking one named document proves too narrow for the backlog, which is where items age.
+3. **The `--backlog` mode itself.** Non-Goal 1. It is also where D8 (overlap with the options board and the living status document) is revisited.
+4. **D6, option B: file a GitHub issue after confirmation.** Revisit after the maintainer's pending test of a Decision issue type.
+5. **Converting the maintainer's decision register to this format.** Option C can walk a named document only if its decisions section follows `references/decisions-section.md`. The register does not yet, so walking it needs a one-time conversion, outside this spec.
 
 ## Users / Actors
 
@@ -93,7 +103,7 @@ The format this skill reads and writes is not new. `references/decisions-section
 
 ## Requirements
 
-1. Gathering is limited to two sources: the current conversation's own unresolved items, and the Open Questions / Decisions section of any document the session has read or edited. This is a deliberately narrow slice of a broader gathering design already written for a repository's specs, plans, and session logs; that broader design stays reserved for the `--sitting` mode, outside this spec (see Non-Goals). [S1, S3]
+1. Gathering is limited to two sources: the current conversation's own unresolved items, and the Open Questions / Decisions section of any document the session has read or edited. This is a deliberately narrow slice of a broader gathering design already written for a repository's specs, plans, and session logs; that broader design stays reserved for the `--backlog` mode, outside this spec (see Non-Goals). When the maintainer names one document to walk, gathering is limited to that document's Open Questions / Decisions section. [S1, S3, S7]
 2. A document counts as touched when the current session has read it or written to it. The design brief itself notes that what counts as pending inside a session is not defined anywhere, so this definition is this spec's own judgment call. [S1, model-inference]
 3. Every gathered item is presented under one of two series: Q, a question only the maintainer can answer, or D, a decision carrying two to four lettered options and exactly one recommendation with a stated confidence level. [S1, S2]
 4. An item drawn from a source document names that document and the item's own id there. An item with no source document is marked as having none, never given a fabricated one. [S1]
@@ -109,11 +119,11 @@ The format this skill reads and writes is not new. `references/decisions-section
 14. The skill carries no `disable-model-invocation` setting and fires from its own description. That description carries explicit do-NOT-fire clauses for a code-walkthrough request, a single standalone decision question, and a status question. [S1, S5, S6]
 15. Applying the maintainer's answer line, including write-back to current-branch documents and writing the walk record, happens in the same pass that reads the answer line, without an added confirmation step. [S1, S4]
 16. A confirmation step is required only before an action that deletes, pushes, merges, posts externally, or edits a document outside the current repository or the current branch. [S1, S4]
-17. The skill's own description and documentation name the `--sitting` backlog mode, automatic GitHub filing, a GitHub Projects board, cross-repository gathering, and a published web-page rendering as deferred or separate work, rather than omitting any of them silently. [S1]
+17. The skill's own description and documentation name the `--backlog` mode, automatic GitHub filing, a GitHub Projects board, cross-repository gathering, and a published web-page rendering as deferred or separate work, rather than omitting any of them silently. [S1]
 
 ## Acceptance Criteria
 
-**AC-1:** Gathering is limited to exactly two sources per walk: the current conversation's own unresolved items, and the "Open Questions / Decisions" section of a document the session has read or edited. [S1, S3]
+**AC-1:** Gathering is limited to exactly two sources per walk: the current conversation's own unresolved items, and the "Open Questions / Decisions" section of a document the session has read or edited. When the maintainer names one document to walk, the walk gathers from that document's section alone. [S1, S3, S7]
 
 **AC-2:** Every gathered item is presented under one of two series, Q for a question only the maintainer can answer, or D for a decision carrying two to four lettered options and exactly one recommendation with a stated confidence level. [S1, S2]
 
@@ -152,7 +162,7 @@ The format this skill reads and writes is not new. `references/decisions-section
 
 **AC-15:** Applying the maintainer's answer line, including write-back to current-branch documents and writing the walk record, happens in the same pass that reads the answer line. A confirmation step is required only before an action that deletes, pushes, merges, posts externally, or edits a document outside the current repository or the current branch. [S1, S4]
 
-**AC-16:** The skill's own description and documentation name the `--sitting` backlog mode, automatic GitHub filing, a GitHub Projects board, cross-repository gathering, and a published web-page rendering as deferred or separate, rather than omitting any of them silently. [S1]
+**AC-16:** The skill's own description and documentation name the `--backlog` mode, automatic GitHub filing, a GitHub Projects board, cross-repository gathering, and a published web-page rendering as deferred or separate, rather than omitting any of them silently. [S1]
 
 ## Behavior / Examples
 
@@ -187,6 +197,7 @@ A walk presents D1 through D3 and Q1. The maintainer answers "D2 B, Q1: the NAS,
 | Date | Author | Type | Description |
 |------|--------|------|-------------|
 | 2026-10-05 | claude | added | Initial draft created |
+| 2026-10-07 | claude | changed | Recorded the maintainer's answers to D1 to D8 from walks on 2026-10-06 and 2026-10-07. Renamed the skill `plab-resolve-open-items` (D1) and the backlog mode `--backlog`. Widened gathering to a single named document (D2, option C: Scope item 1, Requirement 1, AC-1; `ac-count` unchanged). Added the Backlog section, rows D2 and D8 so this document is the single home for all nine items, and two new Proposed items, D9 and D10 |
 
 ## Sources & Evidence
 
@@ -195,6 +206,7 @@ A walk presents D1 through D3 and Q1. The maintainer answers "D2 B, Q1: the NAS,
 - **[S3]** A private toolchain design document in the maintainer's own working notes, its section on the decision and task layer, 2026-08-26. Maintainer-local, gitignored, exists on disk. Class A, read in full; the source for the finding that gathering signals from specs, plans, and session logs is already designed, and for the caution against surfacing every open item at once.
 - **[S4]** A hand-built decision-sitting document in the maintainer's own private planning project, 2026-10-03. Maintainer-local, outside this repository, exists on disk. Class A; its opening instructions and its "Answer sheet" section were read directly, and are the precedent for the one-line batch-answer format and for confirming only outward actions.
 - **[S5]** `skills/plab-continue-session/SKILL.md` (this repository). Class A; precedent for a narrowed description carrying a do-NOT-fire clause for a status question, rather than disabling model invocation.
+- **[S7]** The maintainer's answers to this section's items, given in session on 2026-10-06 and 2026-10-07 and recorded in the maintainer decision blocks below. Class A, direct instruction.
 - **[S6]** `AGENTS.md` (this repository). Class A; records the design frame favoring a narrowed description over a manual-only flag, and the convention that a tracked document in this repository cites no gitignored path.
 
 ### Unverified Claims
@@ -209,19 +221,23 @@ A walk presents D1 through D3 and Q1. The maintainer answers "D2 B, Q1: the NAS,
 
 ## Open Questions / Decisions
 
-**What these statuses mean.** `Proposed` marks an answer this spec adopted as a working default, drawn directly from the design brief's own recommendation, so that this document could be written; the maintainer has not seen or ratified it. `Needs info` marks a question only the maintainer can answer. Nothing in this section carries maintainer approval. Ratify or overturn every `Proposed` row, and answer the `Needs info` row, before this spec's status moves past `draft`. Two further decisions the design brief raised, D2 (first slice) and D8 (overlap with the options board and the living status document), are not repeated here: D2 is already settled in Scope above, and D8's resolution is recorded as a Non-Goal above rather than as an open row, because this spec does not touch either surface it would otherwise weigh against.
+**What these statuses mean.** `Decided` and `Deferred` carry the maintainer's answer, given in two walks on 2026-10-06 and 2026-10-07 and recorded in each item's maintainer block; that block is the authoritative record. `Proposed` marks an answer adopted as a working default that the maintainer has not ratified. `Needs info` marks a question only the maintainer can answer. This section is the single home for these items. The design brief [S1] carried the same D1 to D8 and Q1 with fuller analysis, and points here; D2 and D8 were first omitted from this spec as settled by its scope, and are now recorded here so that no item has two homes. D9 and D10 came out of the 2026-10-06 walk and must be ratified or struck before this spec's status moves past `draft`.
 
 | ID | Title | Resolution | Status | Updated |
 |----|-------|------------|--------|---------|
-| D1 | Skill name | (none) | Proposed | 2026-10-05 |
-| D3 | Numbering and item types | (none) | Proposed | 2026-10-05 |
-| D4 | Where answers are recorded | (none) | Proposed | 2026-10-05 |
-| D5 | Where the walk record lives | (none) | Proposed | 2026-10-05 |
-| D6 | GitHub issues | (none) | Proposed | 2026-10-05 |
-| D7 | Invocation | (none) | Proposed | 2026-10-05 |
-| Q1 | What happened to past walk answers | (none) | Needs info | (none) |
+| D1 | Skill name | `plab-resolve-open-items` | Decided | 2026-10-07 |
+| D2 | First slice | Option C: in-session walk, or one named document | Decided | 2026-10-07 |
+| D3 | Numbering and item types | Option A | Decided | 2026-10-06 |
+| D4 | Where answers are recorded | Option A, provisional; see D9 | Decided | 2026-10-06 |
+| D5 | Where the walk record lives | Option A | Decided | 2026-10-07 |
+| D6 | GitHub issues | Option A | Decided | 2026-10-06 |
+| D7 | Invocation | Option A | Decided | 2026-10-06 |
+| D8 | Overlap with the options board and status document | Deferred to the backlog mode | Deferred | 2026-10-07 |
+| D9 | Answers that are not a letter, and items with several homes | (none) | Proposed | 2026-10-07 |
+| D10 | A third series for maintainer tasks | (none) | Proposed | 2026-10-07 |
+| Q1 | What happened to past walk answers | Skipped twice; default in effect | Needs info | 2026-10-07 |
 
-### D1: Skill name (Proposed)
+### D1: Skill name (Decided)
 
 **Summary.** What this skill should be called.
 
@@ -241,14 +257,41 @@ A walk presents D1 through D3 and Q1. The maintainer answers "D2 B, Q1: the NAS,
 
 ---
 
-> **Maintainer decision:** _(pending ratification)_
+> **Maintainer decision:** Decided 2026-10-07 by jp
 >
-> * **Status:** Proposed as this spec's working default; NOT yet ratified
-> * **Choice (proposed):** Option A, `plab-walk-decisions`
-> * **Reasoning:** Matches the phrasing the maintainer already uses, which is the strongest trigger a description can carry.
-> * **Proposed by / date:** claude, drafting session 2026-10-05. No maintainer input has been received on this item.
+> * **Status:** Decided
+> * **Choice:** None of the listed options: `plab-resolve-open-items`, reached over two rounds.
+> * **Reasoning:** The maintainer disliked "sitting", was lukewarm on "walk decisions", and noted that a walk holds questions as well as decisions. Weighed on 2026-10-06 and 2026-10-07: `plab-walk-pending`, `plab-open-items`, `plab-unblock` and `plab-resolve-open`. "Resolve" names what the skill does, getting items answered and written back, and covers questions, decisions and tasks; "items" keeps "open" an adjective rather than a second verb.
+> * **Decided by / date:** jp / 2026-10-07
 
-### D3: Numbering and item types (Proposed)
+### D2: First slice (Decided)
+
+**Summary.** Which case gets built first: the in-session walk, or the walk over the whole backlog.
+
+**Context.** The in-session walk is frequent and small. The backlog walk is rare, large, and has been built by hand four times. The design brief [S1] notes that the real problem is aging, and items age in the backlog, while its recommendation for the in-session walk rested on how often the prompt is typed. This item was first treated as settled by this spec's scope; it is recorded here once the maintainer asked for the fuller context.
+
+**Desired outcome.** The first release gets used within a week, and it reaches the backlog where items age.
+
+**Options / approaches.**
+
+* **Option A:** The in-session walk first, the full backlog sweep next.
+* **Option B:** The backlog sweep first.
+* **Option C:** The in-session walk first, which can also be pointed at one document the maintainer names, such as a decision register. The full sweep comes later. A named document must follow `references/decisions-section.md` for write-back to work.
+
+**Recommendation.** Option C. It keeps slice 1 small and still lets the maintainer walk the backlog file where items age.
+
+**Confidence:** Medium-low. A hand walk of the decision register would test it cheaply before anything is built.
+
+---
+
+> **Maintainer decision:** Decided 2026-10-07 by jp
+>
+> * **Status:** Decided
+> * **Choice:** Option C. Options A and B are recorded in this spec's Backlog rather than discarded.
+> * **Reasoning:** Chosen after the maintainer asked for more context ("expand this and provide more context") and for the mode not to be called "sitting"; it is `--backlog`.
+> * **Decided by / date:** jp / 2026-10-07
+
+### D3: Numbering and item types (Decided)
 
 **Summary.** How items inside a walk should be numbered and typed.
 
@@ -268,14 +311,14 @@ A walk presents D1 through D3 and Q1. The maintainer answers "D2 B, Q1: the NAS,
 
 ---
 
-> **Maintainer decision:** _(pending ratification)_
+> **Maintainer decision:** Decided 2026-10-06 by jp
 >
-> * **Status:** Proposed as this spec's working default; NOT yet ratified
-> * **Choice (proposed):** Option A, the Q and D series with uppercase options
-> * **Reasoning:** Matches the maintainer's own prompt, and this section is itself a working test of the scheme.
-> * **Proposed by / date:** claude, drafting session 2026-10-05. No maintainer input has been received on this item.
+> * **Status:** Decided
+> * **Choice:** Option A, the Q and D series with uppercase options.
+> * **Reasoning:** Accepted as recommended. The maintainer asked whether other types exist; the answer offered was one, tasks only the maintainer can perform, now D10.
+> * **Decided by / date:** jp / 2026-10-06
 
-### D4: Where answers are recorded (Proposed)
+### D4: Where answers are recorded (Decided)
 
 **Summary.** Where an answer goes once the maintainer gives it.
 
@@ -295,14 +338,14 @@ A walk presents D1 through D3 and Q1. The maintainer answers "D2 B, Q1: the NAS,
 
 ---
 
-> **Maintainer decision:** _(pending ratification)_
+> **Maintainer decision:** Decided 2026-10-06 by jp
 >
-> * **Status:** Proposed as this spec's working default; NOT yet ratified
-> * **Choice (proposed):** Option A
-> * **Reasoning:** Reuses the standard's own maintainer-block rule for sourced items, and covers the common in-session case where no source document exists.
-> * **Proposed by / date:** claude, drafting session 2026-10-05. No maintainer input has been received on this item.
+> * **Status:** Decided
+> * **Choice:** Option A, provisionally.
+> * **Reasoning:** In the maintainer's words: "A. However this feels a little incomplete and unsettled and I can't articulate why." Three candidate causes were offered back, and D9 carries them as a proposal: one item with several homes, answers that are not letters, and decided-is-not-done.
+> * **Decided by / date:** jp / 2026-10-06
 
-### D5: Where the walk record lives (Proposed)
+### D5: Where the walk record lives (Decided)
 
 **Summary.** Whether the walk record is tracked or local, and where it is written.
 
@@ -322,14 +365,14 @@ A walk presents D1 through D3 and Q1. The maintainer answers "D2 B, Q1: the NAS,
 
 ---
 
-> **Maintainer decision:** _(pending ratification)_
+> **Maintainer decision:** Decided 2026-10-07 by jp
 >
-> * **Status:** Proposed as this spec's working default; NOT yet ratified
-> * **Choice (proposed):** Option A
-> * **Reasoning:** Mirrors the same reasoning that already put session logs under `_local/`, and respects a convention the maintainer's own other planning project already follows.
-> * **Proposed by / date:** claude, drafting session 2026-10-05. No maintainer input has been received on this item.
+> * **Status:** Decided
+> * **Choice:** Option A.
+> * **Reasoning:** Follows from the rule of thumb the maintainer accepted on 2026-10-07: the outcome is tracked, the conversation is local. A walk record is conversation; its outcomes reach tracked files through write-back and ADRs. The maintainer's further questions on ADR criteria, frontmatter links and folder layout belong to a separate repository-layout effort, not this spec.
+> * **Decided by / date:** jp / 2026-10-07
 
-### D6: GitHub issues (Proposed)
+### D6: GitHub issues (Decided)
 
 **Summary.** What role GitHub issues play in a walk.
 
@@ -349,14 +392,14 @@ A walk presents D1 through D3 and Q1. The maintainer answers "D2 B, Q1: the NAS,
 
 ---
 
-> **Maintainer decision:** _(pending ratification)_
+> **Maintainer decision:** Decided 2026-10-06 by jp
 >
-> * **Status:** Proposed as this spec's working default; NOT yet ratified
-> * **Choice (proposed):** Option A
-> * **Reasoning:** Costs almost nothing, keeps the option open, and avoids adding a sixth design to an already-undecided tracking question.
-> * **Proposed by / date:** claude, drafting session 2026-10-05. No maintainer input has been received on this item.
+> * **Status:** Decided
+> * **Choice:** Option A, print a ready command and never file.
+> * **Reasoning:** In the maintainer's words: "A i guess". Low-conviction acceptance; option B is kept in this spec's Backlog.
+> * **Decided by / date:** jp / 2026-10-06
 
-### D7: Invocation (Proposed)
+### D7: Invocation (Decided)
 
 **Summary.** Whether the skill can start itself from the model's own reading of the conversation, or only by an explicit command.
 
@@ -375,12 +418,94 @@ A walk presents D1 through D3 and Q1. The maintainer answers "D2 B, Q1: the NAS,
 
 ---
 
+> **Maintainer decision:** Decided 2026-10-06 by jp
+>
+> * **Status:** Decided
+> * **Choice:** Option A, automatic invocation with do-NOT-fire clauses.
+> * **Reasoning:** Accepted as recommended.
+> * **Decided by / date:** jp / 2026-10-06
+
+### D8: Overlap with the options board and status document (Deferred)
+
+**Summary.** Whether this skill should be designed together with two other proposals that show what is waiting on the maintainer.
+
+**Context.** Three lists already show what is waiting: each session log's "Waiting on You" section, the maintainer's decision register, and a proposed options board that would show the next choices when a session resumes. A fourth, a living status page, is also proposed. A backlog walk would read the same material. The in-session walk reads none of it.
+
+**Desired outcome.** One design for one surface, not several that overlap.
+
+**Options / approaches.**
+
+* **Option A:** Fold the options board into this effort now.
+* **Option B:** Keep them separate; this skill only reads what the wrap writes.
+* **Option C:** Decide the options board and status page first, then return to this skill.
+* **Option D:** Staged: separate for slice 1, merged when the backlog mode is designed.
+
+**Recommendation.** Option D. Slice 1 needs nothing from either surface.
+
+**Confidence:** Low. This is a judgment about scope.
+
+---
+
+> **Maintainer decision:** Deferred 2026-10-07 by jp
+>
+> * **Status:** Deferred
+> * **Choice:** Deferred to the backlog mode, where it is revisited (Backlog item 3).
+> * **Reasoning:** The in-session walk touches neither surface. Answered explicitly after a plain-language re-explanation; the first presentation was not understood.
+> * **Decided by / date:** jp / 2026-10-07
+
+### D9: Answers that are not a letter, and items with several homes (Proposed)
+
+**Summary.** Three rules that would resolve the reservation the maintainer attached to D4.
+
+**Context.** The 2026-10-06 walk was this design's first real test, and the reply had more shapes than the spec handles: a letter, a letter "i guess", a letter with a reservation, a letter plus a question back, "expand this", and "I don't understand this". Requirements items 5 to 7 know only answered and skipped, so three of those replies would have been recorded as skips. The same walk showed one item living in several documents: this spec's D1 to D7, the design brief's D1 to D8, and a row in another repository's open-items list. And a decision recorded as made can sit unbuilt, as the maintainer's register showed the same day, with no status that says so.
+
+**Desired outcome.** Every reply is recorded as what it meant, every item has one home, and a decision does not look finished when only its ruling exists.
+
+**Options / approaches.**
+
+* **Option A:** Adopt all three rules. One home per item, with every other copy pointing to it. Answer states for "with reservation" and "needs more context", which re-present the item in the next round rather than record it. Each decided item names its follow-up action and where that is tracked.
+* **Option B:** Adopt only the answer states, the change the 2026-10-06 walk demonstrated directly.
+* **Option C:** Leave the spec as it is and revisit after the first build.
+
+**Recommendation.** Option A. All three causes were observed in this effort's own walk, not hypothesized.
+
+**Confidence:** Medium.
+
+---
+
 > **Maintainer decision:** _(pending ratification)_
 >
-> * **Status:** Proposed as this spec's working default; NOT yet ratified
+> * **Status:** Proposed as a working default; NOT yet ratified
 > * **Choice (proposed):** Option A
-> * **Reasoning:** The trigger phrase is distinctive and used weekly, so the description cost is worth paying.
-> * **Proposed by / date:** claude, drafting session 2026-10-05. No maintainer input has been received on this item.
+> * **Reasoning:** Each rule answers one observed failure of the 2026-10-06 walk.
+> * **Proposed by / date:** claude, 2026-10-07. Raised in the walk as its D10; the maintainer said they did not know what to do with it, and it was parked here as Proposed. No maintainer input has been received on this item.
+
+### D10: A third series for maintainer tasks (Proposed)
+
+**Summary.** Whether a walk should carry a T series for actions only the maintainer can perform.
+
+**Context.** The maintainer asked whether types other than Q and D exist. One does: a session log's "Waiting on You" list mixes decisions with tasks such as restarting the harness, deleting a temporary folder, or wrapping a session in another repository. A task is neither a question nor a choice; its answer is "done", "later" or "drop". Approvals of outward actions, such as merging a pull request, stay D items with two options.
+
+**Desired outcome.** Every item a walk shows has an answer shape that fits it.
+
+**Options / approaches.**
+
+* **Option A:** Add a T series, answered "done", "later" or "drop". The letter does not collide with option letters A to D.
+* **Option B:** Keep two series and leave tasks out of walks.
+* **Option C:** Treat a task as a D item with options "done" and "not yet".
+
+**Recommendation.** Option A for the backlog mode, where tasks are common. In-session walks rarely carry them, so slice 1 may need only to recognise one.
+
+**Confidence:** Medium.
+
+---
+
+> **Maintainer decision:** _(pending ratification)_
+>
+> * **Status:** Proposed as a working default; NOT yet ratified
+> * **Choice (proposed):** Option A
+> * **Reasoning:** The waiting lists already hold tasks, and forcing them into Q or D distorts their answers.
+> * **Proposed by / date:** claude, 2026-10-07. Raised in the walk as its D11 and parked here as Proposed. No maintainer input has been received on this item.
 
 ### Q1: What happened to past walk answers (Needs info)
 
