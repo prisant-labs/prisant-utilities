@@ -2,8 +2,19 @@
 
 | Version | Date | Release | Type | Summary |
 |---|---|---|---|---|
+| 1.1.0 | 2026-10-06 | unreleased | added | Every appraisal now ends with a big-picture section, "Standing back", by maintainer ruling. `bundle-check.py` gains rule R8 to enforce its structure, and the committed sample is rewritten to the seven sections the skill writes. |
 | 1.0.1 | 2026-10-06 | v0.6.1 | fixed | Its first full run on another repository found three defects in the skill: an output folder that could land inside the audited repository, a vendored-copy comparison that asked the wrong question, and a misattributed tier-ceiling marker. Also adds the first-party plugin validator to the agent-plugin pack. |
 | 1.0.0 | 2026-09-20 | v0.6.0 | added | First version. Three composable modes, three type packs, one docs lens, a coverage statement, and a canary-proven bundle self-check. |
+
+## 1.1.0 - 2026-10-06
+
+**Added: a seventh, closing section in `appraise.md`, "Standing back".** The hand-made fixture audit of 2026-09-20 ended its appraisal with a synthesis of what the repository is and what constrains it. The specification defined six sections, so the skill's first full run, on `nonfiction-studio` on 2026-10-06, wrote six. The maintainer ruled the same day that every appraisal ends with the section, because it shows that the model saw the repository as a whole.
+
+- **`references/output-bundle.md` defines it as section 7.** It says what the repository is beyond its parts, what most distinguishes it and what most constrains it. In a full run it names the theme connecting the findings by identifier; under `--appraise` alone it says what the appraisal implies and what a full audit would test first. A paragraph that could be pasted into a different repository's appraisal fails it.
+- **Step 5 of `SKILL.md` writes it last** in a full run, after `findings.md`, because it cites the findings.
+- **`bundle-check.py` rule R8 enforces the structure.** When `appraise.md` is present, a "Standing back" heading, numbered or not, must be its last level-2 section and must not be empty. R8 is skipped when `appraise.md` is absent. Canary: before the sample was rewritten, the committed sample and the real 1.0.1 bundle from the `nonfiction-studio` run both exited 1 on R8. Removing the rule from the checker's pipeline makes its self-test exit 2 on all three R8 canaries. The hand-made fixture, with its unnumbered heading, passes.
+- **The committed sample's `appraise.md` is rewritten** to the seven numbered sections the skill writes. It previously carried four headings that matched none of the required six, which no rule could see.
+- **The self-test's appraise-only anti-canary now writes the `appraise.md` its label names.** Before R8 it wrote `evidence.md` alone.
 
 ## 1.0.1 - 2026-10-06
 

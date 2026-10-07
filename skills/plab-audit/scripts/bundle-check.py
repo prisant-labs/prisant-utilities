@@ -24,6 +24,8 @@ WHAT THIS CHECKS, AND WHICH ACCEPTANCE CRITERION EACH RULE CARRIES
   R5  roadmap.md carries exactly one horizontal break             AC-10
   R6  every roadmap item above the break cites a real finding     AC-9
   R7  no roadmap item below the break cites a finding             AC-10
+  R8  appraise.md, when present, ends with a non-empty            AC-7
+      "Standing back" section
 
 WHY THE FILE SET IS INFERRED RATHER THAN REQUIRED
 -------------------------------------------------
@@ -46,6 +48,24 @@ R6 does not check that a roadmap item contains something shaped like `F-NN`.
 It checks that the id resolves to a real `## F-NN` heading in findings.md. A
 roadmap citing F-12 in a bundle whose findings stop at F-08 is exactly the
 defect this rule exists to catch, and a shape check passes it.
+
+WHY R8 CHECKS THE CLOSING SECTION AND NOTHING ELSE IN appraise.md
+-----------------------------------------------------------------
+By maintainer ruling of 2026-10-06, every appraisal ends with a big-picture
+section, "Standing back", because it shows the model saw the repository as a
+whole rather than as a list of parts. R8 checks the structure of that ruling:
+the heading exists, it is the last level-2 heading, and its body is not empty.
+The skill numbers its headings ("## 7. Standing back") and the hand-made
+fixture did not, so both forms match.
+
+What the section should SAY is not checked. In a full run it names the theme
+connecting the findings, but `--appraise` alone has no findings.md to connect,
+and judging whether a synthesis is specific to its repository is a reading
+task, not a pattern. Mechanizing it would be the mechanize-the-prose mistake
+noted at PATH_RE below.
+
+R8 is skipped when appraise.md is absent, which is the `--audit` and
+`--roadmap` case. It does not check the six sections before it.
 """
 
 import io
@@ -62,6 +82,10 @@ HRULE_RE = re.compile(r"^---\s*$", re.M)
 # rank per output-bundle.md, which is what separates an item from a prose
 # heading such as "## The shape of this list".
 ROADMAP_ITEM_RE = re.compile(r"^##\s+(\d+\..*)$", re.M)
+# Level-2 headings only: a "### " subheading inside a section is not a later
+# section, so `^##\s` rather than `^##+`.
+SECTION_HEADING_RE = re.compile(r"^##\s+(.*?)\s*$", re.M)
+STANDING_BACK_RE = re.compile(r"^(?:\d+\.\s+)?standing back$", re.I)
 
 # A path is a backticked token containing a dot and a plausible extension, or a
 # `file.ext:line` citation. Deliberately structural: matching prose that "looks
@@ -185,6 +209,30 @@ def check_roadmap(bundle, defined_ids, findings):
             "a finding (R7, AC-10)" % ", ".join(cited_below))
 
 
+def check_appraise(bundle, findings):
+    """R8. Skipped when appraise.md is absent; see the module docstring."""
+    path = os.path.join(bundle, "appraise.md")
+    if not os.path.isfile(path):
+        return
+    text = read(path)
+    sections = list(SECTION_HEADING_RE.finditer(text))
+    standing = [m for m in sections if STANDING_BACK_RE.match(m.group(1))]
+    if not standing:
+        findings.append(
+            "appraise.md has no 'Standing back' section; every appraisal ends with one (R8, AC-7)")
+        return
+    last = sections[-1]
+    if last is not standing[-1]:
+        findings.append(
+            "appraise.md's 'Standing back' section is followed by %r; it must be the last section "
+            "(R8, AC-7)" % last.group(1))
+        return
+    body = [ln for ln in text[last.end():].splitlines()
+            if ln.strip() and not ln.lstrip().startswith("#") and not HRULE_RE.match(ln)]
+    if not body:
+        findings.append("appraise.md's 'Standing back' section is empty (R8, AC-7)")
+
+
 def run_all_checks(bundle):
     if not os.path.isdir(bundle):
         raise Broken("%s is not a directory; cannot check a bundle that is not there" % bundle)
@@ -192,6 +240,7 @@ def run_all_checks(bundle):
     check_evidence(bundle, findings)
     defined = check_findings(bundle, findings)
     check_roadmap(bundle, defined, findings)
+    check_appraise(bundle, findings)
     return findings
 
 
@@ -214,6 +263,10 @@ GOOD_ROADMAP = (
     "## 2. Do the other\n\n**Traces to:** F-02\n**Rung:** documented convention\n\n"
     "---\n\n# Questions this audit cannot answer\n\nNothing below traces to a finding.\n\n"
     "Is the compliance layer the product?\n")
+GOOD_APPRAISE = (
+    "# Appraisal\n\n## 1. What this is\n\nA plugin.\n\n"
+    "## 6. Declared plans against observed state\n\nThey agree.\n\n"
+    "## 7. Standing back\n\n### The constraint\n\nIts reasoning is sound and scattered.\n")
 
 
 def _write(d, name, text):
@@ -221,7 +274,11 @@ def _write(d, name, text):
         fh.write(text)
 
 
-def _fixture(root, evidence=GOOD_EVIDENCE, findings=GOOD_FINDINGS, roadmap=GOOD_ROADMAP):
+def _fixture(root, evidence=GOOD_EVIDENCE, findings=GOOD_FINDINGS, roadmap=GOOD_ROADMAP,
+             appraise=None):
+    # appraise defaults to None so that every fixture written before R8 is
+    # unchanged, and so that the default bundle doubles as the --audit case,
+    # where R8 must be skipped.
     d = tempfile.mkdtemp(dir=root)
     if evidence is not None:
         _write(d, "evidence.md", evidence)
@@ -229,6 +286,8 @@ def _fixture(root, evidence=GOOD_EVIDENCE, findings=GOOD_FINDINGS, roadmap=GOOD_
         _write(d, "findings.md", findings)
     if roadmap is not None:
         _write(d, "roadmap.md", roadmap)
+    if appraise is not None:
+        _write(d, "appraise.md", appraise)
     return d
 
 
@@ -250,9 +309,18 @@ def self_test():
         # meaningless (a checker that fails everything proves nothing).
         expect("anti-canary, well-formed bundle", _fixture(root), False)
 
-        # Anti-canary: a legitimate --appraise partial (evidence only) passes.
+        # Anti-canary: a legitimate --appraise partial passes. Before R8 this
+        # fixture wrote evidence.md alone, so it never held the appraise.md its
+        # label names; it now writes both files that mode produces.
         expect("anti-canary, appraise-only partial",
-               _fixture(root, findings=None, roadmap=None), False)
+               _fixture(root, findings=None, roadmap=None, appraise=GOOD_APPRAISE), False)
+        # Anti-canary: a full bundle with appraise.md passes R8.
+        expect("anti-canary, full bundle with appraise.md",
+               _fixture(root, appraise=GOOD_APPRAISE), False)
+        # Anti-canary: the hand-made fixture's unnumbered heading also matches.
+        expect("anti-canary, unnumbered Standing back heading",
+               _fixture(root, appraise=GOOD_APPRAISE.replace("## 7. Standing back", "## Standing back")),
+               False)
 
         # R1
         expect("R1 missing evidence.md", _fixture(root, evidence=None), True, "evidence.md is missing")
@@ -288,6 +356,16 @@ def self_test():
                _fixture(root, roadmap=GOOD_ROADMAP.replace(
                    "Is the compliance layer the product?", "Follow up on F-02 somehow.")),
                True, "below the break")
+        # R8, three ways for the closing section to be wrong.
+        expect("R8 no Standing back section",
+               _fixture(root, appraise=GOOD_APPRAISE.split("## 7. Standing back")[0]),
+               True, "no 'Standing back' section")
+        expect("R8 Standing back is not the last section",
+               _fixture(root, appraise=GOOD_APPRAISE + "\n## 8. Confidence\n\nModerate.\n"),
+               True, "must be the last section")
+        expect("R8 Standing back is empty",
+               _fixture(root, appraise=GOOD_APPRAISE.split("### The constraint")[0] + "---\n"),
+               True, "is empty")
 
         # BROKEN, not FINDINGS: a directory that is not there.
         try:
@@ -312,9 +390,11 @@ def main():
         sys.stderr.write("\n".join(failures) + "\n")
         sys.exit(2)
     sys.stdout.write(
-        "gate self-test: PASS (7 rules proved against 8 canaries, including both halves of R6, "
-        "plus a well-formed anti-canary, a legitimate appraise-only partial, and an "
-        "absent-directory BROKEN case)\n")
+        "gate self-test: PASS (8 rules proved against 11 canaries, including both halves of R6 "
+        "and three ways for R8's closing section to be wrong, plus four anti-canaries: a "
+        "well-formed bundle with no appraise.md, a legitimate appraise-only partial, a full "
+        "bundle with appraise.md, and an unnumbered closing heading; and an absent-directory "
+        "BROKEN case)\n")
 
     try:
         findings = run_all_checks(argv[0])

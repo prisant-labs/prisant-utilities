@@ -16,7 +16,7 @@ Works with Claude Code and Codex.
 | [`plab-spec`](docs/skills/plab-spec/README.md) | Write a feature spec: numbered acceptance criteria, each cited to a source, in a per-effort folder | 1.3.3 |
 | [`plab-release-plan`](docs/skills/plab-release-plan/README.md) | Scope a release, promote efforts into it, and gate the tag on hygiene checks and a doc-update checklist | 1.5.1 |
 | [`plab-init-project`](docs/skills/plab-init-project/README.md) **&sup1;** | Scaffold agent infrastructure into a repository: AGENTS.md, CLAUDE.md, session logs, decision records | 1.3.0 |
-| [`plab-audit`](docs/skills/plab-audit/README.md) **&sup1;** | Audit a repository into a five-file bundle: what it is worth, what is wrong with a file path on every finding, and a ranked roadmap that traces to those findings | 1.0.1 |
+| [`plab-audit`](docs/skills/plab-audit/README.md) **&sup1;** | Audit a repository into a five-file bundle: what it is worth, what is wrong with a file path on every finding, and a ranked roadmap that traces to those findings | 1.1.0 |
 
 **&sup1; Manual invocation only.** Both skills ship with `disable-model-invocation: true` and never fire on their own; type `/plab-init-project` or `/plab-audit` to run them. `plab-init-project`'s trigger phrases ("init", "initialize", "set up") are too common in ordinary conversation to be safe auto-matches, and it writes files into your repository root. `plab-audit` is gated because an audit is occasional, explicit, and expensive to start by accident, and because "audit" collides with dependency scanning and with audit logs as a runtime feature.
 

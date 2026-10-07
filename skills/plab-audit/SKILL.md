@@ -15,7 +15,7 @@ argument-hint: "<path> [--appraise|--audit|--roadmap] [--type=agent-plugin|tauri
 disable-model-invocation: true
 license: MIT
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
   updated: 2026-10-06
 ---
 
@@ -104,7 +104,7 @@ Then do one of three things with the candidate, and record which:
 
 ### 5. Write the bundle
 
-Five files, defined in `references/output-bundle.md`. Write `evidence.md` from the running record first, because the others cite it.
+Five files, defined in `references/output-bundle.md`. Write `evidence.md` from the running record first, because the others cite it. In a full run, write the last section of `appraise.md`, "Standing back", after `findings.md`, because it names the theme connecting the findings by identifier.
 
 Modes select which files are written:
 
