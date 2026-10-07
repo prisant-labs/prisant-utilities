@@ -4,9 +4,9 @@ title: "Implementation plan: Waiting-on items escape the gitignored log via offe
 type: implementation-plan
 status: draft
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-10-06
 linked-spec: spec.md
-linked-release: docs/internal/release-plans/plan_08_escape-and-measure/plan.md
+linked-release: null
 ac-coverage: complete
 phase-count: 4
 ---

@@ -4,14 +4,14 @@ title: "Arc resume: read the last N logs, not just the newest"
 type: spec
 status: draft
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-10-06
 linked-effort: the maintainer's private plab-continue-session evolution roadmap, 2026-08-16
 linked-plan: implementation-plan.md
 ac-count: 7
 source-count: 7
 requires-human-review: false
-target-release: v0.8.0
-linked-release: docs/internal/release-plans/plan_07_aggregation/plan.md
+target-release: null
+linked-release: null
 priority: P2
 ---
 
@@ -155,7 +155,7 @@ The final section is the same verbatim-prompt guarantee the single-log flow alre
 ## Sources & Evidence
 
 - [S1] the maintainer's private plab-continue-session evolution roadmap, 2026-08-16 (maintainer-local, gitignored; exists on disk). Section C-05 (the roadmap's own heading reads "C-5", lines 98-106, including the promotion note and the "share whatever aggregation is built" instruction on line 104), "What not to do" (lines 110-114). Credibility: A, first-party maintainer-authored roadmap.
-- [S2] `docs/internal/release-plans/plan_07_aggregation/W-04_digest-mode/spec.md`, this session's sibling artifact and the owner of the shared aggregation layer this spec depends on. Cited by section (Requirements item 8, AC-2, AC-7, AC-8) rather than by line number, since both documents were drafted in the same session. Credibility: A, first-party.
+- [S2] `docs/internal/release-plans/_unassigned/W-04_digest-mode/spec.md`, this session's sibling artifact and the owner of the shared aggregation layer this spec depends on. Cited by section (Requirements item 8, AC-2, AC-7, AC-8) rather than by line number, since both documents were drafted in the same session. Credibility: A, first-party.
 - [S3] `skills/plab-continue-session/SKILL.md`. The current single-log Phase 1 through 5 flow (lines 34-99) and the never-paraphrase constraint (line 105) this effort must not relax. Credibility: A, verified current shipped file.
 - [S4] `skills/plab-continue-session/references/log-discovery.md` (lines 15-44). The corpus contract reused, not redefined, by the shared script. Credibility: A, verified current shipped file.
 - [S5] `skills/plab-continue-session/references/handoff-display.md` (lines 7-28 for the required structure, line 39 for "Never paraphrase"). The Phase 3 display format this effort extends. Credibility: A, verified current shipped file.

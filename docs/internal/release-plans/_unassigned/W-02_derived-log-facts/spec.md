@@ -4,14 +4,14 @@ title: Derive session-log facts from git instead of model recall
 type: spec
 status: draft
 created: 2026-08-23
-updated: 2026-10-05
+updated: 2026-10-06
 linked-effort: the maintainer's private plab-wrap-session evolution roadmap, 2026-08-16
 linked-plan: implementation-plan.md
 ac-count: 11
 source-count: 10
 requires-human-review: false
-target-release: v0.7.0
-linked-release: docs/internal/release-plans/plan_06_derived-facts/plan.md
+target-release: null
+linked-release: null
 priority: P1
 ---
 

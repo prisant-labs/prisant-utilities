@@ -4,9 +4,9 @@ title: "Implementation plan: Arc resume: read the last N logs, not just the newe
 type: implementation-plan
 status: draft
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-10-06
 linked-spec: spec.md
-linked-release: docs/internal/release-plans/plan_07_aggregation/plan.md
+linked-release: null
 ac-coverage: complete
 phase-count: 3
 ---

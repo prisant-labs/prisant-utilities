@@ -4,14 +4,14 @@ title: Make derive-log-facts.py's output the single log-format contract
 type: spec
 status: draft
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-10-06
 linked-effort: the maintainer's private defect record for the wrap/continue pair, 2026-08-18
 linked-plan: implementation-plan.md
 ac-count: 7
 source-count: 12
 requires-human-review: false
-target-release: v0.7.0
-linked-release: docs/internal/release-plans/plan_06_derived-facts/plan.md
+target-release: null
+linked-release: null
 priority: P2
 ---
 
@@ -43,7 +43,7 @@ None.
 
 D-10 (the source roadmap's own numbering; no zero-padding transformation is needed since the source already writes it as two digits) is named as the structural cause under four already-diagnosed defects: D-1 (trigger narrowing reached the router but not the program), D-2 (a behavior change shipped with no version trail), D-5 (same-arc superseding logs have no mechanism), and D-8 (the wrap skill fails its own gate, inside its own references). All four are instances of one disease: the wrap and continue session-log format has no single source of truth. [S1]
 
-The template lives in wrap's references, the parsing expectations live in continue's references, the frontmatter schema is a third document, and a claim that the two skills "move and version together" is asserted more than once with nothing checking it. [S1] This spec depends on W-02 (Derive session-log facts from git instead of model recall, `docs/internal/release-plans/plan_06_derived-facts/W-02_derived-log-facts/spec.md`): once `derive-log-facts.py` exists, its actual output becomes the contract for every field it derives, and this effort's job is to make every other document defer to it and delete what they used to restate independently, rather than to build a new shared-schema artifact. [S1, S11]
+The template lives in wrap's references, the parsing expectations live in continue's references, the frontmatter schema is a third document, and a claim that the two skills "move and version together" is asserted more than once with nothing checking it. [S1] This spec depends on W-02 (Derive session-log facts from git instead of model recall, `docs/internal/release-plans/_unassigned/W-02_derived-log-facts/spec.md`): once `derive-log-facts.py` exists, its actual output becomes the contract for every field it derives, and this effort's job is to make every other document defer to it and delete what they used to restate independently, rather than to build a new shared-schema artifact. [S1, S11]
 
 ## Scope
 
@@ -138,7 +138,7 @@ An agent picking up this effort's implementation plan first checks two things: d
 - [S8] `README.md` (repository root). Repo file, credibility A, read in full.
 - [S9] `skills/plab-wrap-session/SKILL.md`. Repo file, credibility A, read in full. Cited here for the existing cross-skill-deferral precedent at line 104, and for the Body Sections prose at lines 132-165 that other documents restate.
 - [S10] `docs/skills/plab-continue-session/README.md`. Repo file, credibility A, read in full.
-- [S11] `docs/internal/release-plans/plan_06_derived-facts/W-02_derived-log-facts/spec.md`. This session's own prior artifact, written before this document and verified by direct reading.
+- [S11] `docs/internal/release-plans/_unassigned/W-02_derived-log-facts/spec.md`. This session's own prior artifact, written before this document and verified by direct reading.
 - [S12] `AGENTS.md`. Repo file, credibility A, read in full. Cited for the "personally useful, not maximal" design frame this spec applies when deciding to retain `frontmatter-schema.md` rather than delete it.
 
 ### Unverified Claims

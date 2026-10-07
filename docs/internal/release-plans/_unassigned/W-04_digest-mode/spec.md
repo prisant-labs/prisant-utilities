@@ -4,14 +4,14 @@ title: "Digest mode: aggregate the last N session logs"
 type: spec
 status: draft
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-10-06
 linked-effort: the maintainer's private plab-wrap-session evolution roadmap, 2026-08-16
 linked-plan: implementation-plan.md
 ac-count: 8
 source-count: 9
 requires-human-review: true
-target-release: v0.8.0
-linked-release: docs/internal/release-plans/plan_07_aggregation/plan.md
+target-release: null
+linked-release: null
 priority: P2
 ---
 
@@ -176,4 +176,4 @@ The "Coverage" line is mandatory per AC-5 regardless of how the counts above it 
 
 **D2.** W-04's own roadmap section does not ask for capture-lite integration; W-05 (cross-harness capture, the roadmap's W-5) gestures at Codex-side data more broadly. Folding D-04's unwrapped-session counts into the digest's "outstanding" or a fourth implicit signal is plausible but was not requested, and adding it now would grow the three-question contract past what the roadmap asked for. Held for a future effort if the unwrapped-session gap turns out to matter across a multi-log window, not just at single-session wrap time.
 
-**D3.** Resolved by directly reading W-02's own spec (`docs/internal/release-plans/plan_06_derived-facts/W-02_derived-log-facts/spec.md`), which already exists in this repository as of this writing, drafted alongside this one, even though W-02 has not actually shipped: it targets v0.7.0, which sequences before this effort's v0.8.0 in the release ladder, but its own `status:` is still `draft`, the same as this spec's. `derive-log-facts.py` derives facts about the session currently being wrapped (`machine`, `repo`, `branch`, `date`, `files-changed`, commit-range, latest-tag, a post-hoc `decisions-count`, and verification content when a live tool-call record exists) from git and the environment, before or while that session's own log is being written. It explicitly does not touch Summary, Decisions Made, Waiting on You, or the Continuation Prompt, which stay fully agent-authored (that spec's own Requirement 6 and AC-6). `aggregate-logs.py` needs the opposite operation: reading and parsing the Work Completed, Decisions Made, Waiting on You, and Outstanding Issues sections of many already-written historical logs. The two scripts solve different problems with no shared implementation surface, so there is nothing in `derive-log-facts.py` for `aggregate-logs.py` to call. What does carry forward from W-02 and D-10 (log-format-contract, `docs/internal/release-plans/plan_06_derived-facts/D-10_log-format-contract/spec.md`) is that by v0.8.0 the frontmatter fields `aggregate-logs.py` reads (`date`, `agent`, `status`, `summary`) are derived rather than recalled, so the values themselves are more trustworthy; no code-level dependency between the two scripts is needed or appropriate.
+**D3.** Resolved by directly reading W-02's own spec (`docs/internal/release-plans/_unassigned/W-02_derived-log-facts/spec.md`), which already exists in this repository as of this writing, drafted alongside this one, even though W-02 has not actually shipped: it targets v0.7.0, which sequences before this effort's v0.8.0 in the release ladder, but its own `status:` is still `draft`, the same as this spec's. `derive-log-facts.py` derives facts about the session currently being wrapped (`machine`, `repo`, `branch`, `date`, `files-changed`, commit-range, latest-tag, a post-hoc `decisions-count`, and verification content when a live tool-call record exists) from git and the environment, before or while that session's own log is being written. It explicitly does not touch Summary, Decisions Made, Waiting on You, or the Continuation Prompt, which stay fully agent-authored (that spec's own Requirement 6 and AC-6). `aggregate-logs.py` needs the opposite operation: reading and parsing the Work Completed, Decisions Made, Waiting on You, and Outstanding Issues sections of many already-written historical logs. The two scripts solve different problems with no shared implementation surface, so there is nothing in `derive-log-facts.py` for `aggregate-logs.py` to call. What does carry forward from W-02 and D-10 (log-format-contract, `docs/internal/release-plans/_unassigned/D-10_log-format-contract/spec.md`) is that by v0.8.0 the frontmatter fields `aggregate-logs.py` reads (`date`, `agent`, `status`, `summary`) are derived rather than recalled, so the values themselves are more trustworthy; no code-level dependency between the two scripts is needed or appropriate.

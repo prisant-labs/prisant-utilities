@@ -4,14 +4,14 @@ title: Waiting-on items escape the gitignored log via offered GitHub issues
 type: spec
 status: draft
 created: 2026-08-23
-updated: 2026-08-23
+updated: 2026-10-06
 linked-effort: the maintainer's private plab-wrap-session evolution roadmap, 2026-08-16
 linked-plan: implementation-plan.md
 ac-count: 6
 source-count: 8
 requires-human-review: true
-target-release: v0.9.0
-linked-release: docs/internal/release-plans/plan_08_escape-and-measure/plan.md
+target-release: null
+linked-release: null
 priority: P2
 ---
 
