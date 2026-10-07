@@ -2,7 +2,7 @@
 
 Generated file. Regenerate with `python scripts/gen-release-index.py` from the repository root. Hand edits will be overwritten on the next regeneration.
 
-**Releases:** 5 **Efforts:** 18 (10 unassigned) **Source:** every `plan.md` and `spec.md` under `docs/internal/release-plans/`, including `_unassigned/`, plus each effort's `implementation-plan.md` where present
+**Releases:** 5 **Efforts:** 19 (11 unassigned) **Source:** every `plan.md` and `spec.md` under `docs/internal/release-plans/`, including `_unassigned/`, plus each effort's `implementation-plan.md` where present
 
 ---
 
@@ -19,6 +19,7 @@ Every effort id's letter prefix names which series it belongs to. An id whose le
 | A | ai-review roadmap item |
 | H | hygiene and repo-wide |
 | AU | audit-skill roadmap item |
+| WD | resolve-open-items roadmap item |
 
 ---
 
@@ -51,6 +52,7 @@ Specs written before being assigned to a release: the documented default home `/
 | [W-02](_unassigned/W-02_derived-log-facts/spec.md) | derived log facts | W (wrap-session roadmap item) | draft | draft | P1 | No |
 | [W-03](_unassigned/W-03_waiting-on-escapes-gitignore/spec.md) | waiting on escapes gitignore | W (wrap-session roadmap item) | draft | draft | P2 | Yes |
 | [W-04](_unassigned/W-04_digest-mode/spec.md) | digest mode | W (wrap-session roadmap item) | draft | draft | P2 | Yes |
+| [WD-01](_unassigned/WD-01_resolve-open-items/spec.md) | resolve open items | WD (resolve-open-items roadmap item) | draft | (no implementation plan yet) | P2 | Yes |
 
 ---
 
@@ -78,4 +80,5 @@ One row per effort, grouped by release in sequence order (see the Release column
 | [W-02](_unassigned/W-02_derived-log-facts/spec.md) | derived log facts | W (wrap-session roadmap item) | draft | draft | `_unassigned/` | - | P1 | No |
 | [W-03](_unassigned/W-03_waiting-on-escapes-gitignore/spec.md) | waiting on escapes gitignore | W (wrap-session roadmap item) | draft | draft | `_unassigned/` | - | P2 | Yes |
 | [W-04](_unassigned/W-04_digest-mode/spec.md) | digest mode | W (wrap-session roadmap item) | draft | draft | `_unassigned/` | - | P2 | Yes |
+| [WD-01](_unassigned/WD-01_resolve-open-items/spec.md) | resolve open items | WD (resolve-open-items roadmap item) | draft | (no implementation plan yet) | `_unassigned/` | - | P2 | Yes |
 
