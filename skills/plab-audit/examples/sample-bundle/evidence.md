@@ -41,6 +41,7 @@ Seven of ten candidates survived reconciliation. The three withdrawn are listed 
 - `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json`
 - `.github/workflows/gate.yml`
 - `AGENTS.md`
+- `CHANGELOG.md`
 - `scripts/version-parity-check.py`
 
 ## What was sampled
@@ -50,7 +51,7 @@ Seven of ten candidates survived reconciliation. The three withdrawn are listed 
 
 ## What was skipped, and why
 
-- **Git history beyond `HEAD`.** Out of scope for a structural audit; no finding depends on it.
+- **Git history beyond `HEAD`.** Out of scope for a structural audit; no finding depends on it. The recent history in `appraise.md` reads `CHANGELOG.md` instead, and says so.
 - **The generated manifests' byte-level agreement with `library.json`.** The generator's own parity gate covers it, and duplicating that check here would report a second opinion with no more evidence behind it.
 - **Any runtime behaviour.** Nothing was executed from the audited repository.
 

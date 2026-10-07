@@ -39,7 +39,7 @@ Budget accordingly: Phase 2 is a real audit of a 14-skill repository, and Phase 
 | P4 | Skill installed and manifests regenerated | AC-1, AC-13 | agent | **Done** 2026-09-20 |
 | P5 | Documentation wired | N/A (documentation) | agent | **Done** 2026-09-20 |
 | P6 | Gates pass and the canary is proven to fail | AC-4, AC-5, AC-14, AC-15 | agent | **Done** 2026-09-20, sample committed and mutation-tested |
-| P7 | Dogfood run, degradation test, release | AC-2, AC-3, AC-12 | agent | In progress: step 1 done 2026-10-05 |
+| P7 | Dogfood run, degradation test, release | AC-2, AC-3, AC-12 | agent | In progress: steps 1 to 4 and 7 to 10 done; step 5 waived and optional; step 6 waived permanently, 2026-10-06 |
 
 ---
 
@@ -300,6 +300,8 @@ The self-check under test is `skills/plab-audit/scripts/bundle-check.py`, writte
 3. [x] Diff the generated bundle against the Phase 2 hand-run fixture. They will not match exactly, and should not. What must match is the **shape**: same five files, same required sections, same citation discipline. Record any place the skill omitted a section the hand-run produced, and fix the skill rather than lowering the bar.
 
    **Result, 2026-10-06: the shape matches, with one open question.** Both bundles have the same five files, and the skill's bundle carries every section `references/output-bundle.md` requires; `bundle-check.py` enforces that, and it passed. The headings were compared file by file. Three differences are by design: the evidence file tabulates its commands where the fixture used one subsection per tool, the README adds the specification's "Recommended sequencing", and the README drops the fixture's own section about the method, which only a fixture needs. The README heading reads "Verdict" where the specification says "Executive verdict", a wording difference the checker tolerates. **The open question:** the fixture's `appraise.md` ends with a seventh section, "Standing back", a synthesis of what the repository is and what constrains it. The specification defines six sections and the skill wrote six, so nothing was omitted against the specification. Whether the specification should gain that seventh section is a maintainer decision, and it is left open here rather than settled by either adding the section or dropping the observation.
+
+   **Decided, 2026-10-06: add the section (option B).** The maintainer ruled that every appraisal ends with "Standing back", because it shows that the model saw the repository as a whole. `plab-audit` 1.1.0 adds it as section 7 of `skills/plab-audit/references/output-bundle.md`, the spec's AC-7 is amended in its revision R-2, and `bundle-check.py` rule R8 fails an `appraise.md` that does not end with it. Against R8, the committed sample bundle and this step's real 1.0.1 bundle both exited 1 before the sample was rewritten.
 4. [x] Run `/plab-audit . --appraise` against this repository. Confirm only `appraise.md` and `evidence.md` are written (AC-2).
 
    **Result, 2026-10-05: met.** The run that proved step 1 was this one. It wrote exactly two files, `appraise.md` and `evidence.md`, to `_output/plab-audit/prisant-utilities_2026-10-05/`, and `skills/plab-audit/scripts/bundle-check.py` reports that bundle `CLEAN: canary proved, ... satisfies every structural rule`, exit 0.
@@ -312,6 +314,8 @@ The self-check under test is `skills/plab-audit/scripts/bundle-check.py`, writte
    **Steps 2, 3, 5 and 6 waived before release, by maintainer ruling on 2026-10-06.** The maintainer is the plugin's only user and chose to ship v0.6.0 without them. What was proven before release: the skill loads (step 1), `--appraise` writes exactly two files that `bundle-check.py` reports clean (step 4), and CI runs `bundle-check.py` against the committed sample bundle on every pull request. What was not: a full five-file run on another repository, the shape comparison with the Phase 2 fixture, the AC-12 degradation run with cargo hidden, and the dogfood gate. These steps now run after release against the installed version, and a defect they find ships as a patch release. Their boxes stay unticked because they have not happened.
 
    **Update, 2026-10-06: steps 2 and 3 have run, and 1.0.1 ships what they found.** Steps 5 and 6 remain waived and unticked: the degradation run against `repo-sync-tool` with `cargo` hidden, and the dogfood gate.
+
+   **Step 6 is waived permanently, by maintainer ruling on 2026-10-06.** The maintainer called the dogfood gate "irrelevant for my current purpose": the plugin is built for its maintainer's own use, so whether one output reorders the queue is not a release condition. Its box stays unticked because the gate never ran, and no `DOGFOOD.md` will be written. Step 5 stays waived and optional, with its procedure in the maintainer's local verification note of 2026-10-05.
 7. [x] Open the pull request. Merge when the Standard and Document-lifecycle checks are green.
 8. [x] **Correct the `## [0.6.0]` date in `CHANGELOG.md` before tagging.** Phase 5 wrote it as `2026-09-20`, the authoring date, which is a prediction rather than a record: Keep a Changelog dates the release, and step 6's dogfood gate can legitimately answer "no" and stop this version from shipping at all. Set it to the actual tag date. `scripts/release-notes-from-changelog.py 0.6.0` reads the section by version and is indifferent to the date, so this is a correctness fix rather than a blocker discovered at tag time.
 9. [x] Tag `v0.6.0` after merge. The publish workflow creates the GitHub Release from the CHANGELOG section written in Phase 5, so that section must exist or the run fails rather than publishing an empty release.
@@ -330,6 +334,8 @@ ls _output/plab-audit/
 ```
 
 Shows three run folders: nonfiction-studio, prisant-utilities, repo-sync-tool. `_local/ideas/audit/draft/DOGFOOD.md` contains a direct answer to whether the output changed a decision.
+
+As of 2026-10-06, two of the three folders exist, and the `DOGFOOD.md` half no longer applies, because step 6 is waived permanently.
 
 ---
 

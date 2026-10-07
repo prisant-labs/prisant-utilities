@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Nothing yet.
+### Added
+
+- **`plab-audit` 1.1.0: every appraisal ends with a big-picture section, "Standing back".** By maintainer ruling of 2026-10-06, `appraise.md` gains a seventh, closing section that says what the repository is beyond its parts, what most distinguishes it and what most constrains it, and in a full run names the theme connecting the findings. `bundle-check.py` rule R8 fails an `appraise.md` that does not end with it. Before the committed sample was rewritten, R8 failed both that sample and the real bundle from the skill's 2026-10-06 run on `nonfiction-studio`, which is the canary.
 
 ## [0.6.1] - 2026-10-06
 

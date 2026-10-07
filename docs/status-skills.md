@@ -13,7 +13,7 @@ The current configuration of every skill in `prisant-utilities`, as declared in 
 | Skill | Version | Invocation | Argument hint | Output lands in |
 |---|---|---|---|---|
 | `plab-ai-review` | 1.2.1 | Auto + explicit | `<doc.md> [--reviewer codex\|gpt\|gemini] [--respond]` | Beside the source doc, plus `_archive/` on `--close` |
-| `plab-audit` | 1.0.1 | **Explicit only** | `<path> [--appraise\|--audit\|--roadmap] [--type ...] [--lens=docs] [--out <path>]` | `_output/plab-audit/<repo>_<YYYY-MM-DD>/` |
+| `plab-audit` | 1.1.0 | **Explicit only** | `<path> [--appraise\|--audit\|--roadmap] [--type ...] [--lens=docs] [--out <path>]` | `_output/plab-audit/<repo>_<YYYY-MM-DD>/` |
 | `plab-continue-session` | 1.5.0 | Auto + explicit | `[--log <path>]` | Nothing. Displays context only |
 | `plab-guide` | 2.2.2 | Auto + explicit | `<topic-or-repo-url> [--type repo-url\|tool\|concept] [--out <dir>] [--force]` | `_output/plab-guide/` |
 | `plab-init-project` | 1.3.0 | **Explicit only** | `[--profile minimal\|standard\|public] [--type ...] [--agents ...] [--dry-run]` | The target repository root |
@@ -155,7 +155,7 @@ Pairs with `plab-wrap-session` and `plab-continue-session`, which write and read
 
 ---
 
-### `plab-audit` 1.0.1, explicit only
+### `plab-audit` 1.1.0, explicit only
 
 Audits a repository into a five-file bundle: what it is worth, what is wrong with it, and what to do next.
 
@@ -167,7 +167,7 @@ Audits a repository into a five-file bundle: what it is worth, what is wrong wit
 | Lenses | `--lens=docs` |
 | Output | `_output/plab-audit/<repo>_<YYYY-MM-DD>/`, or `--out <path>`. It refuses a location inside the audited repository unless that repository gitignores it |
 | Produces | `appraise.md`, `findings.md`, `roadmap.md`, `evidence.md`, `README.md` |
-| Scripts | `bundle-check.py`, its own output gate, run by CI against a committed sample |
+| Scripts | `bundle-check.py`, its own output gate, run by CI against a committed sample. Eight rules, the eighth requiring `appraise.md` to end with its big-picture section |
 | Setup required | Nothing. Read-only against the audited repository |
 | Dry run | None. It never writes to the repository it audits |
 | References | 7 files |

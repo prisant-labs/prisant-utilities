@@ -1,6 +1,6 @@
 # plab-audit
 
-**Version:** 1.0.1
+**Version:** 1.1.0
 **Source:** [`skills/plab-audit/`](../../../skills/plab-audit/)
 
 Audit a repository and produce a five-file bundle: what it is and is worth, what is wrong with it with a file path on every finding, and what to do next ranked and traceable to those findings. Manual invocation only.
@@ -86,7 +86,7 @@ Ranking follows the calibration in `references/calibration.md`: token economy, d
 
 | File | What it answers |
 |------|-----------------|
-| `appraise.md` | What this repository is, and what it is worth |
+| `appraise.md` | What this repository is, and what it is worth, ending with "Standing back", the big picture |
 | `findings.md` | What is wrong, with severity and a file path on every finding |
 | `roadmap.md` | What to do next, ranked, with the speculation break |
 | `evidence.md` | Every command run with its exit code, plus coverage and decision records consulted |
@@ -98,7 +98,7 @@ Running a single mode produces a subset: `--appraise` alone yields `appraise.md`
 
 ## Its Own Gate
 
-`skills/plab-audit/scripts/bundle-check.py` enforces seven structural rules over a finished bundle:
+`skills/plab-audit/scripts/bundle-check.py` enforces eight structural rules over a finished bundle:
 
 | Rule | What it requires |
 |------|------------------|
@@ -109,6 +109,7 @@ Running a single mode produces a subset: `--appraise` alone yields `appraise.md`
 | R5 | `roadmap.md` carries exactly one horizontal break |
 | R6 | Every roadmap item above the break cites a real finding |
 | R7 | No roadmap item below the break cites a finding |
+| R8 | `appraise.md`, when present, ends with a non-empty "Standing back" section |
 
 Run it directly:
 

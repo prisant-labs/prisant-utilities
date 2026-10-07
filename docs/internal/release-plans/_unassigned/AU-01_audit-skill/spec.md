@@ -4,12 +4,12 @@ title: "plab-audit: repository appraisal, findings and roadmap"
 type: spec
 status: committed
 created: 2026-09-19
-updated: 2026-09-19
+updated: 2026-10-06
 linked-effort: "docs/internal/ideas/plab-audit-skill-2026-08-15.md, the tracked parent brief. Its why-gate was closed by maintainer ruling on 2026-09-19, recorded in a maintainer-local design note that is not tracked; see Sources below"
 linked-plan: implementation-plan.md
 linked-release: null
 ac-count: 15
-source-count: 8
+source-count: 9
 requires-human-review: false
 priority: P1
 ---
@@ -19,10 +19,10 @@ priority: P1
 ## Task Summary
 
 **Status:** committed
-**Last updated:** 2026-09-20 by claude, on promotion into the tracked tree
+**Last updated:** 2026-10-06 by claude, AC-7 amended for the closing big-picture section (R-2)
 **Linked plan:** `implementation-plan.md` in this folder
 **Open questions:** 0
-**Revisions:** 1
+**Revisions:** 2
 
 **The `AU-` series letter is registered, as of 2026-09-20.** Phase 1 landed it in commit `9d0dfc3`. It required two edits rather than the one the plan named: the legend's only machine-readable home is `SERIES_LEGEND` in `scripts/gen-release-index.py`, which that script says of itself at line 15, and the table in `docs/internal/release-plans/README.md` is prose beside it. A README-only edit would have registered nothing.
 
@@ -36,7 +36,7 @@ This document and its plan were promoted out of `_local/` into this folder on 20
 - [ ] **AC-4** - Every finding carries a file path, and a line number where one applies
 - [ ] **AC-5** - Every run emits a coverage statement naming what was read, sampled and skipped
 - [ ] **AC-6** - The coverage statement records each deterministic tool invoked and its exit code
-- [ ] **AC-7** - Appraisal reports current status, recent history and the repository's own declared plans
+- [ ] **AC-7** - Appraisal reports current status, recent history and the repository's own declared plans, and ends with a big-picture section
 - [ ] **AC-8** - Appraisal compares declared plans against observed state and reports disagreements
 - [ ] **AC-9** - Every roadmap item above the speculation break cites the finding it traces to
 - [ ] **AC-10** - Speculative material appears only below a labelled break and is never mixed with findings
@@ -124,8 +124,8 @@ Every entry in `findings.md` carries a file path. Entries scoped to a line carry
 *Source: `_local/audits/2029-08-29_sol-xhigh/evidence.md`, "Validation commands and outcomes" (folder slug reads 2029, body reads 2026-08-29; the slug is a typo).*
 
 **AC-7 - Appraisal covers status, history and declared plans.**
-`appraise.md` contains: what the repository is, a current-status table (version, last release, last commit, open pull requests, branches in flight), recent history across the last releases, and a section reporting what the repository's own planning artifacts declare as next.
-*Source: maintainer request, 2026-09-19.*
+`appraise.md` contains: what the repository is, a current-status table (version, last release, last commit, open pull requests, branches in flight), recent history across the last releases, and a section reporting what the repository's own planning artifacts declare as next. It ends with a big-picture section headed "Standing back", which says what the repository is beyond its parts, what most distinguishes it and what most constrains it, and in a full run names the theme connecting the findings. The skill's self-check fails an `appraise.md` whose last section is not a non-empty "Standing back".
+*Source: maintainer request, 2026-09-19; the closing section by maintainer ruling, 2026-10-06 (source 9).*
 
 **AC-8 - Declared plans compared against observed state.**
 `appraise.md` contains a section reporting where declared plans and observed state disagree, or stating explicitly that they agree. A stalled branch named in a current release plan is an instance that must be caught.
@@ -193,6 +193,12 @@ The step is not optional polish. Two of the withdrawn candidates were the highes
 
 Source 8 is added to the sources table for the fixture run.
 
+**R-2, 2026-10-06: AC-7 amended to require a closing big-picture section. `ac-count` is unchanged at 15.**
+
+The hand-made fixture audit of 2026-09-20 ended its `appraise.md` with a seventh section, "Standing back": a synthesis of what the repository is and what constrains it. The specification defined six sections, so the skill's first full run, on 2026-10-06, wrote six and omitted nothing the specification required. Phase 7 step 3 of the implementation plan recorded the difference as an open question.
+
+The maintainer ruled on 2026-10-06 that every appraisal ends with that section, because it shows that the model saw the repository as a whole. This is source 9. The criterion is amended rather than added, because the section belongs to the appraisal that AC-7 already defines. `bundle-check.py` rule R8 enforces the section's structure; what it says is a reading task, defined in `skills/plab-audit/references/output-bundle.md`.
+
 ## Sources & Evidence
 
 | # | Source | Class |
@@ -205,8 +211,9 @@ Source 8 is added to the sources table for the fixture run.
 | 6 | `scripts/checks/description-score.mjs` and `chain-contract.mjs` in agent-skills-toolkit | Directly observed |
 | 7 | `docs/internal/release-plans/README.md`, the series legend | First-party, tracked |
 | 8 | `_local/ideas/audit/draft/fixture/`, the 2026-09-20 hand-run fixture audit of nonfiction-studio | First-party, gitignored |
+| 9 | Maintainer ruling, 2026-10-06: every appraisal ends with a big-picture section. Recorded in the maintainer's private decision register | Direct instruction |
 
-**Four of these eight sources are maintainer-local and cannot be opened by any other reader of this repository.** Sources 2, 3, 4 and 8 live under gitignored `_local/`. They are cited rather than paraphrased because the provenance of an acceptance criterion matters more than its reachability, and because a criterion whose source is silently dropped is indistinguishable from one that was invented. Where a claim from one of them is load-bearing, it is restated in full in this document rather than left behind the citation. Source 1 and source 7 are tracked and readable by anyone.
+**Five of these nine sources are maintainer-local and cannot be opened by any other reader of this repository.** Sources 2, 3, 4, 8 and 9 live under gitignored `_local/`. They are cited rather than paraphrased because the provenance of an acceptance criterion matters more than its reachability, and because a criterion whose source is silently dropped is indistinguishable from one that was invented. Where a claim from one of them is load-bearing, it is restated in full in this document rather than left behind the citation. Source 1 and source 7 are tracked and readable by anyone.
 
 ### Unverified Claims
 

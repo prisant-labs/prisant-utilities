@@ -28,7 +28,7 @@ Index and verdict. The only file that assumes the reader has read nothing else.
 
 ## `appraise.md`
 
-What the repository is and is worth. Six required sections.
+What the repository is and is worth. Seven required sections, in this order, numbered as headings: `## 1. What this is` through `## 7. Standing back`.
 
 1. **What this is.** Written for someone who has not seen it. Name the architecture's organising idea, not just its parts.
 2. **Current status.** A table: version, last release, last commit, open pull requests, branches in flight, worktree state, and the conformance position. Where something was not checked, say `not queried` rather than leaving it out.
@@ -37,7 +37,13 @@ What the repository is and is worth. Six required sections.
 5. **What the repository declares as next.** From its own planning artifacts, each citation named. If the declaration is only in a gitignored file, say so.
 6. **Declared plans against observed state.** The comparison, item by item. **Agreements are reported as plainly as disagreements**, because "the declared state and the actual state match" is a real result and its absence from a report is not evidence of anything.
 
-A stalled branch named in a current release plan is the canonical disagreement this section exists to catch. So is a changelog describing the same change as both scheduled and shipped.
+7. **Standing back.** The big picture, in two or three paragraphs of prose, and always the last section. Say what kind of thing this repository is beyond the sum of its parts, the one quality that most distinguishes it, and the one constraint that most limits it. In a full run, name the theme that connects the findings, citing them by identifier. Under `--appraise` alone there are no findings to connect, so say what the appraisal implies and what a full audit would test first.
+
+A stalled branch named in a current release plan is the canonical disagreement section 6 exists to catch. So is a changelog describing the same change as both scheduled and shipped.
+
+**Section 7 is a judgment, and it is where an appraisal shows that the repository was seen whole.** The maintainer ruled it required on 2026-10-06 for that reason. Two tests apply. First, a paragraph that could be pasted into the appraisal of a different repository has failed this section, however true it is. Second, the section asserts nothing new: every claim in it rests on something the bundle already shows, and it cites rather than restates, per the cross-file rules below. The model for it is the "Standing back" section of the hand-made 2026-09-20 audit that specified this skill. That section concluded of its five findings: "not one of them is a thinking failure, and all five are a recording failure at a different boundary."
+
+`bundle-check.py` rule R8 fails an `appraise.md` whose last section is not a non-empty "Standing back". It checks the structure only. Whether the section passes the two tests above is a reading task.
 
 ## `findings.md`
 
