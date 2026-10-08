@@ -2,9 +2,9 @@
 id: WD-01
 title: "plab-resolve-open-items: the in-session walk of open questions and decisions"
 type: spec
-status: draft
+status: committed
 created: 2026-10-05
-updated: 2026-10-07
+updated: 2026-10-08
 linked-effort: "the maintainer's private walk-decisions strategy brief, 2026-10-04"
 linked-plan: implementation-plan.md
 linked-release: null
@@ -18,8 +18,8 @@ priority: P2
 
 ## Task Summary
 
-**Status:** draft
-**Last updated:** 2026-10-07 by claude (Opus 5.5), implementation plan linked (revision 3)
+**Status:** committed
+**Last updated:** 2026-10-08 by claude (Opus 5.5), status committed: the build has started
 **Linked plan:** `implementation-plan.md` in this folder
 **Open questions:** 1 (Q1 Needs info, skipped twice with its default in effect; see Open Questions / Decisions)
 **Revisions:** 3
