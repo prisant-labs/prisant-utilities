@@ -4,7 +4,7 @@ title: "Implementation plan: plab-resolve-open-items, the in-session walk of ope
 type: implementation-plan
 status: draft
 created: 2026-10-07
-updated: 2026-10-07
+updated: 2026-10-08
 linked-spec: spec.md
 linked-release: null
 ac-coverage: complete
@@ -35,30 +35,32 @@ AU-01 (the audit skill) had to produce its specimen by hand before writing the s
 
 That record predates the format this plan defines. It has no State or Follow-up column, and one item ("PR-20 merge") carries no series letter. Phase 3 therefore treats it as the **first canary**: the record checker must exit 1 on it, as `bundle-check.py` rule R8 exited 1 on the bundle that predated R8. The committed sample is a rewrite of it into the final format, scrubbed of every path that is gitignored or machine-specific.
 
-## Interpretations this plan makes, for the maintainer to confirm
+## Interpretations this plan makes
 
-None of these adds an acceptance criterion. Each one reads a criterion where the spec leaves the mechanics open, and Phase 2 builds to these readings unless the maintainer overrules one.
+None of these adds an acceptance criterion. Each one reads a criterion where the spec leaves the mechanics open. The maintainer confirmed I1, I2, I4 and I5 as written in a walk on 2026-10-07 and 2026-10-08, and confirmed I3 in an amended form, replacing a proposed `Reservation` line with a `Provisional` status. I6 came out of that walk, and the maintainer confirmed it the same day.
 
 | # | Criterion | The reading |
 |---|---|---|
 | I1 | AC-16 (deferred work named) | The frontmatter description names only the `--backlog` mode, because it is the deferred feature a user would ask for. The SKILL.md body and the usage README name all five. AC-16 says "description and documentation", and the frontmatter description is always-on context, paid for in every session. |
 | I2 | AC-8 and AC-6 (write-back and skips) | An answered Q item that has a home document is written back like a D item. D4 (where answers are recorded) chose write-back "for a sourced item", not for D items only. A skipped Q item is written nowhere but the walk record, where it is marked assumed. |
-| I3 | AC-18 (reservations) | A provisional answer keeps the status `Decided`. Its `Choice` line ends with `(provisional)`, a new optional `Reservation` line holds the maintainer's words verbatim, and the table's `Resolution` cell ends with `, provisional`. No sixth status is added. This follows D4's own block. |
+| I3 | AC-18 (reservations) | A provisional answer takes the status `Provisional` on all three surfaces, and the maintainer's words of doubt are quoted verbatim in its `Reasoning` line. There is no separate field for them. `Provisional` joins a status list of seven, the maintainer's own: Open and Needs info before an answer, then Decided, Provisional, Deferred, Canceled and Superseded. `Canceled` replaces `Withdrawn`, which no document used. Phase 1 writes the list. |
 | I4 | AC-17 (one home) | A copy of an item outside its home receives a pointer on the three surfaces, not the answer: `Resolution` reads `See <home path> <id>`, the status mirrors the home's status, and the maintainer block's `Choice` reads `Recorded in <home path> <id>`. A pointer block carries no `Follow-up` line, because the follow-up lives in the home. |
 | I5 | AC-9 (branch guard) | A document's branch is the branch checked out in the working tree that contains it. A gitignored document in the current working tree is on the current branch. A document in another worktree of this repository is never written. A document in another repository needs a confirmation first, under AC-15. |
+| I6 | AC-18 (rounds) | **Confirmed by the maintainer, 2026-10-08.** A reply that holds both a choice and a question records the choice, and the question is answered in the same round. Only a reply with no choice is re-presented. Requirement 19 says a question back leaves an item unanswered, but it does not say which wins when a reply holds both. Both hand walks recorded such replies as decided. |
 
 ## Preconditions, verify before starting
 
 - [x] PR #22 (D9 and D10 ratified into the spec) merged as `bf6c675`, with all four CI checks green. Verified 2026-10-07.
 - [x] This terminal loads plugin 0.6.1. Verified 2026-10-07 from a skill's base directory line.
-- [ ] This plan is merged to `main`, and the maintainer has confirmed or overruled interpretations I1 to I5.
+- [x] This plan is merged to `main`, as PR #23 (`2d8a483`), 2026-10-08.
+- [x] The maintainer confirmed I1 to I6 on 2026-10-08, I3 in an amended form.
 - [ ] A branch exists for the build: `feat/plab-resolve-open-items`, cut from `main` after this plan merges.
 
 ## Completion Status
 
 | Phase | Goal | Fulfills AC | Owner | Status |
 |---|---|---|---|---|
-| P1 | The shared decisions format defines `Reservation` and `Follow-up` | AC-18, AC-19 (format halves) | agent | Not started |
+| P1 | The shared decisions format has seven statuses and defines `Follow-up` | AC-18, AC-19 (format halves) | agent | Not started |
 | P2 | The skill is authored under `skills/` | AC-1 to AC-20, authored | agent | Not started |
 | P3 | The walk checker exists, runs in CI, and is proven to fail | AC-6, AC-8, AC-10, AC-18, AC-19, AC-20 (deterministic halves) | agent | Not started |
 | P4 | `library.json` registers ten skills at plugin 0.7.0, and the manifests agree | AC-14 (invocation setting) | agent | Not started |
@@ -68,42 +70,69 @@ None of these adds an acceptance criterion. Each one reads a criterion where the
 
 ---
 
-## Phase 1: The shared format defines Reservation and Follow-up
+## Phase 1: Seven statuses and a Follow-up line in the shared format
 
-**Goal:** `references/decisions-section.md` defines the two optional lines the walk writes, so a block carrying them is conforming rather than improvised. Without this phase, the write-back step in Phase 2 has no definition to follow.
+**Goal:** `references/decisions-section.md` carries the maintainer's seven-status list and defines the optional `Follow-up` line, so a block the walk writes is conforming rather than improvised. Without this phase, the write-back step in Phase 2 has no definition to follow.
 
 **Files:** `references/decisions-section.md` (modify).
 
-**Fulfills:** AC-18 and AC-19, format halves. Requirement 20 of the spec requires this amendment by name.
+**Fulfills:** AC-18 and AC-19, format halves. Requirement 20 of the spec requires the `Follow-up` amendment by name. The status list is the maintainer's ruling of 2026-10-08, recorded as interpretation I3.
 
 **Steps:**
 
-1. [ ] Find the filled-block example. It is the fenced block that follows the sentence "When the maintainer decides, the block fills:" (lines 99 to 111 at the time of writing) and ends with the line `> * **Decided by / date:** jp / 2026-06-16`.
-2. [ ] Immediately after that fenced block, and before the sentence beginning "Optionally, a clarification request can follow", insert this text:
-
-   ````markdown
-   Two optional lines may follow `Reasoning`. A block carries each one only when it applies.
+1. [ ] **Replace the status vocabulary table** under the line `**Status vocabulary.**` (lines 49 to 55 at the time of writing). Before:
 
    ```markdown
-   > * **Reservation:** "<the maintainer's words, verbatim>"
+   | Status | Meaning |
+   |--------|---------|
+   | `Open` | Awaiting maintainer decision. Default for a newly added item. |
+   | `Decided` | Maintainer has chosen. Outcome and reasoning recorded in the maintainer block. |
+   | `Deferred` | Intentionally postponed. The decision is to not decide yet; note when to revisit. |
+   | `Needs info` | Blocked on clarification. Usually triggers a re-run of the producing skill. |
+   | `Withdrawn` | No longer relevant. Keep the row for traceability; do not delete history. |
+   ```
+
+   After:
+
+   ```markdown
+   | Status | Meaning |
+   |--------|---------|
+   | `Open` | Awaiting maintainer decision. Default for a newly added item. |
+   | `Needs info` | Blocked on clarification. Usually triggers a re-run of the producing skill. |
+   | `Decided` | Maintainer has chosen. Outcome and reasoning recorded in the maintainer block. |
+   | `Provisional` | Maintainer has chosen but said they were unsure. The choice is in force, and the maintainer's words of doubt are quoted verbatim in `Reasoning`. |
+   | `Deferred` | Intentionally postponed. The decision is to not decide yet; note when to revisit. |
+   | `Canceled` | No longer relevant. Keep the row for traceability; do not delete history. |
+   | `Superseded` | Replaced by a later decision. `Choice` names the item or record that replaced it. Keep the row for traceability. |
+
+   The first two statuses come before an answer. The other five are what an answer can be. `Canceled` replaced `Withdrawn` in 2026-10; no document had used the old name.
+   ```
+
+2. [ ] **Find the filled-block example.** It is the fenced block that follows the sentence "When the maintainer decides, the block fills:" (lines 99 to 111 at the time of writing) and ends with the line `> * **Decided by / date:** jp / 2026-06-16`.
+3. [ ] Immediately after that fenced block, and before the sentence beginning "Optionally, a clarification request can follow", insert this text:
+
+   ````markdown
+   An optional `Follow-up` line may follow `Reasoning`:
+
+   ```markdown
    > * **Follow-up:** <the action this decision requires, and where that action is tracked>, or "None needed."
    ```
 
-   `Reservation` marks a provisional answer: the maintainer chose, but said they were unsure. The line keeps their words verbatim rather than a paraphrase. A provisional answer keeps the status `Decided`, because it is still the answer in force. Its `Choice` line ends with `(provisional)`, and the summary-table row's `Resolution` cell ends with `, provisional`.
-
-   `Follow-up` separates a decision from the work it causes. A decision can be recorded as made and still sit unbuilt, with no status that says so. The line names what has to happen next and where that is tracked, or states that nothing does. `plab-resolve-open-items` writes it on every item it records as decided.
+   `Follow-up` separates a decision from the work it causes. A decision can be recorded as made and still sit unbuilt, with no status that says so. The line names what has to happen next and where that is tracked, or states that nothing does. `plab-resolve-open-items` writes it on every item it records as `Decided` or `Provisional`.
    ````
 
-3. [ ] Do not change the status vocabulary table and do not change the Lifecycle section. The status-label drift recorded in the 2026-10-07 session belongs to the separate layout effort.
-4. [ ] No skill's version moves for this phase. The two lines are optional, so `plab-spec`, `plab-strategy-brief` and `plab-ai-review`, which cite this file, behave exactly as before.
+4. [ ] Do not change the Lifecycle section. The release plans' drifted labels (Ratified, Proposed, Resolved, Needs ruling and Applied) are mapped onto the seven statuses by the separate layout effort, not here.
+5. [ ] No skill's version moves for this phase. A search on 2026-10-08 found no skill that copies this vocabulary. `plab-ai-review` keeps its own Accepted and Rejected values for review findings, and its "unresolved" set (Open, Deferred and Needs info) is unchanged by this phase. `plab-spec` and `plab-strategy-brief` cite this file without restating the list.
 
 **Verification:**
 
 ```bash
-grep -c '\*\*Reservation:\*\*\|\*\*Follow-up:\*\*' references/decisions-section.md && python scripts/check-dashes.py
+grep -c '^| `Provisional` \|^| `Canceled` \|^| `Superseded` \|\*\*Follow-up:\*\*' references/decisions-section.md
+grep -c 'Withdrawn' references/decisions-section.md
+python scripts/check-dashes.py
 ```
 
-The count is 2, and `check-dashes.py` exits 0. The spec's own D9 block already carries a `Follow-up` line, so after this phase that line is defined rather than ahead of its definition.
+The first count is 4. The second count is 1, from the sentence recording the rename. `check-dashes.py` exits 0. The spec's own D9 block already carries a `Follow-up` line, so after this phase that line is defined rather than ahead of its definition.
 
 ---
 
@@ -162,12 +191,12 @@ Modify `docs/internal/release-plans/_unassigned/WD-01_resolve-open-items/spec.md
    - The answer states, by series. D: `decided`, `provisional`, `deferred`, `unanswered`. Q: `decided`, `provisional`, `assumed`. T: `done`, `later`, `drop`, `open`.
    - Skips (AC-6): an omitted D item stays `unanswered` and is written nowhere, while an omitted Q item becomes `assumed` on its stated default. An omitted T item stays `open`.
    - Explicit acceptance (AC-7). "ok", "accept all", "accept the rest" and "yes to all" accept every presented item's recommendation or default, and each such item is recorded `decided`. A line that merely omits an item accepts nothing.
-   - Leftover text, which the model interprets, never the grammar. A reservation such as "but I'm not sure" or "i guess" makes the answer `provisional`, with the words kept verbatim. A request for more context, a question back, or "I don't understand this" leaves the item unanswered and queues it for the next round with more context (AC-18).
+   - Leftover text, which the model interprets, never the grammar. Words of doubt such as "but I'm not sure" or "i guess" make the answer `provisional`, and the words are kept verbatim for its `Reasoning` line. A request for more context, a question back, or "I don't understand this" leaves the item unanswered and queues it for the next round with more context (AC-18). A reply holding both a choice and a question follows interpretation I6.
    - Worked examples, quoted exactly: AC-5's "D1 A, D2 B, Q1: the NAS"; AC-18's "D1 A, but I'm not sure. D2: expand this. D3: I don't understand this"; the spec's Example 3, "D2 B, Q1: the NAS, accept the rest"; and the seven reply shapes of the first walk ("A", "A i guess", "A. However this feels a little incomplete and unsettled and I can't articulate why", "A. Are there other types than Q and D?", "expand this and provide more context", "I don't understand this", and a reply of four questions).
    - An id the walk did not present is reported back and applies nothing.
 6. [ ] **Write `references/write-back.md`** (applying answers). It must define:
    - The three surfaces of `references/decisions-section.md`, and the rule that an item's Summary, Context, Desired outcome, Options, Recommendation and Confidence text is never edited (AC-8).
-   - The provisional notation of interpretation I3, and the `Follow-up` line on every `decided` or `provisional` item (AC-19), both citing the Phase 1 text.
+   - The `Provisional` status of interpretation I3, with the maintainer's words of doubt in `Reasoning`, and the `Follow-up` line on every `Decided` or `Provisional` item (AC-19), both citing the Phase 1 text.
    - The pointer of interpretation I4, written into every copy outside the home (AC-17).
    - The branch guard of interpretation I5, with the command: `git -C <folder containing the document> rev-parse --abbrev-ref HEAD`, compared with the same command run at the repository root. On a mismatch, the walk writes nothing to that document and prints the intended edit as text, naming the branch it would have targeted (AC-9).
    - The self-check. Copy each document to a temporary file immediately before its first edit, and after the last edit run `python <skill base directory>/scripts/walk-check.py writeback <copy> <document>`. Exit 1 means the write-back touched something it must not; undo that edit and report it. Exit 2 means the check could not run, and the output says so rather than claiming success. `HEAD` is not a safe "before", because the session may already have edited the document.
@@ -222,13 +251,13 @@ The first prints a number no greater than 1024. The second prints 0. The third e
    - R5: Every State belongs to its series' vocabulary in `references/answer-line.md`.
    - R6: Every `decided` or `provisional` row has a Follow-up that is neither empty nor `-` (AC-19).
    - R7: Every T row's Landed reads `walk record only` (AC-20). Every `unanswered` D row's Landed reads `not written`. Every `assumed` Q row's Answer begins `default:` (AC-6).
-   - R8: The number of `## Round N` sections equals `rounds`, no Round cell exceeds it, and every `provisional` row's Answer contains a quoted reservation (AC-18).
+   - R8: The number of `## Round N` sections equals `rounds`, no Round cell exceeds it, and every `provisional` row's Answer quotes the maintainer's words of doubt (AC-18).
 3. [ ] **Implement the write-back rules**, comparing two copies of one document with line endings normalized:
    - W1: Everything outside the `## Open Questions / Decisions` section is identical.
    - W2: Each item subsection is identical from the line after its header down to the `---` rule before its maintainer block. Only the header's trailing `(status)` may differ (AC-8).
    - W3: In the summary table, only the `Resolution`, `Status` and `Updated` cells may differ. No row is added or removed, and no `ID` or `Title` changes.
    - W4: For each changed item, the table status, the header status and the block's `Status` line agree.
-   - W5: Each changed block whose status is `Decided` carries a `Follow-up` line (AC-19). A pointer block, whose `Choice` begins `Recorded in`, is exempt, per interpretation I4.
+   - W5: Each changed block whose status is `Decided` or `Provisional` carries a `Follow-up` line (AC-19). A pointer block, whose `Choice` begins `Recorded in`, is exempt, per interpretation I4.
    - A file that is missing, or has no decisions section, exits 2. A changed item count is a finding and exits 1.
 4. [ ] **Build the sample walk record** by rewriting the first walk record into the final format. Keep its three rounds, its replies verbatim, and every item. Give the "PR-20 merge" item the series letter D. Add the State and Follow-up columns. Replace every gitignored or machine-specific path with a plain-language description.
 5. [ ] **Build the write-back pair.** `before.md` holds a decisions section of three items: D1 Open, D2 Open, and Q1 Needs info with a stated default. `after.md` decides D1 with a `Follow-up` line on all three surfaces, leaves D2 untouched (a skipped D), and leaves Q1 untouched (an assumed Q).
@@ -413,7 +442,7 @@ All three gates exit 0. The loop prints a count of at least 1 for each of the fi
 
     | Check | Criteria | Pass condition |
     |---|---|---|
-    | `walk-check.py writeback fixture.before.md fixture.md` | AC-8, AC-18, AC-19 | Exit 0. D1 is provisional with the reservation verbatim. D2, D3 and D4 are decided with Follow-up lines. D5 is unchanged. |
+    | `walk-check.py writeback fixture.before.md fixture.md` | AC-8, AC-18, AC-19 | Exit 0. D1's status is `Provisional`, with the maintainer's words verbatim in `Reasoning`. D2, D3 and D4 are decided with Follow-up lines. D5 is unchanged. |
     | `walk-check.py writeback <spec pre-trial copy> spec.md` | AC-8, AC-19 | Exit 0. Q1 is decided, with a Follow-up line. |
     | `walk-check.py writeback <brief pre-trial copy> <brief>` | AC-17 | Exit 0, and Q1 carries a pointer block to the spec, with no answer and no Follow-up line. |
     | The hash of the worktree's `branch-guard.md` | AC-9 | Unchanged, and the session printed the intended edit naming `trial/wd01-branch-guard`. |
@@ -493,7 +522,7 @@ There is no schema change and no data migration. To undo the whole effort:
 - Remove the junction with `cmd /c rmdir`, never with `Remove-Item -Recurse`.
 - Return the spec to `draft` only after unticking every box, because invariant 9 fails a `draft` spec with any box ticked.
 
-**Keep the Phase 1 amendment.** By the time anyone rolls back, walks will have written `Reservation` and `Follow-up` lines into real documents, and the spec's D9 block already carries one. Removing the definition would leave those lines undefined, while keeping it costs nothing.
+**Keep the Phase 1 amendment.** By the time anyone rolls back, walks will have written `Provisional` statuses and `Follow-up` lines into real documents, and the spec's D9 block already carries a `Follow-up` line. Removing the definitions would leave those documents using undefined terms, while keeping them costs nothing.
 
 **Partial-rollback hazards.** Reverting Phase 4 without Phase 5 leaves `AGENTS.md` and `README.md` claiming ten skills over a manifest of nine. Reverting Phase 3's sample without its CI steps fails every run. Revert each pair together or not at all.
 
