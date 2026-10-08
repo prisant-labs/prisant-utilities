@@ -267,7 +267,7 @@ The first prints a number no greater than 1024. The second prints 0. The third e
    | # | Mutation | Expected |
    |---|---|---|
    | 1 | None: the sample record and the sample pair | 0 and 0 |
-   | 2 | The first, hand-made walk record, unmodified | 1 (R2, R3) |
+   | 2 | The first, hand-made walk record, unmodified | 1 (R2, R8). Corrected on execution: the plan first said R3, but the record's "PR-20 merge" item is named only in its frontmatter; in its table it is `D9`, a valid id. It has no `## Round` sections, so R8 fires instead |
    | 3 | Blank one decided row's Follow-up cell | 1 (R6) |
    | 4 | Set one T row's Landed to a document path | 1 (R7) |
    | 5 | Drop one `## Round N` section | 1 (R8) |
@@ -278,6 +278,7 @@ The first prints a number no greater than 1024. The second prints 0. The third e
    | 9a | Make D2 in `after.md` a pointer block (`Choice: Recorded in other.md D2`, status Decided, no `Follow-up`) | 0 (W5's exemption is an anti-canary) |
    | 10 | A path that does not exist | 2 |
    | 11 | Remove the R6 check from the pipeline function | the self-test exits 2 |
+   | 11b | Added on execution: remove the round-section check from the record pipeline | the self-test exits 2 |
 
    Canary 11 matters most. It proves the self-test covers the shipped pipeline and not only each check function in isolation, which is how R8 was proven in PR #20.
 8. [ ] **Record every result** in `RESULTS.md`, with the exact output and exit code of each run. Then delete the scratch copies and keep `RESULTS.md`.
@@ -301,7 +302,9 @@ The first prints a number no greater than 1024. The second prints 0. The third e
 
 **Verification:**
 
-`RESULTS.md` shows canary 1 at exit 0 twice, canaries 2 to 9 at exit 1 each, canary 9a at exit 0, canary 10 at exit 2, and canary 11 with the self-test exiting 2. A phase that produces only passing results has tested nothing.
+`RESULTS.md` shows canary 1 at exit 0 twice, canaries 2 to 9 at exit 1 each, canary 9a at exit 0, canary 10 at exit 2, and canaries 11 and 11b with the self-test exiting 2. A phase that produces only passing results has tested nothing.
+
+**Executed 2026-10-08.** All 14 canaries behaved as expected, and each exit 1 named the rule its mutation targeted. The record is in the gitignored canary folder named above. The self-test passed on its first run, so canaries 11 and 11b are what prove it can fail: with R6 removed it reported "R6 a decision with no Follow-up: expected a finding, got none" and exited 2.
 
 ---
 

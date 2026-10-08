@@ -153,3 +153,19 @@ jobs:
         id: bundle-check
         if: always()
         run: python3 skills/plab-audit/scripts/bundle-check.py skills/plab-audit/examples/sample-bundle
+
+      # The resolve-open-items walk checker, in both of its modes, against its
+      # committed sample. Same job as the bundle checker, for the same reason:
+      # branch protection requires status checks by job name, so a new job
+      # would report without gating. The sample walk record is the first
+      # design walk rewritten into the final format; the write-back pair is
+      # one document before and after a walk decided one item. Mutation
+      # results proving each rule can fail are in the effort's canary record.
+      # Exit 2 means the checker could not prove itself. Never read it as clean.
+      - name: The walk checker, against its committed sample walk record
+        if: always()
+        run: python3 skills/plab-resolve-open-items/scripts/walk-check.py record skills/plab-resolve-open-items/examples/sample-walk/walk-record.md
+
+      - name: The walk checker, against its committed write-back pair
+        if: always()
+        run: python3 skills/plab-resolve-open-items/scripts/walk-check.py writeback skills/plab-resolve-open-items/examples/sample-walk/before.md skills/plab-resolve-open-items/examples/sample-walk/after.md
