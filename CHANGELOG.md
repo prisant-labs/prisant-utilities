@@ -11,6 +11,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **`plab-audit` 1.1.0: every appraisal ends with a big-picture section, "Standing back".** By maintainer ruling of 2026-10-06, `appraise.md` gains a seventh, closing section that says what the repository is beyond its parts, what most distinguishes it and what most constrains it, and in a full run names the theme connecting the findings. `bundle-check.py` rule R8 fails an `appraise.md` that does not end with it. Before the committed sample was rewritten, R8 failed both that sample and the real bundle from the skill's 2026-10-06 run on `nonfiction-studio`, which is the canary.
 
+- **`plab-resolve-open-items` 1.0.0: walk through what a session has left open, and write each answer back.** Ask "walk me through the pending questions and decisions" and the skill gathers the open items of the conversation, and of every document the session touched, or of one document you name. It presents them as D (a decision between lettered options, with a recommendation), Q (a question only you can answer, with the default it assumes if skipped) and T (a task only you can do), and takes one line such as `D1 A, Q1: the NAS, T1 later`.
+  - Each answer is written to its item's one home document, on the three surfaces of `references/decisions-section.md`, with a `Follow-up` line naming the work the decision causes. Every other copy gets a pointer.
+  - Silence is never acceptance: an omitted decision is left as found, and an omitted question proceeds on its default, recorded as assumed. A reply with doubt is recorded as `Provisional`. A reply that asks for more comes back in a further round.
+  - A document on another branch is never written; the intended edit is printed instead.
+  - `scripts/walk-check.py` checks every write-back and every walk record, and CI runs it against a committed sample. Fourteen mutation canaries proved each rule can fail.
+  - Not built yet: the `--backlog` sweep across every spec, plan and log, automatic GitHub filing, a GitHub Projects board, gathering across repositories, and a published web page.
+
+### Changed
+
+- **The shared decisions format has seven statuses, by maintainer ruling of 2026-10-08.** `references/decisions-section.md` now lists Open and Needs info before an answer, then Decided, Provisional, Deferred, Canceled and Superseded. `Canceled` replaces `Withdrawn`, which no document used. It also defines the optional `Follow-up` line. Both are additive for the skills that cite the file.
+
+### Fixed
+
+- **`library.json` listed `plab-audit` at 1.0.1 after its `SKILL.md` moved to 1.1.0.** No gate reads per-skill versions in `library.json`, so the drift went unnoticed from PR #20 until the WD-01 implementation plan's parity loop flagged it.
+
 ## [0.6.1] - 2026-10-06
 
 The patch release that the 0.6.0 entry promised. The first full run of `plab-audit` on another repository found three defects in the skill itself, and this release fixes them.

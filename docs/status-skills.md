@@ -2,7 +2,7 @@
 
 The current configuration of every skill in `prisant-utilities`, as declared in the repository. One row per skill, plus the setup each one needs and where its output lands.
 
-**Plugin version:** 0.6.1 **Skills:** 9 (7 auto-discoverable, 2 explicit-invocation only) **Verified against:** `library.json`, `manifest.generated.json`, and each `skills/*/SKILL.md` **As of:** 2026-10-06
+**Plugin version:** 0.7.0 **Skills:** 10 (8 auto-discoverable, 2 explicit-invocation only) **Verified against:** `library.json`, `manifest.generated.json`, and each `skills/*/SKILL.md` **As of:** 2026-10-08
 
 > This file describes what the repository declares, not what is installed on any given machine. To check a local install, read `~/.claude/plugins/installed_plugins.json`.
 
@@ -18,6 +18,7 @@ The current configuration of every skill in `prisant-utilities`, as declared in 
 | `plab-guide` | 2.2.2 | Auto + explicit | `<topic-or-repo-url> [--type repo-url\|tool\|concept] [--out <dir>] [--force]` | `_output/plab-guide/` |
 | `plab-init-project` | 1.3.0 | **Explicit only** | `[--profile minimal\|standard\|public] [--type ...] [--agents ...] [--dry-run]` | The target repository root |
 | `plab-release-plan` | 1.5.1 | Auto + explicit | `--create \| --promote \| --demote \| --update \| --gate` | `docs/internal/release-plans/plan_NN_<slug>/` |
+| `plab-resolve-open-items` | 1.0.0 | Auto + explicit | `[<document>]` | Each item's home document; the walk record in `_local/decisions/` |
 | `plab-spec` | 1.3.3 | Auto + explicit | `--effort <id> [--target-release vX.Y.Z] [--revise] [--dry-run]` | `docs/internal/release-plans/_unassigned/` by default |
 | `plab-strategy-brief` | 1.1.1 | Auto + explicit | `[paste raw thinking]` | `_output/plab-strategy-brief/` |
 | `plab-wrap-session` | 1.7.0 | Auto + explicit | `[mode: quick\|final\|deep\|blocked] [--organize]` | `_local/_session-logs/` (gitignored) |
@@ -135,6 +136,22 @@ Manages a version-scoped release plan folder.
 
 Auto-generates the aggregation table from folder contents and enforces hygiene gates plus a doc-update checklist that gates the tag. **Refuses to invent or modify acceptance criteria**; those live in specs, and the release plan only aggregates.
 
+### `plab-resolve-open-items` 1.0.0
+
+Walks the maintainer through what a session has left open, and writes each answer back to where its question came from.
+
+| Property | Value |
+|---|---|
+| Invocation | **Auto-discoverable from 1.0.0.** Fires on an explicit request to walk what is pending. Do-NOT-fire clauses cover a code walkthrough, a single standalone decision question, and a status question |
+| Default behavior | Gather open items from the conversation and from documents the session touched, present them as D, Q and T, read a one-line answer, write back, and write a walk record |
+| Named-document mode | `[<document>]` walks one document's "Open Questions / Decisions" section alone |
+| Output | Each answered item's home document, on the three surfaces of `references/decisions-section.md`; a pointer in every other copy; the walk record in `_local/decisions/` (gitignored) |
+| Scripts | `walk-check.py`, run by the skill after each write-back and walk record, and by CI against a committed sample. Eight record rules and five write-back rules |
+| Setup required | Python 3 on PATH for the self-check. Without it, the walk still runs and reports its write-backs as unverified |
+| References | 4 files, plus the plugin-root `references/decisions-section.md` |
+
+**Silence is never acceptance.** An omitted decision is left exactly as found, an omitted question proceeds on its stated default and is recorded as assumed, and only an explicit "ok" or "accept the rest" applies recommendations. A document on another branch is never written; the intended edit is printed instead. Not built yet: the `--backlog` sweep across every spec, plan and log, automatic GitHub filing, a Projects board, cross-repository gathering, and a web-page rendering.
+
 ### `plab-init-project` 1.3.0, explicit only
 
 Scaffolds agentic development infrastructure into a repository.
@@ -184,7 +201,7 @@ Used by skills rather than duplicated inside them:
 |---|---|---|
 | `lib/render-mermaid.py` | `plab-guide` | Mermaid diagram rendering |
 | `references/diagrams.md` | `plab-guide` | Diagram conventions |
-| `references/decisions-section.md` | `plab-spec`, `plab-strategy-brief` | Shared decisions-section format. Resolves at plugin root, not skill root |
+| `references/decisions-section.md` | `plab-spec`, `plab-strategy-brief`, `plab-resolve-open-items` | Shared decisions-section format. Resolves at plugin root, not skill root |
 | `scripts/check-dashes.py` | CI | Canary-proven dash detector, invoked by `.github/workflows/gate.yml` |
 
 ---
