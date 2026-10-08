@@ -37,7 +37,7 @@ That record predates the format this plan defines. It has no State or Follow-up 
 
 ## Interpretations this plan makes
 
-None of these adds an acceptance criterion. Each one reads a criterion where the spec leaves the mechanics open. The maintainer confirmed I1, I2, I4 and I5 as written in a walk on 2026-10-07 and 2026-10-08, and confirmed I3 in an amended form, replacing a proposed `Reservation` line with a `Provisional` status. I6 came out of that walk and awaits the maintainer.
+None of these adds an acceptance criterion. Each one reads a criterion where the spec leaves the mechanics open. The maintainer confirmed I1, I2, I4 and I5 as written in a walk on 2026-10-07 and 2026-10-08, and confirmed I3 in an amended form, replacing a proposed `Reservation` line with a `Provisional` status. I6 came out of that walk, and the maintainer confirmed it the same day.
 
 | # | Criterion | The reading |
 |---|---|---|
@@ -46,14 +46,14 @@ None of these adds an acceptance criterion. Each one reads a criterion where the
 | I3 | AC-18 (reservations) | A provisional answer takes the status `Provisional` on all three surfaces, and the maintainer's words of doubt are quoted verbatim in its `Reasoning` line. There is no separate field for them. `Provisional` joins a status list of seven, the maintainer's own: Open and Needs info before an answer, then Decided, Provisional, Deferred, Canceled and Superseded. `Canceled` replaces `Withdrawn`, which no document used. Phase 1 writes the list. |
 | I4 | AC-17 (one home) | A copy of an item outside its home receives a pointer on the three surfaces, not the answer: `Resolution` reads `See <home path> <id>`, the status mirrors the home's status, and the maintainer block's `Choice` reads `Recorded in <home path> <id>`. A pointer block carries no `Follow-up` line, because the follow-up lives in the home. |
 | I5 | AC-9 (branch guard) | A document's branch is the branch checked out in the working tree that contains it. A gitignored document in the current working tree is on the current branch. A document in another worktree of this repository is never written. A document in another repository needs a confirmation first, under AC-15. |
-| I6 | AC-18 (rounds) | **Proposed, awaiting the maintainer.** A reply that holds both a choice and a question records the choice, and the question is answered in the same round. Only a reply with no choice is re-presented. Requirement 19 says a question back leaves an item unanswered, but it does not say which wins when a reply holds both. Both hand walks recorded such replies as decided. |
+| I6 | AC-18 (rounds) | **Confirmed by the maintainer, 2026-10-08.** A reply that holds both a choice and a question records the choice, and the question is answered in the same round. Only a reply with no choice is re-presented. Requirement 19 says a question back leaves an item unanswered, but it does not say which wins when a reply holds both. Both hand walks recorded such replies as decided. |
 
 ## Preconditions, verify before starting
 
 - [x] PR #22 (D9 and D10 ratified into the spec) merged as `bf6c675`, with all four CI checks green. Verified 2026-10-07.
 - [x] This terminal loads plugin 0.6.1. Verified 2026-10-07 from a skill's base directory line.
 - [x] This plan is merged to `main`, as PR #23 (`2d8a483`), 2026-10-08.
-- [ ] The maintainer has confirmed or overruled I6. I1 to I5 were confirmed on 2026-10-08, I3 in its amended form.
+- [x] The maintainer confirmed I1 to I6 on 2026-10-08, I3 in an amended form.
 - [ ] A branch exists for the build: `feat/plab-resolve-open-items`, cut from `main` after this plan merges.
 
 ## Completion Status
