@@ -44,7 +44,7 @@ None of these adds an acceptance criterion. Each one reads a criterion where the
 | I1 | AC-16 (deferred work named) | The frontmatter description names only the `--backlog` mode, because it is the deferred feature a user would ask for. The SKILL.md body and the usage README name all five. AC-16 says "description and documentation", and the frontmatter description is always-on context, paid for in every session. |
 | I2 | AC-8 and AC-6 (write-back and skips) | An answered Q item that has a home document is written back like a D item. D4 (where answers are recorded) chose write-back "for a sourced item", not for D items only. A skipped Q item is written nowhere but the walk record, where it is marked assumed. |
 | I3 | AC-18 (reservations) | A provisional answer keeps the status `Decided`. Its `Choice` line ends with `(provisional)`, a new optional `Reservation` line holds the maintainer's words verbatim, and the table's `Resolution` cell ends with `, provisional`. No sixth status is added. This follows D4's own block. |
-| I4 | AC-17 (one home) | A copy of an item outside its home receives a pointer on the three surfaces, not the answer: `Resolution` reads `See <home path> <id>`, the status mirrors the home's status, and the maintainer block's `Choice` reads `Recorded in <home path> <id>`. |
+| I4 | AC-17 (one home) | A copy of an item outside its home receives a pointer on the three surfaces, not the answer: `Resolution` reads `See <home path> <id>`, the status mirrors the home's status, and the maintainer block's `Choice` reads `Recorded in <home path> <id>`. A pointer block carries no `Follow-up` line, because the follow-up lives in the home. |
 | I5 | AC-9 (branch guard) | A document's branch is the branch checked out in the working tree that contains it. A gitignored document in the current working tree is on the current branch. A document in another worktree of this repository is never written. A document in another repository needs a confirmation first, under AC-15. |
 
 ## Preconditions, verify before starting
@@ -228,7 +228,7 @@ The first prints a number no greater than 1024. The second prints 0. The third e
    - W2: Each item subsection is identical from the line after its header down to the `---` rule before its maintainer block. Only the header's trailing `(status)` may differ (AC-8).
    - W3: In the summary table, only the `Resolution`, `Status` and `Updated` cells may differ. No row is added or removed, and no `ID` or `Title` changes.
    - W4: For each changed item, the table status, the header status and the block's `Status` line agree.
-   - W5: Each changed block whose status is `Decided` carries a `Follow-up` line (AC-19).
+   - W5: Each changed block whose status is `Decided` carries a `Follow-up` line (AC-19). A pointer block, whose `Choice` begins `Recorded in`, is exempt, per interpretation I4.
    - A file that is missing, or has no decisions section, exits 2. A changed item count is a finding and exits 1.
 4. [ ] **Build the sample walk record** by rewriting the first walk record into the final format. Keep its three rounds, its replies verbatim, and every item. Give the "PR-20 merge" item the series letter D. Add the State and Follow-up columns. Replace every gitignored or machine-specific path with a plain-language description.
 5. [ ] **Build the write-back pair.** `before.md` holds a decisions section of three items: D1 Open, D2 Open, and Q1 Needs info with a stated default. `after.md` decides D1 with a `Follow-up` line on all three surfaces, leaves D2 untouched (a skipped D), and leaves Q1 untouched (an assumed Q).
@@ -246,6 +246,7 @@ The first prints a number no greater than 1024. The second prints 0. The third e
    | 7 | Change one table Title in `after.md` | 1 (W3) |
    | 8 | Leave the header at `(Open)` while the block says Decided | 1 (W4) |
    | 9 | Delete the `Follow-up` line from D1's block in `after.md` | 1 (W5) |
+   | 9a | Make D2 in `after.md` a pointer block (`Choice: Recorded in other.md D2`, status Decided, no `Follow-up`) | 0 (W5's exemption is an anti-canary) |
    | 10 | A path that does not exist | 2 |
    | 11 | Remove the R6 check from the pipeline function | the self-test exits 2 |
 
@@ -271,7 +272,7 @@ The first prints a number no greater than 1024. The second prints 0. The third e
 
 **Verification:**
 
-`RESULTS.md` shows canary 1 at exit 0 twice, canaries 2 to 9 at exit 1 each, canary 10 at exit 2, and canary 11 with the self-test exiting 2. A phase that produces only passing results has tested nothing.
+`RESULTS.md` shows canary 1 at exit 0 twice, canaries 2 to 9 at exit 1 each, canary 9a at exit 0, canary 10 at exit 2, and canary 11 with the self-test exiting 2. A phase that produces only passing results has tested nothing.
 
 ---
 
@@ -393,7 +394,7 @@ All three gates exit 0. The loop prints a count of at least 1 for each of the fi
 
 2. [ ] **Write `fixture.md`**, a document whose decisions section follows `references/decisions-section.md`. It holds five D items (D1 to D5) and one Q item with a stated default. Make D4 architectural: it must state alternatives considered and be hard to reverse, so that it meets the ADR bar. Write `fixture-b.md` with two D items and one Q item. Copy both to `*.before.md` beside them.
 3. [ ] **Create the branch-guard worktree:** `git worktree add ../prisant-utilities-wd01-trial -b trial/wd01-branch-guard`. In it, write `_local/branch-guard.md` with one Open D item in the same format, and record its SHA-256 hash.
-4. [ ] **Copy the maintainer's private design brief** for this skill, dated 2026-10-04 and kept in the gitignored ideas folder, to a pre-trial copy. Its Q1 is the same item as the spec's Q1, and the spec is its home, so it tests the one-home rule.
+4. [ ] **Make pre-trial copies of `spec.md` and of the maintainer's private design brief** for this skill, dated 2026-10-04 and kept in the gitignored ideas folder. Copy each into `_local/verification/wd01-trial/`. The brief's Q1 is the same item as the spec's Q1, and the spec is its home, so the pair tests the one-home rule. Do not use `git show HEAD:` as the spec's "before": Phase 2 already changed the spec's status, and Phase 2 step 6 explains why `HEAD` is not a safe baseline.
 5. [ ] **Start a fresh Claude Code session** in the repository root, because `/clear` does not reload skills. When the skill first loads, confirm that its base directory line names the `.claude\skills\plab-resolve-open-items` junction. On Windows the line uses backslashes.
 6. [ ] **Touch the sources.** Ask the session to read `fixture.md`, the worktree's `branch-guard.md`, `spec.md` and the design brief. Then say two things in conversation: "I haven't decided whether the trial results go in RESULTS.md or a session log" (a sourceless Q), and "I still need to delete the decision-21 canary clone" (a T item). Do not let it read the maintainer's decision register, because that register's absence from the walk is the AC-1 test.
 7. [ ] **Ask for the walk** with the maintainer's own words: "Walk me through the pending questions, decisions, and needed clarifications." Check the presentation against AC-1 to AC-4 and AC-17. No item may come from the decision register. Q1 must appear once, naming the spec as its home. Every D item has options and a recommendation with confidence. Every Q item has a default. The T item has done, later and drop.
@@ -413,8 +414,8 @@ All three gates exit 0. The loop prints a count of at least 1 for each of the fi
     | Check | Criteria | Pass condition |
     |---|---|---|
     | `walk-check.py writeback fixture.before.md fixture.md` | AC-8, AC-18, AC-19 | Exit 0. D1 is provisional with the reservation verbatim. D2, D3 and D4 are decided with Follow-up lines. D5 is unchanged. |
-    | `walk-check.py writeback <spec at bf6c675 or later> spec.md` | AC-8, AC-19 | Exit 0. Q1 is decided, with a Follow-up line. |
-    | `walk-check.py writeback <brief copy> <brief>` | AC-17 | Exit 0, and Q1 carries a pointer to the spec, not the answer. |
+    | `walk-check.py writeback <spec pre-trial copy> spec.md` | AC-8, AC-19 | Exit 0. Q1 is decided, with a Follow-up line. |
+    | `walk-check.py writeback <brief pre-trial copy> <brief>` | AC-17 | Exit 0, and Q1 carries a pointer block to the spec, with no answer and no Follow-up line. |
     | The hash of the worktree's `branch-guard.md` | AC-9 | Unchanged, and the session printed the intended edit naming `trial/wd01-branch-guard`. |
     | The walk records in `_local/decisions/` | AC-10, AC-11 | Two records exist, and `walk-check.py record` exits 0 on each. |
     | The first walk record | AC-6, AC-18, AC-20 | Two rounds. Fixture D5 is `unanswered` and `not written`. The fixture Q and the conversation Q are `assumed`. The T item is `later` and `walk record only`. |
@@ -508,5 +509,5 @@ There is no schema change and no data migration. To undo the whole effort:
 - [ ] `python scripts/version-parity-check.py` exits 0
 - [ ] `node <agent-skills-toolkit>/scripts/check.mjs .` exits 0
 - [ ] `.github/workflows/gate.yml` contains both walk-checker steps
-- [ ] Phase 3's canary record shows eight exit-1 results, one exit-2 result, and a self-test failure, not only passes
+- [ ] Phase 3's canary record shows eight exit-1 results, one exit-2 result, a self-test failure, and the passing W5 anti-canary, not only passes
 - [ ] Every per-skill version in `library.json` matches its `SKILL.md`, per the Phase 4 loop
