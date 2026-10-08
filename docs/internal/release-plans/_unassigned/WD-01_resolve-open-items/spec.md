@@ -6,7 +6,7 @@ status: draft
 created: 2026-10-05
 updated: 2026-10-07
 linked-effort: "the maintainer's private walk-decisions strategy brief, 2026-10-04"
-linked-plan: null
+linked-plan: implementation-plan.md
 linked-release: null
 ac-count: 20
 source-count: 7
@@ -19,10 +19,10 @@ priority: P2
 ## Task Summary
 
 **Status:** draft
-**Last updated:** 2026-10-07 by claude (Opus 5.5), D9 and D10 ratified and written into scope, requirements and criteria (revision 2)
-**Linked plan:** not yet planned
+**Last updated:** 2026-10-07 by claude (Opus 5.5), implementation plan linked (revision 3)
+**Linked plan:** `implementation-plan.md` in this folder
 **Open questions:** 1 (Q1 Needs info, skipped twice with its default in effect; see Open Questions / Decisions)
-**Revisions:** 2
+**Revisions:** 3
 
 ### Acceptance Criteria Fulfillment
 
@@ -224,6 +224,7 @@ A walk presents D1 through D3 and Q1. The maintainer answers "D2 B, Q1: the NAS,
 | 2026-10-05 | claude | added | Initial draft created |
 | 2026-10-07 | claude | changed | Recorded the maintainer's answers to D1 to D8 from walks on 2026-10-06 and 2026-10-07. Renamed the skill `plab-resolve-open-items` (D1) and the backlog mode `--backlog`. Widened gathering to a single named document (D2, option C: Scope item 1, Requirement 1, AC-1; `ac-count` unchanged). Added the Backlog section, rows D2 and D8 so this document is the single home for all nine items, and two new Proposed items, D9 and D10 |
 | 2026-10-07 | claude | changed | The maintainer ratified D9 (three answer rules) and D10 (T series). Written into Scope items 2 and 13 to 15, Requirements 3, 5 and 18 to 21, AC-2 and AC-4, and new AC-17 to AC-20; `ac-count` 16 to 20 |
+| 2026-10-07 | claude | changed | Linked `implementation-plan.md`, which covers all 20 criteria in seven phases. D9's Follow-up line now names Phase 1 of that plan. No criterion changed |
 
 ## Sources & Evidence
 
@@ -504,7 +505,7 @@ A walk presents D1 through D3 and Q1. The maintainer answers "D2 B, Q1: the NAS,
 > * **Status:** Decided
 > * **Choice:** Option A, all three rules: one home per item, answer states for a reservation and for a request for more, and a follow-up named for every decided item.
 > * **Reasoning:** Selected as recommended, once the item was explained as a spec change parked as Proposed. Written into Requirements 18 to 20 and AC-17 to AC-19.
-> * **Follow-up:** Implementation amends `references/decisions-section.md` to define the optional `Follow-up` line; tracked in this effort's implementation plan, not yet written.
+> * **Follow-up:** Implementation amends `references/decisions-section.md` to define the optional `Follow-up` line; tracked in Phase 1 of this effort's `implementation-plan.md`.
 > * **Decided by / date:** jp / 2026-10-07. Proposed by claude the same day, raised in the walk as its D10; the maintainer said they did not know what to do with it, and it was parked here as Proposed.
 
 ### D10: A third series for maintainer tasks (Decided)
