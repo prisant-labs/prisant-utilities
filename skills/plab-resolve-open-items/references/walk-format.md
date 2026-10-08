@@ -7,7 +7,7 @@ How a walk finds its items, sorts them into series, gives each one home, and sho
 A walk gathers from exactly two sources.
 
 1. **This conversation.** An item is open here when the agent asked the maintainer something that got no answer, proposed a choice the maintainer did not rule on, said a choice needs the maintainer, or named a task only the maintainer can do. A question the agent could answer by reading a file is not an item; answer it instead.
-2. **Documents this session has touched.** A document is touched when this session has read it or written to it. Its items are the entries in its "Open Questions / Decisions" section whose status is `Open` or `Needs info`. Items already `Decided`, `Provisional`, `Deferred`, `Canceled` or `Superseded` are settled and are not gathered.
+2. **Documents this session has touched.** A document is touched when this session has read it or written to it. Its items are the entries in its "Open Questions / Decisions" section whose status is `Open` or `Needs info`. Items already `Decided`, `Provisional`, `Deferred`, `Canceled` or `Superseded` are settled and are not gathered. An item whose status is none of the seven, such as `Proposed`, `Ratified` or `Needs ruling`, is not silently skipped: present it as open, and name its unrecognized status in the source line, so the maintainer can settle the item and its status together.
 
 Nothing else is a source: not a document the session never opened, not another repository, and not the session-log store. Sweeping those is the `--backlog` mode, which is not built.
 

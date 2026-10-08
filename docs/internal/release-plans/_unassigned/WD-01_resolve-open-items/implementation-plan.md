@@ -279,6 +279,8 @@ The first prints a number no greater than 1024. The second prints 0. The third e
    | 10 | A path that does not exist | 2 |
    | 11 | Remove the R6 check from the pipeline function | the self-test exits 2 |
    | 11b | Added on execution: remove the round-section check from the record pipeline | the self-test exits 2 |
+   | 12 | Added on execution: the real WD-01 spec against itself | 0, with the parser extracting all eleven items |
+   | 13 | Added on execution: the real spec before and after PR #22 (D9 and D10 ratified, plus requirement edits) | 1, W1 only |
 
    Canary 11 matters most. It proves the self-test covers the shipped pipeline and not only each check function in isolation, which is how R8 was proven in PR #20.
 8. [ ] **Record every result** in `RESULTS.md`, with the exact output and exit code of each run. Then delete the scratch copies and keep `RESULTS.md`.
@@ -464,7 +466,8 @@ All three gates exit 0. The loop prints a count of at least 1 for each of the fi
 
     Re-verify the event shape on the first run: the grep assumes compact JSON with a `"name":"Skill"` tool-use field. It must fire, with a count of at least 1, on: "Walk me through the pending questions, decisions, and needed clarifications.", "resolve open items", and "what do you need me to decide before we go on?" It must not fire, with a count of 0, on: "Walk me through how skills/plab-audit/scripts/bundle-check.py works.", "Should walk records go in _local/decisions or docs/decisions? Just tell me which.", and "Where are we?"
 14. [ ] **Fix and repeat.** A failed check is fixed in `skills/plab-resolve-open-items/`, which the junction exposes at once, and re-run in a fresh session. Record the failure and the fix in `RESULTS.md` rather than overwriting it.
-15. [ ] **Tick each proven criterion** in the spec's Task Summary. Update its `**Open questions:**` line, because Q1 is now answered. Leave unticked any criterion that did not pass, and say why in `RESULTS.md`.
+15. [ ] **Run every step-12 check first.** The Task Summary and the spec's `updated:` frontmatter sit outside the decisions section, so editing them before step 12's `writeback` check makes W1 fire on this step's own edit. The skill itself must not touch either, under AC-8.
+    **Tick each proven criterion** in the spec's Task Summary. Update its `**Open questions:**` line, because Q1 is now answered. Leave unticked any criterion that did not pass, and say why in `RESULTS.md`.
 16. [ ] **Clean up.** Run `git worktree remove ../prisant-utilities-wd01-trial` and `git branch -D trial/wd01-branch-guard`. Keep the junction until Phase 7, step 7.
 
 **Verification:**

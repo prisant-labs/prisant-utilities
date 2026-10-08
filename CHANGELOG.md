@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **The shared decisions format has seven statuses, by maintainer ruling of 2026-10-08.** `references/decisions-section.md` now lists Open and Needs info before an answer, then Decided, Provisional, Deferred, Canceled and Superseded. `Canceled` replaces `Withdrawn`, which no document used. It also defines the optional `Follow-up` line. Both are additive for the skills that cite the file.
+- **The shared decisions format has seven statuses, by maintainer ruling of 2026-10-08.** `references/decisions-section.md` now lists Open and Needs info before an answer, then Decided, Provisional, Deferred, Canceled and Superseded. `Canceled` replaces `Withdrawn`. It also defines the optional `Follow-up` line. Neither change alters any existing document: a search of every tracked Markdown file found no item using `Withdrawn`, and no skill restates the vocabulary.
 
 ### Fixed
 
