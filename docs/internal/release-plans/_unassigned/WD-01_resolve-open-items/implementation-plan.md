@@ -2,7 +2,7 @@
 id: WD-01
 title: "Implementation plan: plab-resolve-open-items, the in-session walk of open questions and decisions"
 type: implementation-plan
-status: draft
+status: in-progress
 created: 2026-10-07
 updated: 2026-10-08
 linked-spec: spec.md
@@ -60,11 +60,11 @@ None of these adds an acceptance criterion. Each one reads a criterion where the
 
 | Phase | Goal | Fulfills AC | Owner | Status |
 |---|---|---|---|---|
-| P1 | The shared decisions format has seven statuses and defines `Follow-up` | AC-18, AC-19 (format halves) | agent | Not started |
-| P2 | The skill is authored under `skills/` | AC-1 to AC-20, authored | agent | Not started |
-| P3 | The walk checker exists, runs in CI, and is proven to fail | AC-6, AC-8, AC-10, AC-18, AC-19, AC-20 (deterministic halves) | agent | Not started |
-| P4 | `library.json` registers ten skills at plugin 0.7.0, and the manifests agree | AC-14 (invocation setting) | agent | Not started |
-| P5 | Every human-facing file names the new skill | AC-16 (documentation half) | agent | Not started |
+| P1 | The shared decisions format has seven statuses and defines `Follow-up` | AC-18, AC-19 (format halves) | agent | **Done** 2026-10-08, `d5b21fd` |
+| P2 | The skill is authored under `skills/` | AC-1 to AC-20, authored | agent | **Done** 2026-10-08, `6031624` |
+| P3 | The walk checker exists, runs in CI, and is proven to fail | AC-6, AC-8, AC-10, AC-18, AC-19, AC-20 (deterministic halves) | agent | **Done** 2026-10-08, `a55b8de`, 14 canaries |
+| P4 | `library.json` registers ten skills at plugin 0.7.0, and the manifests agree | AC-14 (invocation setting) | agent | **Done** 2026-10-08, `d3d295d` |
+| P5 | Every human-facing file names the new skill | AC-16 (documentation half) | agent | **Done** 2026-10-08, `29108f1` |
 | P6 | A live walk proves the behaviour | AC-1 to AC-15 and AC-17 to AC-20 (behaviour, including AC-14's trigger test) | agent and maintainer | Not started |
 | P7 | v0.7.0 ships with `plab-audit` 1.1.0 and loads from the cache | N/A (release) | agent and maintainer | Not started |
 
