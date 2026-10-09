@@ -4,9 +4,9 @@ Agent navigation entrypoint for the `prisant-utilities` plugin.
 
 ## What this is
 
-Nine general-purpose agent skills for the work around the work: scaffolding a repository for agent-assisted development, closing and resuming coding sessions, turning raw thinking into a decision-ready brief, producing guide bundles, getting a second model to review a document, auditing a repository and reordering its backlog on evidence, and carrying a feature from written specification through to a taggable release plan.
+Ten general-purpose agent skills for the work around the work: scaffolding a repository for agent-assisted development, closing and resuming coding sessions, turning raw thinking into a decision-ready brief, producing guide bundles, getting a second model to review a document, auditing a repository and reordering its backlog on evidence, carrying a feature from written specification through to a taggable release plan, and walking the maintainer through the questions and decisions a session leaves open.
 
-Two of the nine ship with `disable-model-invocation: true` and run only when invoked by name.
+Two of the ten ship with `disable-model-invocation: true` and run only when invoked by name.
 
 `plab-init-project` scaffolds files into a repository root, its trigger phrases ("init", "initialize", "set up") are among the most common words in ordinary conversation, and it is run once per repository rather than routinely.
 
@@ -117,6 +117,14 @@ Initialize agent development infrastructure in a repository: `AGENTS.md`, `CLAUD
 Audit a repository and produce a five-file bundle: what it is and is worth, what is wrong with it with a file path on every finding, and what to do next ranked and traceable. Three composable modes, `--appraise`, `--audit` and `--roadmap`, defaulting to all three. Detects repository type from disk (`agent-plugin`, `tauri`, `generic`) and runs that type's deterministic tools first, recording every command and exit code in a coverage statement naming what was read, sampled and skipped, so a missing tool becomes a recorded gap rather than a silence. Every candidate finding is reconciled against the repository's own recorded decisions before it is published; on the fixture run that specified the skill, that step withdrew 7 of 15 candidates including the two highest-ranked. Its own output is gated by `skills/plab-audit/scripts/bundle-check.py`, which CI runs against the committed sample under `skills/plab-audit/examples/sample-bundle/`.
 
 **Invocation:** manual only (`disable-model-invocation: true`). `/plab-audit`.
+
+---
+
+### plab-resolve-open-items
+
+Walk the maintainer through the open questions, decisions and tasks a session has raised, take a one-line answer such as `D1 A, Q1: the NAS`, and write each answer back to its home document. Items are gathered from the conversation and from the "Open Questions / Decisions" sections of documents the session has touched, or from one document the maintainer names. Each answer lands on the three surfaces `references/decisions-section.md` defines, with a `Follow-up` line naming the work the decision causes, and every other copy of the item gets a pointer to its home. Silence is never acceptance: an omitted decision is left as found, and an omitted question proceeds on its stated default, recorded as assumed. Every walk writes a local walk record. Both the write-back and the record are checked by `skills/plab-resolve-open-items/scripts/walk-check.py`, which CI runs against the committed sample under `skills/plab-resolve-open-items/examples/sample-walk/`. The `--backlog` sweep across every spec, plan and log is not built yet.
+
+**Invocation:** auto-discoverable from 1.0.0. Fires on an explicit request to walk what is pending: "walk me through the pending questions and decisions", "resolve open items". Its description carries do-NOT-fire clauses for a code walkthrough, a single standalone decision question, and a status question.
 
 ---
 

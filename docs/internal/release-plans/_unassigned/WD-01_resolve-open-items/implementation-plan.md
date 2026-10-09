@@ -2,7 +2,7 @@
 id: WD-01
 title: "Implementation plan: plab-resolve-open-items, the in-session walk of open questions and decisions"
 type: implementation-plan
-status: draft
+status: in-progress
 created: 2026-10-07
 updated: 2026-10-08
 linked-spec: spec.md
@@ -60,11 +60,11 @@ None of these adds an acceptance criterion. Each one reads a criterion where the
 
 | Phase | Goal | Fulfills AC | Owner | Status |
 |---|---|---|---|---|
-| P1 | The shared decisions format has seven statuses and defines `Follow-up` | AC-18, AC-19 (format halves) | agent | Not started |
-| P2 | The skill is authored under `skills/` | AC-1 to AC-20, authored | agent | Not started |
-| P3 | The walk checker exists, runs in CI, and is proven to fail | AC-6, AC-8, AC-10, AC-18, AC-19, AC-20 (deterministic halves) | agent | Not started |
-| P4 | `library.json` registers ten skills at plugin 0.7.0, and the manifests agree | AC-14 (invocation setting) | agent | Not started |
-| P5 | Every human-facing file names the new skill | AC-16 (documentation half) | agent | Not started |
+| P1 | The shared decisions format has seven statuses and defines `Follow-up` | AC-18, AC-19 (format halves) | agent | **Done** 2026-10-08, `d5b21fd` |
+| P2 | The skill is authored under `skills/` | AC-1 to AC-20, authored | agent | **Done** 2026-10-08, `6031624` |
+| P3 | The walk checker exists, runs in CI, and is proven to fail | AC-6, AC-8, AC-10, AC-18, AC-19, AC-20 (deterministic halves) | agent | **Done** 2026-10-08, `a55b8de`, 14 canaries |
+| P4 | `library.json` registers ten skills at plugin 0.7.0, and the manifests agree | AC-14 (invocation setting) | agent | **Done** 2026-10-08, `d3d295d` |
+| P5 | Every human-facing file names the new skill | AC-16 (documentation half) | agent | **Done** 2026-10-08, `29108f1` |
 | P6 | A live walk proves the behaviour | AC-1 to AC-15 and AC-17 to AC-20 (behaviour, including AC-14's trigger test) | agent and maintainer | Not started |
 | P7 | v0.7.0 ships with `plab-audit` 1.1.0 and loads from the cache | N/A (release) | agent and maintainer | Not started |
 
@@ -188,7 +188,7 @@ Modify `docs/internal/release-plans/_unassigned/WD-01_resolve-open-items/spec.md
    - The one-home rule of Requirement 18: a tracked document closest to the work wins over an untracked one, and a tie between two tracked documents becomes a Q item asking which is the home (AC-17).
 5. [ ] **Write `references/answer-line.md`** (reading the answer). It must define:
    - The grammar. Split the line at each item id (`Q<n>`, `D<n>`, `T<n>`). An option letter directly after an id is the choice. Text after a colon is free text, kept verbatim. Any other text left in an item's segment goes to step 6 for interpretation.
-   - The answer states, by series. D: `decided`, `provisional`, `deferred`, `unanswered`. Q: `decided`, `provisional`, `assumed`. T: `done`, `later`, `drop`, `open`.
+   - The answer states, by series. D: `decided`, `provisional`, `deferred`, `canceled`, `unanswered`. `canceled` follows the maintainer's seven statuses of 2026-10-08. Q: `decided`, `provisional`, `assumed`. T: `done`, `later`, `drop`, `open`.
    - Skips (AC-6): an omitted D item stays `unanswered` and is written nowhere, while an omitted Q item becomes `assumed` on its stated default. An omitted T item stays `open`.
    - Explicit acceptance (AC-7). "ok", "accept all", "accept the rest" and "yes to all" accept every presented item's recommendation or default, and each such item is recorded `decided`. A line that merely omits an item accepts nothing.
    - Leftover text, which the model interprets, never the grammar. Words of doubt such as "but I'm not sure" or "i guess" make the answer `provisional`, and the words are kept verbatim for its `Reasoning` line. A request for more context, a question back, or "I don't understand this" leaves the item unanswered and queues it for the next round with more context (AC-18). A reply holding both a choice and a question follows interpretation I6.
@@ -267,7 +267,7 @@ The first prints a number no greater than 1024. The second prints 0. The third e
    | # | Mutation | Expected |
    |---|---|---|
    | 1 | None: the sample record and the sample pair | 0 and 0 |
-   | 2 | The first, hand-made walk record, unmodified | 1 (R2, R3) |
+   | 2 | The first, hand-made walk record, unmodified | 1 (R2, R8). Corrected on execution: the plan first said R3, but the record's "PR-20 merge" item is named only in its frontmatter; in its table it is `D9`, a valid id. It has no `## Round` sections, so R8 fires instead |
    | 3 | Blank one decided row's Follow-up cell | 1 (R6) |
    | 4 | Set one T row's Landed to a document path | 1 (R7) |
    | 5 | Drop one `## Round N` section | 1 (R8) |
@@ -278,6 +278,9 @@ The first prints a number no greater than 1024. The second prints 0. The third e
    | 9a | Make D2 in `after.md` a pointer block (`Choice: Recorded in other.md D2`, status Decided, no `Follow-up`) | 0 (W5's exemption is an anti-canary) |
    | 10 | A path that does not exist | 2 |
    | 11 | Remove the R6 check from the pipeline function | the self-test exits 2 |
+   | 11b | Added on execution: remove the round-section check from the record pipeline | the self-test exits 2 |
+   | 12 | Added on execution: the real WD-01 spec against itself | 0, with the parser extracting all eleven items |
+   | 13 | Added on execution: the real spec before and after PR #22 (D9 and D10 ratified, plus requirement edits) | 1, W1 only |
 
    Canary 11 matters most. It proves the self-test covers the shipped pipeline and not only each check function in isolation, which is how R8 was proven in PR #20.
 8. [ ] **Record every result** in `RESULTS.md`, with the exact output and exit code of each run. Then delete the scratch copies and keep `RESULTS.md`.
@@ -301,7 +304,9 @@ The first prints a number no greater than 1024. The second prints 0. The third e
 
 **Verification:**
 
-`RESULTS.md` shows canary 1 at exit 0 twice, canaries 2 to 9 at exit 1 each, canary 9a at exit 0, canary 10 at exit 2, and canary 11 with the self-test exiting 2. A phase that produces only passing results has tested nothing.
+`RESULTS.md` shows canary 1 at exit 0 twice, canaries 2 to 9 at exit 1 each, canary 9a at exit 0, canary 10 at exit 2, and canaries 11 and 11b with the self-test exiting 2. A phase that produces only passing results has tested nothing.
+
+**Executed 2026-10-08.** All 14 canaries behaved as expected, and each exit 1 named the rule its mutation targeted. The record is in the gitignored canary folder named above. The self-test passed on its first run, so canaries 11 and 11b are what prove it can fail: with R6 removed it reported "R6 a decision with no Follow-up: expected a finding, got none" and exited 2.
 
 ---
 
@@ -461,7 +466,8 @@ All three gates exit 0. The loop prints a count of at least 1 for each of the fi
 
     Re-verify the event shape on the first run: the grep assumes compact JSON with a `"name":"Skill"` tool-use field. It must fire, with a count of at least 1, on: "Walk me through the pending questions, decisions, and needed clarifications.", "resolve open items", and "what do you need me to decide before we go on?" It must not fire, with a count of 0, on: "Walk me through how skills/plab-audit/scripts/bundle-check.py works.", "Should walk records go in _local/decisions or docs/decisions? Just tell me which.", and "Where are we?"
 14. [ ] **Fix and repeat.** A failed check is fixed in `skills/plab-resolve-open-items/`, which the junction exposes at once, and re-run in a fresh session. Record the failure and the fix in `RESULTS.md` rather than overwriting it.
-15. [ ] **Tick each proven criterion** in the spec's Task Summary. Update its `**Open questions:**` line, because Q1 is now answered. Leave unticked any criterion that did not pass, and say why in `RESULTS.md`.
+15. [ ] **Run every step-12 check first.** The Task Summary and the spec's `updated:` frontmatter sit outside the decisions section, so editing them before step 12's `writeback` check makes W1 fire on this step's own edit. The skill itself must not touch either, under AC-8.
+    **Tick each proven criterion** in the spec's Task Summary. Update its `**Open questions:**` line, because Q1 is now answered. Leave unticked any criterion that did not pass, and say why in `RESULTS.md`.
 16. [ ] **Clean up.** Run `git worktree remove ../prisant-utilities-wd01-trial` and `git branch -D trial/wd01-branch-guard`. Keep the junction until Phase 7, step 7.
 
 **Verification:**

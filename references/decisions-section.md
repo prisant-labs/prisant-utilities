@@ -49,10 +49,14 @@ Three required parts, in this order:
 | Status | Meaning |
 |--------|---------|
 | `Open` | Awaiting maintainer decision. Default for a newly added item. |
-| `Decided` | Maintainer has chosen. Outcome and reasoning recorded in the maintainer block. |
-| `Deferred` | Intentionally postponed. The decision is to not decide yet; note when to revisit. |
 | `Needs info` | Blocked on clarification. Usually triggers a re-run of the producing skill. |
-| `Withdrawn` | No longer relevant. Keep the row for traceability; do not delete history. |
+| `Decided` | Maintainer has chosen. Outcome and reasoning recorded in the maintainer block. |
+| `Provisional` | Maintainer has chosen but said they were unsure. The choice is in force, and the maintainer's words of doubt are quoted verbatim in `Reasoning`. |
+| `Deferred` | Intentionally postponed. The decision is to not decide yet; note when to revisit. |
+| `Canceled` | No longer relevant. Keep the row for traceability; do not delete history. |
+| `Superseded` | Replaced by a later decision. `Choice` names the item or record that replaced it. Keep the row for traceability. |
+
+The first two statuses come before an answer. The other five are what an answer can be. `Canceled` replaced `Withdrawn` in 2026-10; no document had used the old name.
 
 ### Part B: Per-item subsection
 
@@ -109,6 +113,14 @@ When the maintainer decides, the block fills:
 >   resolves the staleness concern without adding a manual step.
 > * **Decided by / date:** jp / 2026-06-16
 ```
+
+An optional `Follow-up` line may follow `Reasoning`:
+
+```markdown
+> * **Follow-up:** <the action this decision requires, and where that action is tracked>, or "None needed."
+```
+
+`Follow-up` separates a decision from the work it causes. A decision can be recorded as made and still sit unbuilt, with no status that says so. The line names what has to happen next and where that is tracked, or states that nothing does. `plab-resolve-open-items` writes it on every item it records as `Decided` or `Provisional`.
 
 Optionally, a clarification request can follow the decision block when the maintainer is blocked on a question for the agent:
 
