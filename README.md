@@ -40,7 +40,7 @@ Then invoke any skill by name, for example `/plab-wrap-session`.
 
 **Generated artifacts** are written to `_output/<skill-name>/` relative to your working directory. Every producing skill accepts an explicit destination to override that. Add `_output/` to your `.gitignore`.
 
-That applies to the content-producing skills. The three planning skills write where their artifacts belong instead: `plab-spec` and `plab-release-plan` into per-effort folders under `docs/internal/release-plans/`, and `plab-init-project` into the repository it is scaffolding, with its dry-run and onboarding reports under `_local/plab-init-project/`.
+That applies to the content-producing skills. The three planning skills write where their artifacts belong instead: `plab-spec` and `plab-release-plan` into per-effort folders under `docs/internal/release-plans/`, and `plab-init-project` into the repository it is scaffolding, with its dry-run and onboarding reports under `_local/plab-init-project/`. `plab-resolve-open-items` writes each answer into the document its question came from, and keeps its walk record in `_local/decisions/`, which is expected to be gitignored.
 
 **Session logs** are written to `_local/_session-logs/`, which is expected to be gitignored. They are local working notes and are not intended to be committed. Once a store has been running a while, `/plab-wrap-session --organize` files logs from closed months into `YYYY-MM/` subfolders; `/plab-continue-session` reads the flat store and those month folders as one set, so resume keeps working either way.
 

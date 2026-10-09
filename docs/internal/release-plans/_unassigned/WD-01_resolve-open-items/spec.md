@@ -49,7 +49,7 @@ priority: P2
 
 ### Currently In Progress
 
-None.
+Phases 1 to 5 of `implementation-plan.md` are built and merged (PR #25, 2026-10-08). Next is Phase 6, the live walk in a fresh session, which is what ticks these criteria. No box is ticked yet, because no criterion has been proven by a real walk.
 
 ---
 
