@@ -5,7 +5,9 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.7.0] - 2026-10-09
+
+Adds a tenth skill, `plab-resolve-open-items`, and ships `plab-audit` 1.1.0. The new skill ships before its live-walk trial, by maintainer ruling of 2026-10-09: the plugin's only user chose to run that trial against the installed release. A defect it finds ships as a patch release, as 0.6.1 did for `plab-audit`.
 
 ### Added
 

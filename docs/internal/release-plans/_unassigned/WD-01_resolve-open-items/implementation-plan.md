@@ -66,7 +66,7 @@ None of these adds an acceptance criterion. Each one reads a criterion where the
 | P4 | `library.json` registers ten skills at plugin 0.7.0, and the manifests agree | AC-14 (invocation setting) | agent | **Done** 2026-10-08, `d3d295d` |
 | P5 | Every human-facing file names the new skill | AC-16 (documentation half) | agent | **Done** 2026-10-08, `29108f1` |
 | P6 | A live walk proves the behaviour | AC-1 to AC-15 and AC-17 to AC-20 (behaviour, including AC-14's trigger test) | agent and maintainer | Not started |
-| P7 | v0.7.0 ships with `plab-audit` 1.1.0 and loads from the cache | N/A (release) | agent and maintainer | Not started |
+| P7 | v0.7.0 ships with `plab-audit` 1.1.0 and loads from the cache | N/A (release) | agent and maintainer | **Released ahead of P6** by maintainer ruling, 2026-10-09; see the note under Phase 6 |
 
 ---
 
@@ -406,6 +406,8 @@ All three gates exit 0. The loop prints a count of at least 1 for each of the fi
 ---
 
 ## Phase 6: A live walk proves the behaviour
+
+**Run after the release, by maintainer ruling of 2026-10-09.** The maintainer, the plugin's only user, chose to ship v0.7.0 first and run this walk against the installed version, as v0.6.0 did for `plab-audit`. Three steps change as a result. Skip step 1: the skill loads from the installed plugin, and Phase 7 step 7 has already removed the junction. In step 5, the base-directory line must name the `prisant-utilities\0.7.0` cache instead of the junction. And a defect this walk finds ships as a patch release, 0.7.1, rather than blocking the tag. The spec stays `committed` until this phase ticks its boxes; it has no `target-release`, so invariant 4 does not require it to be `fulfilled`.
 
 **Goal:** In a fresh session that loads the skill through a junction, a real walk shows every behaviour the checker cannot see. The same walk answers the spec's last open item, Q1 (what happened to past walk answers).
 
