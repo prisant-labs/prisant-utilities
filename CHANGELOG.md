@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Each answer is written to its item's one home document, on the three surfaces of `references/decisions-section.md`, with a `Follow-up` line naming the work the decision causes. Every other copy gets a pointer.
   - Silence is never acceptance: an omitted decision is left as found, and an omitted question proceeds on its default, recorded as assumed. A reply with doubt is recorded as `Provisional`. A reply that asks for more comes back in a further round.
   - A document on another branch is never written; the intended edit is printed instead.
-  - `scripts/walk-check.py` checks every write-back and every walk record, and CI runs it against a committed sample. Fourteen mutation canaries proved each rule can fail.
+  - `scripts/walk-check.py` checks every write-back and every walk record, and CI runs it against a committed sample. Sixteen canaries proved each rule can fail, two of them against a real spec rather than a synthetic one.
   - Not built yet: the `--backlog` sweep across every spec, plan and log, automatic GitHub filing, a GitHub Projects board, gathering across repositories, and a published web page.
 
 ### Changed
